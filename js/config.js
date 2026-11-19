@@ -17,16 +17,18 @@ export const CONFIG = {
     basic: 2,        // 기본 공격 (쉬운 문제)
     skill: 5,        // 스킬 (어려운 문제)
     ult: 8,          // 필살기
+    counter: 1,      // 방어 문제를 맞혔을 때의 반격
     weakBonus: 1.5,  // 적의 약점 유형을 맞혔을 때 곱하는 값
   },
 
   basicLevel: 1,     // 기본 공격이 내는 문제 단계
   ultNeed: 3,        // 필살기에 필요한 연속 정답 수
-  defendReduce: 0.5, // 방어했을 때 받는 피해 비율
+  guardLevel: 1,     // 방어가 내는 문제 단계
+  defendReduce: 0.5, // 방어 문제를 틀렸을 때 받는 피해 비율 (맞히면 0)
 
   foeAttack: {
     normal: 3,       // 적의 보통 공격
-    big: 6,          // 적의 강한 공격
+    big: 9,          // 적의 강한 공격 (막지 않으면 체력의 절반 가까이)
     bigEvery: 3,     // 몇 턴마다 강한 공격을 하는지
   },
 

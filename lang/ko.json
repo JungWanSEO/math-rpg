@@ -9,13 +9,14 @@
     "skill": "스킬",
     "skillSub": "어려운 문제",
     "defend": "방어",
-    "defendSub": "문제 없음",
+    "defendSub": "문제를 맞혀 막기",
     "ultReady": "필살기 사용 가능",
     "ultCharge": "필살기 {n} / {need}",
     "weak": "약점: {type}",
     "intentNormal": "다음 턴 예고: 공격 (피해 {d})",
     "intentBig": "다음 턴 예고: 강한 공격 (피해 {d})",
-    "level": "{n}단계 · {type}"
+    "level": "{n}단계 · {type}",
+    "defendWait": "연속 사용 불가"
   },
   "msg": {
     "choose": "행동을 고르세요.",
@@ -24,8 +25,11 @@
     "correctWeak": "정답! 약점을 찔렀습니다. 피해 {d}",
     "wrong": "오답. {explain}",
     "miss": "빗나감",
-    "defend": "방어 자세를 취했습니다.",
-    "ult": "필살기! 피해 {d}"
+    "ult": "필살기! 피해 {d}",
+    "solveGuard": "문제를 맞히면 공격을 완전히 막고 반격합니다.",
+    "guardOk": "완벽하게 막았습니다! 반격합니다.",
+    "guardFail": "막지 못해 피해를 절반 받았습니다. {explain}",
+    "blocked": "막음"
   },
   "result": {
     "winTitle": "승리",

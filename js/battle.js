@@ -16,7 +16,7 @@ export function createBattle({ stage, data, unit, monsters }) {
     combo: 0,        // 연속 정답 수 (필살기 게이지)
     turn: 0,
     intent: 'normal',
-    guard: false,
+    lastAction: null, // 방어는 연속으로 쓸 수 없습니다.
     phase: 'busy',   // 'choose' 행동 고르기 | 'answer' 답 고르기 | 'busy' 연출 중
     cur: null,       // 지금 문제
     picked: -1,
@@ -77,9 +77,11 @@ export function createBattle({ stage, data, unit, monsters }) {
 
     const choosing = B.phase === 'choose';
     document.querySelectorAll('#actions button').forEach((btn) => {
-      btn.disabled = !choosing;
+      const cooling = btn.dataset.action === 'defend' && B.lastAction === 'defend';
+      btn.disabled = !choosing || cooling;
       btn.classList.toggle('picked', B.phase === 'answer' && B.cur && B.cur.action === btn.dataset.action);
     });
+    $('defendSub').textContent = t(B.lastAction === 'defend' ? 'ui.defendWait' : 'ui.defendSub');
     const ready = B.combo >= CONFIG.ultNeed;
     const ult = $('ultBtn');
     ult.disabled = !(choosing && ready);
@@ -107,17 +109,10 @@ export function createBattle({ stage, data, unit, monsters }) {
 
   function choose(action) {
     if (B.phase !== 'choose') return;
-    if (action === 'defend') {
-      B.guard = true;
-      B.phase = 'busy';
-      say('msg.defend');
-      render();
-      foeTurn();
-      return;
-    }
     if (action === 'ult') {
       if (B.combo < CONFIG.ultNeed) return;
       B.combo = 0;
+      B.lastAction = 'ult';
       B.phase = 'busy';
       const dmg = CONFIG.damage.ult;
       say('msg.ult', { d: dmg });
@@ -125,12 +120,14 @@ export function createBattle({ stage, data, unit, monsters }) {
       stage.heroUlt(`-${dmg}`, () => afterHit(dmg));
       return;
     }
-    const level = action === 'skill' ? B.foe.skillLevel : CONFIG.basicLevel;
+    if (action === 'defend' && B.lastAction === 'defend') return;
+    B.lastAction = action;
+    const level = action === 'skill' ? B.foe.skillLevel : action === 'defend' ? CONFIG.guardLevel : CONFIG.basicLevel;
     B.cur = next(level);
     B.cur.action = action;
     B.picked = -1;
     B.phase = 'answer';
-    say('msg.solve');
+    say(action === 'defend' ? 'msg.solveGuard' : 'msg.solve');
     render();
   }
 
@@ -148,6 +145,21 @@ export function createBattle({ stage, data, unit, monsters }) {
     B.picked = i;
     const ok = i === B.cur.correct;
     record(B.cur.type, ok);
+    if (B.cur.action === 'defend') {
+      if (ok) {
+        // 완벽 방어: 피해 0, 반격, 연속 정답 +1
+        B.combo = Math.min(CONFIG.ultNeed, B.combo + 1);
+        say('msg.guardOk');
+        render();
+        foeTurn(0, counter);
+      } else {
+        B.combo = 0;
+        say('msg.guardFail', { explain: explainText(B.cur.raw) });
+        render();
+        foeTurn(CONFIG.defendReduce);
+      }
+      return;
+    }
     if (ok) {
       const weak = B.cur.type === B.foe.weak;
       const base = B.cur.action === 'skill' ? CONFIG.damage.skill : CONFIG.damage.basic;
@@ -160,7 +172,7 @@ export function createBattle({ stage, data, unit, monsters }) {
       B.combo = 0;
       say('msg.wrong', { explain: explainText(B.cur.raw) });
       render();
-      stage.heroMiss(t('msg.miss'), foeTurn);
+      stage.heroMiss(t('msg.miss'), () => foeTurn(1));
     }
   }
 
@@ -168,19 +180,30 @@ export function createBattle({ stage, data, unit, monsters }) {
     B.foeHp -= dmg;
     render();
     if (B.foeHp <= 0) win();
-    else foeTurn();
+    else foeTurn(1);
   }
 
-  function foeTurn() {
-    let dmg = intentDamage();
-    const guarded = B.guard;
-    if (guarded) dmg = Math.ceil(dmg * CONFIG.defendReduce);
-    stage.foeAttack(`-${dmg}`, guarded, () => {
+  // 방어에 성공한 뒤의 반격
+  function counter() {
+    const dmg = CONFIG.damage.counter;
+    stage.heroAttack(`-${dmg}`, false, () => {
+      B.foeHp -= dmg;
+      render();
+      if (B.foeHp <= 0) win();
+      else backToChoose();
+    });
+  }
+
+  // mult: 받는 피해 비율 (1 = 그대로, 0.5 = 방어 실패, 0 = 완벽 방어)
+  function foeTurn(mult, then) {
+    const dmg = Math.ceil(intentDamage() * mult);
+    stage.foeAttack(dmg > 0 ? `-${dmg}` : t('msg.blocked'), mult < 1, () => {
       B.hp -= dmg;
-      B.guard = false;
       if (B.hp <= 0) {
         render();
         lose();
+      } else if (then) {
+        then();
       } else {
         backToChoose();
       }
@@ -226,7 +249,7 @@ export function createBattle({ stage, data, unit, monsters }) {
     B.foe = monsters[index % monsters.length];
     B.foeHp = B.foe.hp;
     B.turn = 0;
-    B.guard = false;
+    B.lastAction = null;
     B.overlay = null;
     stage.heroUp();
     stage.setFoe(B.foe.id);

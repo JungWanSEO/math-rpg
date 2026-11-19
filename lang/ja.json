@@ -9,13 +9,14 @@
     "skill": "スキル",
     "skillSub": "むずかしい問題",
     "defend": "防御",
-    "defendSub": "問題なし",
+    "defendSub": "問題を解いて防ぐ",
     "ultReady": "必殺技が使えます",
     "ultCharge": "必殺技 {n} / {need}",
     "weak": "弱点: {type}",
     "intentNormal": "次のターン: 攻撃 (ダメージ {d})",
     "intentBig": "次のターン: 強い攻撃 (ダメージ {d})",
-    "level": "レベル{n} · {type}"
+    "level": "レベル{n} · {type}",
+    "defendWait": "連続では使えません"
   },
   "msg": {
     "choose": "行動を選んでください。",
@@ -24,8 +25,11 @@
     "correctWeak": "正解! 弱点を突いた。ダメージ {d}",
     "wrong": "不正解。{explain}",
     "miss": "ミス",
-    "defend": "防御の構えをとった。",
-    "ult": "必殺技! ダメージ {d}"
+    "ult": "必殺技! ダメージ {d}",
+    "solveGuard": "正解すると攻撃を完全に防いで反撃します。",
+    "guardOk": "完全に防いだ! 反撃する。",
+    "guardFail": "防ぎきれず、ダメージを半分受けた。{explain}",
+    "blocked": "ガード"
   },
   "result": {
     "winTitle": "勝利",
