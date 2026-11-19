@@ -1,5 +1,6 @@
 // 시작점이자 진행 담당.
-// 지도 → (칸을 고름) → 전투 / 상점 / 휴식 / 보물 → 다음 줄 → … → 보스 → 새 지도
+// 지도 → (칸을 고름) → 전투 / ? / 상점 / 휴식 / 보물 → 지도 → … → 보스 → 새 지도
+// 전투에서 쓰러지면 게임 오버이고, 새 지도로 처음부터 다시 시작합니다.
 import { CONFIG } from './config.js';
 import { loadLang, applyStatic, t, pick } from './i18n.js';
 import { load, store } from './save.js';
@@ -12,6 +13,8 @@ import { createEvents } from './events.js';
 import { createCodex } from './codex.js';
 import { createTutorial } from './tutorial.js';
 import { $, show } from './ui.js';
+
+const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
 
 async function boot() {
   const data = load();
@@ -27,7 +30,8 @@ async function boot() {
     }),
   ]);
 
-  if (!data.run || data.run.unit !== CONFIG.unit) data.run = newRun(CONFIG.unit);
+  // 저장된 지도가 없거나 예전 형식이면 새로 만듭니다.
+  if (!data.run || !Array.isArray(data.run.nodes) || data.run.unit !== CONFIG.unit) data.run = newRun(CONFIG.unit);
   const getRun = () => data.run;
   const persist = () => store(data);
   let screen = 'screenMap';
@@ -98,30 +102,42 @@ async function boot() {
     if (beforeCodex === 'screenMap') map.render();
     else events.refresh();
   });
+
   function goMap() {
     persist();
     go('screenMap');
     map.render();
   }
-  // 칸을 끝내고 다음 줄로
-  function advance() {
-    getRun().row += 1;
+
+  // 칸을 끝냈습니다. 지도로 돌아가 다음 칸을 고릅니다.
+  function complete(node) {
+    const run = getRun();
+    run.visited.push(node.id);
+    run.at = node.id;
+    run.pending = null;
+    goMap();
+  }
+
+  function startOver() {
+    data.run = newRun(CONFIG.unit);
     goMap();
   }
 
   function chooseMonster(kind) {
     const run = getRun();
     if (kind === 'boss') return monsters.find((m) => m.boss);
-    if (tutorial.active()) return monsters[0];
-    let pool = monsters.filter((m) => !m.boss && m.id !== run.lastFoe);
-    if (!pool.length) pool = monsters.filter((m) => !m.boss);
+    if (kind === 'midboss') return monsters.find((m) => m.midboss);
+    const normal = monsters.filter((m) => !m.boss && !m.midboss);
+    if (tutorial.active()) return normal[0];
+    const fresh = normal.filter((m) => m.id !== run.lastFoe);
+    const pool = fresh.length ? fresh : normal;
     return pool[Math.floor(Math.random() * pool.length)];
   }
 
-  function fight(node) {
+  // kind 를 따로 주면 그 종류로 싸웁니다. (? 칸의 기습은 보통 전투)
+  function fight(node, kind = node.type) {
     const run = getRun();
-    const kind = node.type;
-    // 다시 도전할 때 같은 적이 나오도록 칸에 적어 둡니다.
+    // 닫았다가 다시 열어도 같은 적이 나오도록 칸에 적어 둡니다.
     if (!node.monster) node.monster = chooseMonster(kind).id;
     const monster = monsters.find((m) => m.id === node.monster) || monsters[0];
     run.lastFoe = monster.id;
@@ -132,11 +148,11 @@ async function boot() {
     go('screenBattle');
     battle.start({ monster, kind, safe: tutorial.active() }, (result) => {
       if (result === 'lose') {
+        // 게임 오버: 지도 한 장의 진행은 사라지고, 도감 기록은 남습니다.
+        data.deaths = (data.deaths || 0) + 1;
+        persist();
         go('screenEvent');
-        events.defeat(() => {
-          run.hp = run.maxHp;
-          fight(node);
-        });
+        events.gameover({ floor: node.floor + 1, total: run.floors }, startOver);
         return;
       }
       const gold = CONFIG.gold[kind];
@@ -148,30 +164,33 @@ async function boot() {
       if (kind === 'boss') {
         data.clears += 1;
         persist();
-        events.clear(gold, () => {
-          data.run = newRun(CONFIG.unit);
-          goMap();
-        });
+        events.clear(gold, startOver);
       } else {
         persist();
         events.reward(gold, () => {
           tutorial.emit('rewarded');
-          advance();
+          complete(node);
         });
       }
     });
   }
 
-  function onPick(node, index) {
+  function onPick(node) {
     const run = getRun();
-    run.picked[run.row] = index;
+    run.pending = node.id;
+    persist();
     tutorial.emit('picked');
-    if (node.type === 'battle' || node.type === 'elite' || node.type === 'boss') {
+    if (FIGHTS.includes(node.type)) {
       fight(node);
       return;
     }
     go('screenEvent');
-    events[node.type](advance); // shop, rest, treasure
+    if (node.type === 'event') {
+      // ? 칸: 좋은 일, 나쁜 일, 선택, 기습 중 하나
+      events.mystery(() => complete(node), () => fight(node, 'battle'));
+    } else {
+      events[node.type](() => complete(node)); // shop, rest, treasure
+    }
   }
 
   // 언어 바꾸기

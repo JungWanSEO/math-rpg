@@ -10,7 +10,7 @@ import { $ } from './ui.js';
 export function createBattle({ stage, unit, getRun, record, tutorial, onChange }) {
   const B = {
     foe: null,
-    kind: 'battle',  // 'battle' 전투 | 'elite' 강적 | 'boss' 보스
+    kind: 'battle',  // 'battle' 전투 | 'elite' 강적 | 'midboss' 중간 보스 | 'boss' 보스
     safe: false,     // 튜토리얼 전투: 피해가 줄고 쓰러지지 않습니다.
     foeHp: 0,
     foeMax: 0,
@@ -31,6 +31,7 @@ export function createBattle({ stage, unit, getRun, record, tutorial, onChange }
   function intentDamage() {
     let dmg = B.intent === 'big' ? CONFIG.foeAttack.big : CONFIG.foeAttack.normal;
     if (B.kind === 'elite') dmg += CONFIG.elite.attackAdd;
+    if (B.kind === 'midboss') dmg += CONFIG.midboss.attackAdd;
     if (B.kind === 'boss') dmg += CONFIG.boss.attackAdd;
     if (B.safe) dmg = Math.floor(dmg / 2);
     return dmg;
@@ -46,6 +47,8 @@ export function createBattle({ stage, unit, getRun, record, tutorial, onChange }
     const showing = B.cur && (B.phase === 'answer' || B.picked >= 0);
     $('question').hidden = !showing;
     $('answers').hidden = !showing;
+    // 문제를 푸는 동안에는 행동 버튼을 접어 문제와 답이 한 화면에 보이게 합니다.
+    $('screenBattle').classList.toggle('answering', Boolean(showing));
     const hint = $('hintBtn');
     hint.hidden = B.phase !== 'answer';
     if (!showing) return;
@@ -79,6 +82,7 @@ export function createBattle({ stage, unit, getRun, record, tutorial, onChange }
     const run = getRun();
     let name = pick(B.foe.name);
     if (B.kind === 'elite') name = t('ui.elite', { name });
+    if (B.kind === 'midboss') name = t('ui.midboss', { name });
     if (B.kind === 'boss') name = t('ui.boss', { name });
     $('foeName').textContent = name;
     $('foeWeak').textContent = t('ui.weak', { type: typeName(B.foe.weak) });

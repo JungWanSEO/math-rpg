@@ -1,8 +1,18 @@
-// "지도 한 장"의 상태. 체력, 골드, 힌트, 강화는 지도 한 장 동안 유지됩니다.
+// "지도 한 장"의 상태와 지도 만들기.
+// 체력, 골드, 힌트, 강화는 지도 한 장 동안 유지되고, 쓰러지면 모두 사라집니다.
+//
+// 지도 모양 (CONFIG.map 의 half = 4 일 때)
+//   10층  보스
+//    9층  휴식 (보스 직전 준비)
+//  6~8층  갈라지는 길
+//    5층  중간 보스
+//  1~4층  갈라지는 길  ← 맨 아래에서 출발할 칸을 고릅니다
 import { CONFIG } from './config.js';
 
-// 칸 종류와 나올 확률의 무게 (첫 칸, 휴식 칸, 보스 칸은 따로 정합니다)
-const WEIGHTS = { battle: 4, elite: 2, treasure: 2, shop: 1.5, rest: 1.5 };
+// 칸 종류가 나올 확률의 무게 (출발 칸, 중간 보스, 보스 직전, 보스는 따로 정합니다)
+const WEIGHTS = { battle: 4, event: 2.5, elite: 1.5, treasure: 1.2, shop: 1, rest: 1 };
+
+const rand = (n) => Math.floor(Math.random() * n);
 
 function weightedPick(types) {
   const total = types.reduce((sum, type) => sum + WEIGHTS[type], 0);
@@ -14,44 +24,90 @@ function weightedPick(types) {
   return types[types.length - 1];
 }
 
-// 줄마다 고를 수 있는 칸 2~3개를 만듭니다.
-// 모든 줄에는 싸우는 칸이 하나 이상 있어서, 전투만으로도 끝까지 갈 수 있습니다.
-export function makeMap() {
-  const count = CONFIG.map.rows;
-  const rows = [];
-  for (let i = 0; i < count; i++) {
-    if (i === 0) {
-      rows.push([{ type: 'battle' }]);
-    } else if (i === count - 1) {
-      rows.push([{ type: 'boss' }]);
-    } else if (i === count - 2) {
-      rows.push([{ type: 'rest' }, { type: 'shop' }]); // 보스 직전에는 준비할 기회
-    } else {
-      const fight = i >= 2 && Math.random() < 0.35 ? 'elite' : 'battle';
-      const types = [fight];
-      const size = 2 + (Math.random() < 0.4 ? 1 : 0);
-      let pool = Object.keys(WEIGHTS).filter((type) => type !== fight && (type !== 'elite' || i >= 2));
-      if (i === Math.floor(count / 2) && !types.includes('rest')) {
-        types.push('rest'); // 중간쯤에 쉬는 칸을 보장
-        pool = pool.filter((type) => type !== 'rest');
-      }
-      while (types.length < size && pool.length) {
-        const type = weightedPick(pool);
-        types.push(type);
-        pool = pool.filter((other) => other !== type);
-      }
-      rows.push(types.map((type) => ({ type })));
+// 지도의 절반을 만듭니다. 아래에서 위로 올라가는 길을 여러 개 그어, 길이 지나간 자리에 칸이 생깁니다.
+function buildHalf(base, tag) {
+  const { half, width, paths } = CONFIG.map;
+  const cells = new Map(); // "층,열" → 칸
+  const edges = new Set(); // "층,열>다음 열"
+  const cell = (f, c) => {
+    const key = `${f},${c}`;
+    if (!cells.has(key)) cells.set(key, { id: `${tag}${f}_${c}`, floor: base + f, col: c, type: 'battle', next: [] });
+    return cells.get(key);
+  };
+
+  let firstStart = -1;
+  for (let p = 0; p < paths; p++) {
+    let c = rand(width);
+    if (p === 0) firstStart = c;
+    if (p === 1) while (c === firstStart) c = rand(width); // 출발 칸이 적어도 둘
+    for (let f = 0; f < half; f++) {
+      const here = cell(f, c);
+      if (f === half - 1) break;
+      let to = Math.max(0, Math.min(width - 1, c + rand(3) - 1));
+      // 길이 서로 엇갈려 꼬이지 않게 합니다.
+      if (to > c && edges.has(`${f},${c + 1}>${c}`)) to = c;
+      if (to < c && edges.has(`${f},${c - 1}>${c}`)) to = c;
+      edges.add(`${f},${c}>${to}`);
+      const nextCell = cell(f + 1, to);
+      if (!here.next.includes(nextCell.id)) here.next.push(nextCell.id);
+      c = to;
     }
   }
-  return rows;
+  const list = [...cells.values()];
+  return {
+    list,
+    first: list.filter((n) => n.floor === base),
+    last: list.filter((n) => n.floor === base + half - 1),
+  };
+}
+
+function assignTypes(nodes) {
+  const { half } = CONFIG.map;
+  const parents = {};
+  for (const n of nodes) {
+    for (const id of n.next) {
+      if (!parents[id]) parents[id] = [];
+      parents[id].push(n);
+    }
+  }
+  const sorted = [...nodes].sort((a, b) => a.floor - b.floor);
+  for (const n of sorted) {
+    if (n.type === 'midboss' || n.type === 'boss') continue;
+    if (n.floor === 0) { n.type = 'battle'; continue; }      // 출발은 항상 전투
+    if (n.floor === 2 * half) { n.type = 'rest'; continue; } // 보스 직전은 항상 휴식
+    let pool = Object.keys(WEIGHTS);
+    if (n.floor < 2) pool = pool.filter((type) => type !== 'elite' && type !== 'rest' && type !== 'shop');
+    if (n.floor === half + 1) pool = pool.filter((type) => type !== 'elite'); // 중간 보스 바로 다음
+    let type = weightedPick(pool);
+    // 휴식·상점·강적이 연달아 나오지 않게 합니다.
+    const above = parents[n.id] || [];
+    if ((type === 'rest' || type === 'shop' || type === 'elite') && above.some((p) => p.type === type)) type = 'battle';
+    n.type = type;
+  }
+}
+
+export function makeMap() {
+  const { half, width } = CONFIG.map;
+  const lower = buildHalf(0, 'a');
+  const upper = buildHalf(half + 1, 'b');
+  const center = (width - 1) / 2;
+  const mid = { id: 'mid', floor: half, col: center, type: 'midboss', next: upper.first.map((n) => n.id) };
+  const boss = { id: 'boss', floor: 2 * half + 1, col: center, type: 'boss', next: [] };
+  lower.last.forEach((n) => { n.next = ['mid']; });
+  upper.last.forEach((n) => { n.next = ['boss']; });
+  const nodes = [...lower.list, mid, ...upper.list, boss];
+  assignTypes(nodes);
+  return nodes;
 }
 
 export function newRun(unitId) {
   return {
     unit: unitId,
-    rows: makeMap(),
-    row: 0,          // 지금 고를 줄
-    picked: [],      // 줄마다 고른 칸의 번호
+    nodes: makeMap(),
+    floors: 2 * CONFIG.map.half + 2,
+    at: null,        // 마지막으로 끝낸 칸 (아직 출발 전이면 null)
+    pending: null,   // 들어갔지만 아직 끝내지 못한 칸
+    visited: [],     // 지나온 칸
     hp: CONFIG.player.hp,
     maxHp: CONFIG.player.hp,
     gold: 0,
@@ -59,6 +115,16 @@ export function newRun(unitId) {
     up: { basic: 0, skill: 0, counter: 0, weak: 0 }, // 강화로 더해진 값
     lastFoe: null,
   };
+}
+
+export const nodeOf = (run, id) => run.nodes.find((n) => n.id === id);
+
+// 지금 고를 수 있는 칸의 id 목록
+export function available(run) {
+  if (run.pending) return [run.pending];
+  if (run.at === null) return run.nodes.filter((n) => n.floor === 0).map((n) => n.id);
+  const here = nodeOf(run, run.at);
+  return here ? here.next : [];
 }
 
 // 강화 목록. 이름과 설명은 lang 파일의 up.<id> 에 있습니다.
@@ -72,11 +138,11 @@ export const UPGRADES = {
   weak: (run) => { run.up.weak += 0.5; },
 };
 
-// 전투 보상으로 보여줄 강화를 겹치지 않게 뽑습니다.
+// 보상으로 보여줄 강화를 겹치지 않게 뽑습니다.
 export function rollUpgrades(count = 3) {
   const ids = Object.keys(UPGRADES);
   for (let i = ids.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = rand(i + 1);
     [ids[i], ids[j]] = [ids[j], ids[i]];
   }
   return ids.slice(0, count);

@@ -9,9 +9,9 @@ export const CONFIG = {
   defaultLang: 'ja',
 
   player: {
-    hp: 20,          // 최대 체력
+    hp: 30,          // 최대 체력
     hints: 1,        // 지도 한 장을 시작할 때 가진 힌트 수
-    healOnWin: 2,    // 전투에서 이기면 회복하는 체력
+    healOnWin: 4,    // 전투에서 이기면 회복하는 체력
   },
 
   damage: {
@@ -27,21 +27,33 @@ export const CONFIG = {
   defendReduce: 0.5, // 방어 문제를 틀렸을 때 받는 피해 비율 (맞히면 0)
 
   foeAttack: {
-    normal: 3,       // 적의 보통 공격
-    big: 9,          // 적의 강한 공격 (막지 않으면 체력의 절반 가까이)
+    normal: 2,       // 적의 보통 공격
+    big: 8,          // 적의 강한 공격 (예고를 보고 방어로 막아야 하는 공격)
     bigEvery: 3,     // 몇 턴마다 강한 공격을 하는지
   },
 
-  elite: { hpMul: 1.5, attackAdd: 1 }, // 강적: 체력 배수, 공격 추가
+  elite: { hpMul: 1.3, attackAdd: 1 }, // 강적: 체력 배수, 공격 추가
+  midboss: { attackAdd: 0 },           // 중간 보스: 공격 추가 (체력은 monsters.json)
   boss: { attackAdd: 1 },              // 보스: 공격 추가 (체력은 monsters.json)
 
   map: {
-    rows: 9,         // 지도 한 장의 칸 수 (마지막 칸은 보스)
+    half: 4,         // 중간 보스 앞뒤로 갈라지는 길이 몇 층씩인지 (전체 층수 = half × 2 + 2)
+    width: 4,        // 가로로 놓이는 칸의 최대 수
+    paths: 4,        // 길을 몇 가닥 긋는지 (많을수록 칸과 갈림길이 늘어납니다)
+  },
+
+  mystery: {
+    spring: 6,       // ? 칸 "샘물": 회복하는 체력
+    fog: 3,          // ? 칸 "짙은 안개": 잃는 체력 (1 아래로는 내려가지 않음)
+    purse: 25,       // ? 칸 "떨어진 지갑": 얻는 골드
+    thief: 15,       // ? 칸 "소매치기": 잃는 골드
+    statueLoss: 4,   // ? 칸 "수상한 석상": 문제를 틀렸을 때 잃는 체력
   },
 
   gold: {
     battle: 20,       // 전투 승리 보상
     elite: 35,        // 강적 승리 보상
+    midboss: 40,      // 중간 보스 승리 보상
     boss: 50,         // 보스 승리 보상
     treasureWin: 30,  // 보물 문제를 맞혔을 때
     treasureLose: 10, // 보물 문제를 틀렸을 때
