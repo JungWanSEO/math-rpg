@@ -306,3 +306,7 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
   color: var(--ground);
   background: var(--amber);
 }
+
+/* question figure */
+.figure { display: flex; justify-content: center; }
+.figure svg { width: 100%; max-width: 320px; height: auto; font-family: inherit; }
