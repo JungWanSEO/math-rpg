@@ -16,7 +16,11 @@
     "intentNormal": "Next turn: attack ({d} damage)",
     "intentBig": "Next turn: heavy attack ({d} damage)",
     "level": "Level {n} · {type}",
-    "defendWait": "Not twice in a row"
+    "defendWait": "Not twice in a row",
+    "hint": "Use a hint ({n} left)",
+    "status": "HP {hp}/{max} · {gold}G · Hints {hints}",
+    "elite": "Elite {name}",
+    "boss": "Boss {name}"
   },
   "msg": {
     "choose": "Choose an action.",
@@ -31,12 +35,80 @@
     "guardFail": "The block failed, so you take half damage. {explain}",
     "blocked": "Blocked"
   },
-  "result": {
-    "winTitle": "Victory",
-    "winText": "You defeated the monster. You recover a little HP and move on to the next enemy.",
-    "next": "Next battle",
-    "loseTitle": "Defeated",
-    "loseText": "Nothing you collected is lost. Try the same enemy again.",
-    "retry": "Try again"
+  "map": {
+    "title": "Crossroads map",
+    "progress": "Space {n} of {total}"
+  },
+  "node": {
+    "battle": "Battle",
+    "battleSub": "Fight a monster",
+    "elite": "Elite",
+    "eliteSub": "Tougher, better reward",
+    "shop": "Shop",
+    "shopSub": "Spend gold on upgrades",
+    "rest": "Rest",
+    "restSub": "Heal or review",
+    "treasure": "Treasure",
+    "treasureSub": "Opens if you answer right",
+    "boss": "Boss",
+    "bossSub": "Win to clear the unit"
+  },
+  "ev": {
+    "rewardTitle": "Victory",
+    "rewardText": "You earned {gold}G. Choose one upgrade.",
+    "shopTitle": "Shop",
+    "shopText": "Your gold: {gold}G",
+    "leave": "Leave",
+    "continue": "Continue",
+    "restTitle": "Rest",
+    "restText": "Take a rest, or review a question you missed?",
+    "restSleep": "Rest",
+    "restSleepSub": "Recover {n} HP",
+    "restReview": "Review",
+    "restReviewSub": "Retry a type you missed for a bonus",
+    "restSlept": "You rested well and recovered {n} HP.",
+    "reviewText": "Answer correctly to get 1 hint and {n} HP.",
+    "reviewOk": "Correct! You got 1 hint and {n} HP.",
+    "reviewFail": "Not quite. {explain}",
+    "treasureTitle": "Treasure chest",
+    "treasureText": "Answer correctly to open the chest.",
+    "treasureOk": "The chest opened. You got {gold}G and 1 hint.",
+    "treasureFail": "The lock held, but you picked up {gold}G from the floor. {explain}",
+    "defeatTitle": "Defeated",
+    "defeatText": "Nothing you collected is lost. Your HP is fully restored and you retry the same space.",
+    "retry": "Try again",
+    "clearTitle": "Unit cleared",
+    "clearText": "You defeated the boss. You have cleared this unit {n} time(s).",
+    "newRun": "Start a new map"
+  },
+  "up": {
+    "maxhp": {
+      "name": "Sturdy cloak",
+      "desc": "Max HP +4"
+    },
+    "heal": {
+      "name": "Potion",
+      "desc": "Recover 8 HP"
+    },
+    "hint": {
+      "name": "Hint note",
+      "desc": "Hints +1"
+    },
+    "basic": {
+      "name": "Tough tape measure",
+      "desc": "Attack damage +1"
+    },
+    "skill": {
+      "name": "Precision protractor",
+      "desc": "Skill damage +1"
+    },
+    "counter": {
+      "name": "Riposte",
+      "desc": "Counter damage after a block +1"
+    },
+    "weak": {
+      "name": "Weak-point insight",
+      "desc": "Weak-point multiplier +0.5"
+    }
   }
 }

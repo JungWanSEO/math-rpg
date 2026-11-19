@@ -34,6 +34,12 @@ function shuffle(arr) {
   return arr;
 }
 
+function build(raw) {
+  used.add(raw.id);
+  const options = shuffle([raw.item.answer, ...raw.item.wrong]);
+  return { raw, level: raw.level, type: raw.type, options, correct: options.indexOf(raw.item.answer) };
+}
+
 // 단계에 맞는 문제를 하나 뽑습니다. 한 바퀴 다 돌 때까지 같은 문제는 나오지 않습니다.
 export function next(level) {
   let candidates = pool.filter((q) => q.level === level && !used.has(q.id));
@@ -42,10 +48,14 @@ export function next(level) {
     candidates = pool.filter((q) => q.level === level);
   }
   if (!candidates.length) candidates = pool;
-  const raw = candidates[Math.floor(Math.random() * candidates.length)];
-  used.add(raw.id);
-  const options = shuffle([raw.item.answer, ...raw.item.wrong]);
-  return { raw, level: raw.level, type: raw.type, options, correct: options.indexOf(raw.item.answer) };
+  return build(candidates[Math.floor(Math.random() * candidates.length)]);
+}
+
+// 유형을 정해서 문제를 하나 뽑습니다. (휴식 칸의 복습에 씁니다) 없으면 null.
+export function nextByType(type) {
+  const candidates = pool.filter((q) => q.type === type);
+  if (!candidates.length) return null;
+  return build(candidates[Math.floor(Math.random() * candidates.length)]);
 }
 
 // 지금 언어로 문제 문장과 해설을 만듭니다. 언어를 바꾸면 다시 부르면 됩니다.

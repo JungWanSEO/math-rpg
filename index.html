@@ -24,57 +24,80 @@
       </select>
     </label>
   </header>
+  <div class="statusbar" id="runStatus"></div>
 
-  <section class="foe">
-    <div class="row">
-      <strong id="foeName"></strong>
-      <span class="chip" id="foeWeak"></span>
+  <!-- 갈림길 지도 -->
+  <section class="screen" id="screenMap">
+    <div class="screen-head">
+      <h2 data-i18n="map.title"></h2>
+      <span id="mapProgress"></span>
     </div>
-    <div class="row">
-      <div class="bar"><div class="fill rose" id="foeHpBar"></div></div>
-      <span class="num" id="foeHpText"></span>
-    </div>
-    <canvas id="stage"></canvas>
-    <div class="intent" id="foeIntent"></div>
+    <div class="map" id="mapRows"></div>
   </section>
 
-  <section class="me">
-    <div class="row">
-      <span class="label" data-i18n="ui.hp"></span>
-      <div class="bar"><div class="fill teal" id="hpBar"></div></div>
-      <span class="num" id="hpText"></span>
+  <!-- 전투 -->
+  <section class="screen" id="screenBattle" hidden>
+    <div class="foe">
+      <div class="row">
+        <strong id="foeName"></strong>
+        <span class="chip" id="foeWeak"></span>
+      </div>
+      <div class="row">
+        <div class="bar"><div class="fill rose" id="foeHpBar"></div></div>
+        <span class="num" id="foeHpText"></span>
+      </div>
+      <canvas id="stage"></canvas>
+      <div class="intent" id="foeIntent"></div>
     </div>
-    <div class="row">
-      <span class="label" data-i18n="ui.ult"></span>
-      <div class="pips" id="ultPips"></div>
-      <span class="num" id="comboText"></span>
+
+    <div class="me">
+      <div class="row">
+        <span class="label" data-i18n="ui.hp"></span>
+        <div class="bar"><div class="fill teal" id="hpBar"></div></div>
+        <span class="num" id="hpText"></span>
+      </div>
+      <div class="row">
+        <span class="label" data-i18n="ui.ult"></span>
+        <div class="pips" id="ultPips"></div>
+        <span class="num" id="comboText"></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="actions" id="actions">
+        <button type="button" data-action="basic"><b data-i18n="ui.basic"></b><small data-i18n="ui.basicSub"></small></button>
+        <button type="button" data-action="skill"><b data-i18n="ui.skill"></b><small data-i18n="ui.skillSub"></small></button>
+        <button type="button" data-action="defend"><b data-i18n="ui.defend"></b><small id="defendSub"></small></button>
+      </div>
+      <button type="button" class="ult" id="ultBtn" data-action="ult" disabled></button>
+
+      <div class="question" id="question" hidden>
+        <span class="meta" id="qMeta"></span>
+        <p id="qText"></p>
+      </div>
+      <div class="answers" id="answers" hidden></div>
+      <button type="button" class="hint" id="hintBtn" hidden></button>
+
+      <p class="notice" id="notice" aria-live="polite"></p>
     </div>
   </section>
 
-  <section class="panel">
-    <div class="actions" id="actions">
-      <button type="button" data-action="basic"><b data-i18n="ui.basic"></b><small data-i18n="ui.basicSub"></small></button>
-      <button type="button" data-action="skill"><b data-i18n="ui.skill"></b><small data-i18n="ui.skillSub"></small></button>
-      <button type="button" data-action="defend"><b data-i18n="ui.defend"></b><small id="defendSub"></small></button>
+  <!-- 상점, 휴식, 보물, 보상, 결과가 함께 쓰는 화면 -->
+  <section class="screen" id="screenEvent" hidden>
+    <div class="event">
+      <h2 id="evTitle"></h2>
+      <p id="evText"></p>
+      <div id="evQuiz" hidden>
+        <div class="question">
+          <span class="meta" id="evQMeta"></span>
+          <p id="evQText"></p>
+        </div>
+        <div class="answers" id="evAnswers"></div>
+      </div>
+      <div class="options" id="evOptions"></div>
+      <button type="button" class="primary" id="evLeave" hidden></button>
     </div>
-    <button type="button" class="ult" id="ultBtn" data-action="ult" disabled></button>
-
-    <div class="question" id="question" hidden>
-      <span class="meta" id="qMeta"></span>
-      <p id="qText"></p>
-    </div>
-    <div class="answers" id="answers" hidden></div>
-
-    <p class="notice" id="notice" aria-live="polite"></p>
   </section>
-
-  <div class="overlay" id="overlay" hidden>
-    <div class="card">
-      <h2 id="ovTitle"></h2>
-      <p id="ovText"></p>
-      <button type="button" id="ovBtn"></button>
-    </div>
-  </div>
 
 </main>
 <script type="module" src="./js/main.js"></script>

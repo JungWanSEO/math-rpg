@@ -1,18 +1,18 @@
 // 전투 규칙과 화면 연결.
-// 한 턴: 행동 고르기 → (공격이면) 문제 풀기 → 결과 → 적의 턴 → 다시 행동 고르기
+// 한 턴: 행동 고르기 → 문제 풀기 → 결과 → 적의 턴 → 다시 행동 고르기
+// 체력, 힌트, 강화는 "지도 한 장"의 상태(run)에서 가져옵니다.
 import { CONFIG } from './config.js';
 import { t, pick } from './i18n.js';
 import { next, questionText, explainText } from './questions.js';
-import { store } from './save.js';
+import { $ } from './ui.js';
 
-const $ = (id) => document.getElementById(id);
-
-export function createBattle({ stage, data, unit, monsters }) {
+export function createBattle({ stage, unit, getRun, record, tutorial, onChange }) {
   const B = {
-    index: 0,        // 지금 몇 번째 몬스터인지
     foe: null,
+    kind: 'battle',  // 'battle' 전투 | 'elite' 강적 | 'boss' 보스
+    safe: false,     // 튜토리얼 전투: 피해가 줄고 쓰러지지 않습니다.
     foeHp: 0,
-    hp: CONFIG.player.hp,
+    foeMax: 0,
     combo: 0,        // 연속 정답 수 (필살기 게이지)
     turn: 0,
     intent: 'normal',
@@ -21,10 +21,19 @@ export function createBattle({ stage, data, unit, monsters }) {
     cur: null,       // 지금 문제
     picked: -1,
     notice: { key: 'msg.choose', vars: null },
+    onEnd: null,
   };
 
-  const intentDamage = () => (B.intent === 'big' ? CONFIG.foeAttack.big : CONFIG.foeAttack.normal);
   const typeName = (type) => pick(unit.types[type]);
+
+  // 적이 이번 턴에 주는 피해
+  function intentDamage() {
+    let dmg = B.intent === 'big' ? CONFIG.foeAttack.big : CONFIG.foeAttack.normal;
+    if (B.kind === 'elite') dmg += CONFIG.elite.attackAdd;
+    if (B.kind === 'boss') dmg += CONFIG.boss.attackAdd;
+    if (B.safe) dmg = Math.floor(dmg / 2);
+    return dmg;
+  }
 
   function say(key, vars) {
     B.notice = { key, vars: vars || null };
@@ -33,10 +42,17 @@ export function createBattle({ stage, data, unit, monsters }) {
 
   // ---- 화면 갱신 ----
   function renderQuestion() {
-    const showing = B.phase === 'answer' || (B.cur && B.picked >= 0);
+    const showing = B.cur && (B.phase === 'answer' || B.picked >= 0);
     $('question').hidden = !showing;
     $('answers').hidden = !showing;
+    const hint = $('hintBtn');
+    hint.hidden = B.phase !== 'answer';
     if (!showing) return;
+
+    const run = getRun();
+    hint.textContent = t('ui.hint', { n: run.hints });
+    hint.disabled = run.hints <= 0 || B.cur.removed >= 0;
+
     $('qMeta').textContent = t('ui.level', { n: B.cur.level, type: typeName(B.cur.type) });
     $('qText').textContent = questionText(B.cur.raw);
     const box = $('answers');
@@ -45,7 +61,8 @@ export function createBattle({ stage, data, unit, monsters }) {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.textContent = text;
-      btn.disabled = B.phase !== 'answer';
+      btn.disabled = B.phase !== 'answer' || i === B.cur.removed;
+      if (i === B.cur.removed) btn.classList.add('gone');
       if (B.picked >= 0) {
         if (i === B.cur.correct) btn.classList.add('right');
         else if (i === B.picked) btn.classList.add('wrong');
@@ -56,15 +73,18 @@ export function createBattle({ stage, data, unit, monsters }) {
   }
 
   function render() {
-    $('subjectName').textContent = pick(unit.subject);
-    $('unitName').textContent = pick(unit.area);
-    $('foeName').textContent = pick(B.foe.name);
+    if (!B.foe) return;
+    const run = getRun();
+    let name = pick(B.foe.name);
+    if (B.kind === 'elite') name = t('ui.elite', { name });
+    if (B.kind === 'boss') name = t('ui.boss', { name });
+    $('foeName').textContent = name;
     $('foeWeak').textContent = t('ui.weak', { type: typeName(B.foe.weak) });
-    $('foeHpBar').style.width = `${Math.max(0, (B.foeHp / B.foe.hp) * 100)}%`;
-    $('foeHpText').textContent = `${Math.max(0, B.foeHp)} / ${B.foe.hp}`;
+    $('foeHpBar').style.width = `${Math.max(0, (B.foeHp / B.foeMax) * 100)}%`;
+    $('foeHpText').textContent = `${Math.max(0, B.foeHp)} / ${B.foeMax}`;
     $('foeIntent').textContent = t(B.intent === 'big' ? 'ui.intentBig' : 'ui.intentNormal', { d: intentDamage() });
-    $('hpBar').style.width = `${Math.max(0, (B.hp / CONFIG.player.hp) * 100)}%`;
-    $('hpText').textContent = `${Math.max(0, B.hp)} / ${CONFIG.player.hp}`;
+    $('hpBar').style.width = `${Math.max(0, (run.hp / run.maxHp) * 100)}%`;
+    $('hpText').textContent = `${Math.max(0, run.hp)} / ${run.maxHp}`;
     $('comboText').textContent = t('ui.combo', { n: B.combo });
 
     const pips = $('ultPips');
@@ -76,27 +96,32 @@ export function createBattle({ stage, data, unit, monsters }) {
     }
 
     const choosing = B.phase === 'choose';
+    const only = tutorial.only(); // 튜토리얼 중에는 안내한 버튼만 누를 수 있습니다.
+    const cooling = B.lastAction === 'defend';
     document.querySelectorAll('#actions button').forEach((btn) => {
-      const cooling = btn.dataset.action === 'defend' && B.lastAction === 'defend';
-      btn.disabled = !choosing || cooling;
-      btn.classList.toggle('picked', B.phase === 'answer' && B.cur && B.cur.action === btn.dataset.action);
+      const action = btn.dataset.action;
+      btn.disabled = !choosing || (only && only !== action) || (action === 'defend' && cooling);
+      btn.classList.toggle('picked', B.phase === 'answer' && B.cur && B.cur.action === action);
     });
-    $('defendSub').textContent = t(B.lastAction === 'defend' ? 'ui.defendWait' : 'ui.defendSub');
+    $('defendSub').textContent = t(cooling ? 'ui.defendWait' : 'ui.defendSub');
+
     const ready = B.combo >= CONFIG.ultNeed;
     const ult = $('ultBtn');
-    ult.disabled = !(choosing && ready);
+    ult.disabled = !(choosing && ready) || Boolean(only);
     ult.classList.toggle('ready', ready);
     ult.textContent = ready ? t('ui.ultReady') : t('ui.ultCharge', { n: B.combo, need: CONFIG.ultNeed });
 
     $('notice').textContent = t(B.notice.key, B.notice.vars);
     renderQuestion();
+    tutorial.setUltReady(ready && choosing);
+    onChange();
   }
 
   // ---- 턴 진행 ----
   function planIntent() {
     B.turn += 1;
     B.intent = B.turn % CONFIG.foeAttack.bigEvery === 0 ? 'big' : 'normal';
-    if (B.intent === 'big') stage.foeSpecial();
+    if (B.intent === 'big') stage.foeSpecial(); // 고유 동작으로 강한 공격을 예고
   }
 
   function backToChoose() {
@@ -109,6 +134,9 @@ export function createBattle({ stage, data, unit, monsters }) {
 
   function choose(action) {
     if (B.phase !== 'choose') return;
+    const only = tutorial.only();
+    if (only && only !== action) return;
+
     if (action === 'ult') {
       if (B.combo < CONFIG.ultNeed) return;
       B.combo = 0;
@@ -120,31 +148,41 @@ export function createBattle({ stage, data, unit, monsters }) {
       stage.heroUlt(`-${dmg}`, () => afterHit(dmg));
       return;
     }
+
     if (action === 'defend' && B.lastAction === 'defend') return;
     B.lastAction = action;
-    const level = action === 'skill' ? B.foe.skillLevel : action === 'defend' ? CONFIG.guardLevel : CONFIG.basicLevel;
+    let level = CONFIG.guardLevel;
+    if (action === 'basic') level = B.foe.basicLevel || 1;
+    if (action === 'skill') level = B.foe.skillLevel || 2;
     B.cur = next(level);
     B.cur.action = action;
+    B.cur.removed = -1;
     B.picked = -1;
     B.phase = 'answer';
     say(action === 'defend' ? 'msg.solveGuard' : 'msg.solve');
+    tutorial.emit(`chose:${action}`);
     render();
   }
 
-  function record(type, ok) {
-    const entry = data.codex[type] || { right: 0, wrong: 0 };
-    if (ok) entry.right += 1;
-    else entry.wrong += 1;
-    data.codex[type] = entry;
-    store(data);
+  // 힌트: 틀린 보기 하나를 지웁니다.
+  function useHint() {
+    const run = getRun();
+    if (B.phase !== 'answer' || run.hints <= 0 || B.cur.removed >= 0) return;
+    const wrong = B.cur.options.map((_, i) => i).filter((i) => i !== B.cur.correct);
+    B.cur.removed = wrong[Math.floor(Math.random() * wrong.length)];
+    run.hints -= 1;
+    render();
   }
 
   function answer(i) {
-    if (B.phase !== 'answer') return;
+    if (B.phase !== 'answer' || i === B.cur.removed) return;
+    const run = getRun();
     B.phase = 'busy';
     B.picked = i;
     const ok = i === B.cur.correct;
     record(B.cur.type, ok);
+    tutorial.emit('answered');
+
     if (B.cur.action === 'defend') {
       if (ok) {
         // 완벽 방어: 피해 0, 반격, 연속 정답 +1
@@ -160,10 +198,13 @@ export function createBattle({ stage, data, unit, monsters }) {
       }
       return;
     }
+
     if (ok) {
       const weak = B.cur.type === B.foe.weak;
-      const base = B.cur.action === 'skill' ? CONFIG.damage.skill : CONFIG.damage.basic;
-      const dmg = Math.round(base * (weak ? CONFIG.damage.weakBonus : 1));
+      const base = B.cur.action === 'skill'
+        ? CONFIG.damage.skill + run.up.skill
+        : CONFIG.damage.basic + run.up.basic;
+      const dmg = Math.round(base * (weak ? CONFIG.damage.weakBonus + run.up.weak : 1));
       B.combo = Math.min(CONFIG.ultNeed, B.combo + 1);
       say(weak ? 'msg.correctWeak' : 'msg.correct', { d: dmg });
       render();
@@ -185,7 +226,7 @@ export function createBattle({ stage, data, unit, monsters }) {
 
   // 방어에 성공한 뒤의 반격
   function counter() {
-    const dmg = CONFIG.damage.counter;
+    const dmg = CONFIG.damage.counter + getRun().up.counter;
     stage.heroAttack(`-${dmg}`, false, () => {
       B.foeHp -= dmg;
       render();
@@ -198,10 +239,14 @@ export function createBattle({ stage, data, unit, monsters }) {
   function foeTurn(mult, then) {
     const dmg = Math.ceil(intentDamage() * mult);
     stage.foeAttack(dmg > 0 ? `-${dmg}` : t('msg.blocked'), mult < 1, () => {
-      B.hp -= dmg;
-      if (B.hp <= 0) {
+      const run = getRun();
+      run.hp -= dmg;
+      if (B.safe && run.hp < 1) run.hp = 1;
+      if (run.hp <= 0) {
+        run.hp = 0;
         render();
-        lose();
+        stage.heroDown();
+        finish('lose');
       } else if (then) {
         then();
       } else {
@@ -210,68 +255,42 @@ export function createBattle({ stage, data, unit, monsters }) {
     });
   }
 
-  // ---- 승패 ----
-  function overlay(titleKey, textKey, btnKey, onClick) {
-    $('ovTitle').textContent = t(titleKey);
-    $('ovText').textContent = t(textKey);
-    const btn = $('ovBtn');
-    btn.textContent = t(btnKey);
-    btn.onclick = () => {
-      $('overlay').hidden = true;
-      onClick();
-    };
-    $('overlay').hidden = false;
-    B.overlay = { titleKey, textKey, btnKey };
-  }
-
   function win() {
-    data.wins += 1;
-    store(data);
-    stage.foeDefeat(() => {
-      overlay('result.winTitle', 'result.winText', 'result.next', () => {
-        B.hp = Math.min(CONFIG.player.hp, B.hp + CONFIG.player.healOnWin);
-        start(B.index + 1);
-      });
-    });
+    stage.foeDefeat(() => finish('win'));
   }
 
-  function lose() {
-    stage.heroDown();
-    overlay('result.loseTitle', 'result.loseText', 'result.retry', () => {
-      B.hp = CONFIG.player.hp;
-      B.combo = 0;
-      start(B.index);
-    });
+  function finish(result) {
+    B.phase = 'busy';
+    const done = B.onEnd;
+    B.onEnd = null;
+    if (done) done(result);
   }
 
-  function start(index) {
-    B.index = index;
-    B.foe = monsters[index % monsters.length];
-    B.foeHp = B.foe.hp;
+  // 전투 시작. monster 는 monsters.json 의 항목입니다.
+  function start({ monster, kind, safe }, onEnd) {
+    B.foe = monster;
+    B.kind = kind;
+    B.safe = Boolean(safe);
+    B.foeMax = Math.round(monster.hp * (kind === 'elite' ? CONFIG.elite.hpMul : 1));
+    B.foeHp = B.foeMax;
     B.turn = 0;
+    B.combo = 0;
     B.lastAction = null;
-    B.overlay = null;
+    B.onEnd = onEnd;
     stage.heroUp();
-    stage.setFoe(B.foe.id);
+    stage.setFoe(monster.id);
     say('msg.choose');
     backToChoose();
   }
 
   // ---- 버튼 연결 ----
-  document.querySelectorAll('[data-action]').forEach((btn) => {
+  document.querySelectorAll('#screenBattle [data-action]').forEach((btn) => {
     btn.addEventListener('click', () => choose(btn.dataset.action));
   });
+  $('hintBtn').addEventListener('click', useHint);
 
   return {
     start,
-    // 언어를 바꾼 뒤 화면의 글을 다시 씁니다.
-    refresh() {
-      render();
-      if (B.overlay && !$('overlay').hidden) {
-        $('ovTitle').textContent = t(B.overlay.titleKey);
-        $('ovText').textContent = t(B.overlay.textKey);
-        $('ovBtn').textContent = t(B.overlay.btnKey);
-      }
-    },
+    refresh: render, // 언어를 바꾼 뒤 화면의 글을 다시 씁니다.
   };
 }
