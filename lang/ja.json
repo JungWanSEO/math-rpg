@@ -1,0 +1,38 @@
+{
+  "ui": {
+    "language": "言語",
+    "hp": "体力",
+    "ult": "必殺技",
+    "combo": "連続 {n}",
+    "basic": "通常攻撃",
+    "basicSub": "やさしい問題",
+    "skill": "スキル",
+    "skillSub": "むずかしい問題",
+    "defend": "防御",
+    "defendSub": "問題なし",
+    "ultReady": "必殺技が使えます",
+    "ultCharge": "必殺技 {n} / {need}",
+    "weak": "弱点: {type}",
+    "intentNormal": "次のターン: 攻撃 (ダメージ {d})",
+    "intentBig": "次のターン: 強い攻撃 (ダメージ {d})",
+    "level": "レベル{n} · {type}"
+  },
+  "msg": {
+    "choose": "行動を選んでください。",
+    "solve": "問題を解いて攻撃しよう。時間制限はありません。",
+    "correct": "正解! ダメージ {d}",
+    "correctWeak": "正解! 弱点を突いた。ダメージ {d}",
+    "wrong": "不正解。{explain}",
+    "miss": "ミス",
+    "defend": "防御の構えをとった。",
+    "ult": "必殺技! ダメージ {d}"
+  },
+  "result": {
+    "winTitle": "勝利",
+    "winText": "モンスターを倒しました。体力を少し回復して、次の敵に進みます。",
+    "next": "次のバトル",
+    "loseTitle": "敗北",
+    "loseText": "集めたものは消えません。同じ敵にもう一度挑戦します。",
+    "retry": "もう一度"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "ui": {
+    "language": "Language",
+    "hp": "HP",
+    "ult": "Ultimate",
+    "combo": "Streak {n}",
+    "basic": "Attack",
+    "basicSub": "Easy question",
+    "skill": "Skill",
+    "skillSub": "Hard question",
+    "defend": "Defend",
+    "defendSub": "No question",
+    "ultReady": "Ultimate is ready",
+    "ultCharge": "Ultimate {n} / {need}",
+    "weak": "Weak to: {type}",
+    "intentNormal": "Next turn: attack ({d} damage)",
+    "intentBig": "Next turn: heavy attack ({d} damage)",
+    "level": "Level {n} · {type}"
+  },
+  "msg": {
+    "choose": "Choose an action.",
+    "solve": "Solve the question to attack. There is no time limit.",
+    "correct": "Correct! {d} damage",
+    "correctWeak": "Correct! You hit its weak point. {d} damage",
+    "wrong": "Not quite. {explain}",
+    "miss": "Miss",
+    "defend": "You brace for the attack.",
+    "ult": "Ultimate! {d} damage"
+  },
+  "result": {
+    "winTitle": "Victory",
+    "winText": "You defeated the monster. You recover a little HP and move on to the next enemy.",
+    "next": "Next battle",
+    "loseTitle": "Defeated",
+    "loseText": "Nothing you collected is lost. Try the same enemy again.",
+    "retry": "Try again"
+  }
+}

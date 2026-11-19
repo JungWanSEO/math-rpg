@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0f1a3a">
+<title>Math RPG</title>
+<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+<main id="app">
+
+  <header class="top">
+    <div class="unit">
+      <span id="subjectName"></span>
+      <strong id="unitName"></strong>
+    </div>
+    <label class="lang">
+      <span class="sr" data-i18n="ui.language"></span>
+      <select id="langSelect">
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+  </header>
+
+  <section class="foe">
+    <div class="row">
+      <strong id="foeName"></strong>
+      <span class="chip" id="foeWeak"></span>
+    </div>
+    <div class="row">
+      <div class="bar"><div class="fill rose" id="foeHpBar"></div></div>
+      <span class="num" id="foeHpText"></span>
+    </div>
+    <canvas id="stage"></canvas>
+    <div class="intent" id="foeIntent"></div>
+  </section>
+
+  <section class="me">
+    <div class="row">
+      <span class="label" data-i18n="ui.hp"></span>
+      <div class="bar"><div class="fill teal" id="hpBar"></div></div>
+      <span class="num" id="hpText"></span>
+    </div>
+    <div class="row">
+      <span class="label" data-i18n="ui.ult"></span>
+      <div class="pips" id="ultPips"></div>
+      <span class="num" id="comboText"></span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="actions" id="actions">
+      <button type="button" data-action="basic"><b data-i18n="ui.basic"></b><small data-i18n="ui.basicSub"></small></button>
+      <button type="button" data-action="skill"><b data-i18n="ui.skill"></b><small data-i18n="ui.skillSub"></small></button>
+      <button type="button" data-action="defend"><b data-i18n="ui.defend"></b><small data-i18n="ui.defendSub"></small></button>
+    </div>
+    <button type="button" class="ult" id="ultBtn" data-action="ult" disabled></button>
+
+    <div class="question" id="question" hidden>
+      <span class="meta" id="qMeta"></span>
+      <p id="qText"></p>
+    </div>
+    <div class="answers" id="answers" hidden></div>
+
+    <p class="notice" id="notice" aria-live="polite"></p>
+  </section>
+
+  <div class="overlay" id="overlay" hidden>
+    <div class="card">
+      <h2 id="ovTitle"></h2>
+      <p id="ovText"></p>
+      <button type="button" id="ovBtn"></button>
+    </div>
+  </div>
+
+</main>
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>
