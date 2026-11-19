@@ -1,14 +1,46 @@
 {
   "id": "math1-trig",
-  "subject": { "ja": "数学I", "ko": "수학I", "en": "Math I" },
-  "name": { "ja": "三角比", "ko": "삼각비", "en": "Trigonometric ratios" },
-  "area": { "ja": "測量の高原", "ko": "측량 고원", "en": "Survey Highlands" },
+  "subject": {
+    "ja": "数学I",
+    "ko": "수학I",
+    "en": "Math I"
+  },
+  "name": {
+    "ja": "三角比",
+    "ko": "삼각비",
+    "en": "Trigonometric ratios"
+  },
+  "area": {
+    "ja": "測量の高原",
+    "ko": "측량 고원",
+    "en": "Survey Highlands"
+  },
   "types": {
-    "value": { "ja": "三角比の値", "ko": "삼각비의 값", "en": "Exact values" },
-    "ratio": { "ja": "辺の比", "ko": "변의 비", "en": "Side ratios" },
-    "length": { "ja": "辺の長さ", "ko": "변의 길이", "en": "Side lengths" },
-    "height": { "ja": "高さ", "ko": "높이 구하기", "en": "Heights" },
-    "twopoint": { "ja": "2地点からの観測", "ko": "두 지점 관측", "en": "Two observation points" }
+    "value": {
+      "ja": "三角比の値",
+      "ko": "삼각비의 값",
+      "en": "Exact values"
+    },
+    "ratio": {
+      "ja": "辺の比",
+      "ko": "변의 비",
+      "en": "Side ratios"
+    },
+    "length": {
+      "ja": "辺の長さ",
+      "ko": "변의 길이",
+      "en": "Side lengths"
+    },
+    "height": {
+      "ja": "高さ",
+      "ko": "높이 구하기",
+      "en": "Heights"
+    },
+    "twopoint": {
+      "ja": "2地点からの観測",
+      "ko": "두 지점 관측",
+      "en": "Two observation points"
+    }
   },
   "templates": [
     {
@@ -26,25 +58,32 @@
         "en": "{fn} {deg}° = {answer}"
       },
       "items": [
-        { "fn": "sin", "deg": 30, "answer": "1/2", "wrong": ["√2/2", "√3/2", "√3/3"] },
-        { "fn": "sin", "deg": 45, "answer": "√2/2", "wrong": ["1/2", "√3/2", "√3/3"] },
-        { "fn": "sin", "deg": 60, "answer": "√3/2", "wrong": ["1/2", "√2/2", "√3/3"] },
-        { "fn": "cos", "deg": 30, "answer": "√3/2", "wrong": ["1/2", "√2/2", "√3/3"] },
-        { "fn": "cos", "deg": 45, "answer": "√2/2", "wrong": ["1/2", "√3/2", "√3/3"] },
-        { "fn": "cos", "deg": 60, "answer": "1/2", "wrong": ["√2/2", "√3/2", "√3/3"] },
-        { "fn": "tan", "deg": 30, "answer": "√3/3", "wrong": ["1/2", "√2/2", "√3/2"] },
-        { "fn": "tan", "deg": 45, "answer": "1", "wrong": ["1/2", "√2/2", "√3/2"] },
-        { "fn": "tan", "deg": 60, "answer": "√3", "wrong": ["1/2", "√2/2", "√3/2"] }
+        { "fn": "sin", "deg": 30, "answer": "1/2", "wrong": [ "√2/2", "√3/2", "√3/3" ] },
+        { "fn": "sin", "deg": 45, "answer": "√2/2", "wrong": [ "1/2", "√3/2", "√3/3" ] },
+        { "fn": "sin", "deg": 60, "answer": "√3/2", "wrong": [ "1/2", "√2/2", "√3/3" ] },
+        { "fn": "cos", "deg": 30, "answer": "√3/2", "wrong": [ "1/2", "√2/2", "√3/3" ] },
+        { "fn": "cos", "deg": 45, "answer": "√2/2", "wrong": [ "1/2", "√3/2", "√3/3" ] },
+        { "fn": "cos", "deg": 60, "answer": "1/2", "wrong": [ "√2/2", "√3/2", "√3/3" ] },
+        { "fn": "tan", "deg": 30, "answer": "√3/3", "wrong": [ "1/2", "√2/2", "√3/2" ] },
+        { "fn": "tan", "deg": 45, "answer": "1", "wrong": [ "1/2", "√2/2", "√3/2" ] },
+        { "fn": "tan", "deg": 60, "answer": "√3", "wrong": [ "1/2", "√2/2", "√3/2" ] }
       ]
     },
     {
       "id": "ratio-from-sides",
       "level": 1,
       "type": "ratio",
+      "figure": {
+        "kind": "triangle",
+        "angle": "θ",
+        "opp": "{a}",
+        "adj": "{b}",
+        "hyp": "{c}"
+      },
       "text": {
-        "ja": "直角三角形で、θ の対辺が {a}、隣辺が {b}、斜辺が {c} である。{fn} θ は?",
-        "ko": "직각삼각형에서 θ의 맞은편 변이 {a}, 이웃 변이 {b}, 빗변이 {c}이다. {fn} θ는?",
-        "en": "In a right triangle, the side opposite θ is {a}, the adjacent side is {b}, and the hypotenuse is {c}. What is {fn} θ?"
+        "ja": "図の直角三角形で、{fn} θ は?",
+        "ko": "그림의 직각삼각형에서 {fn} θ는?",
+        "en": "In the right triangle shown, what is {fn} θ?"
       },
       "explain": {
         "ja": "sin = 対辺/斜辺、cos = 隣辺/斜辺、tan = 対辺/隣辺 なので {fn} θ = {answer}",
@@ -52,24 +91,31 @@
         "en": "sin = opposite/hypotenuse, cos = adjacent/hypotenuse, tan = opposite/adjacent, so {fn} θ = {answer}"
       },
       "items": [
-        { "a": 3, "b": 4, "c": 5, "fn": "sin", "answer": "3/5", "wrong": ["4/5", "3/4", "5/4"] },
-        { "a": 3, "b": 4, "c": 5, "fn": "cos", "answer": "4/5", "wrong": ["3/5", "3/4", "4/3"] },
-        { "a": 3, "b": 4, "c": 5, "fn": "tan", "answer": "3/4", "wrong": ["3/5", "4/5", "4/3"] },
-        { "a": 5, "b": 12, "c": 13, "fn": "sin", "answer": "5/13", "wrong": ["12/13", "5/12", "13/12"] },
-        { "a": 5, "b": 12, "c": 13, "fn": "cos", "answer": "12/13", "wrong": ["5/13", "5/12", "12/5"] },
-        { "a": 8, "b": 15, "c": 17, "fn": "sin", "answer": "8/17", "wrong": ["15/17", "8/15", "17/15"] },
-        { "a": 8, "b": 15, "c": 17, "fn": "cos", "answer": "15/17", "wrong": ["8/17", "8/15", "15/8"] },
-        { "a": 7, "b": 24, "c": 25, "fn": "sin", "answer": "7/25", "wrong": ["24/25", "7/24", "25/24"] }
+        { "a": 3, "b": 4, "c": 5, "fn": "sin", "answer": "3/5", "wrong": [ "4/5", "3/4", "5/4" ] },
+        { "a": 3, "b": 4, "c": 5, "fn": "cos", "answer": "4/5", "wrong": [ "3/5", "3/4", "4/3" ] },
+        { "a": 3, "b": 4, "c": 5, "fn": "tan", "answer": "3/4", "wrong": [ "3/5", "4/5", "4/3" ] },
+        { "a": 5, "b": 12, "c": 13, "fn": "sin", "answer": "5/13", "wrong": [ "12/13", "5/12", "13/12" ] },
+        { "a": 5, "b": 12, "c": 13, "fn": "cos", "answer": "12/13", "wrong": [ "5/13", "5/12", "12/5" ] },
+        { "a": 8, "b": 15, "c": 17, "fn": "sin", "answer": "8/17", "wrong": [ "15/17", "8/15", "17/15" ] },
+        { "a": 8, "b": 15, "c": 17, "fn": "cos", "answer": "15/17", "wrong": [ "8/17", "8/15", "15/8" ] },
+        { "a": 7, "b": 24, "c": 25, "fn": "sin", "answer": "7/25", "wrong": [ "24/25", "7/24", "25/24" ] }
       ]
     },
     {
       "id": "length-sin30",
       "level": 2,
       "type": "length",
+      "figure": {
+        "kind": "triangle",
+        "angle": "30°",
+        "opp": "?",
+        "adj": "",
+        "hyp": "{c} m"
+      },
       "text": {
-        "ja": "斜辺が {c}m で sin 30° = 1/2 のとき、対辺の長さは?",
-        "ko": "빗변이 {c}m이고 sin 30° = 1/2일 때, 맞은편 변의 길이는?",
-        "en": "The hypotenuse is {c} m and sin 30° = 1/2. How long is the opposite side?"
+        "ja": "図の直角三角形で、? の辺の長さは? (sin 30° = 1/2)",
+        "ko": "그림의 직각삼각형에서 ?로 표시한 변의 길이는? (sin 30° = 1/2)",
+        "en": "In the right triangle shown, how long is the side marked ? (sin 30° = 1/2)"
       },
       "explain": {
         "ja": "対辺 = 斜辺 × sin 30° = {c} × 1/2 = {answer}",
@@ -77,19 +123,26 @@
         "en": "Opposite = hypotenuse × sin 30° = {c} × 1/2 = {answer}"
       },
       "items": [
-        { "c": 12, "answer": "6 m", "wrong": ["12 m", "18 m", "10 m"] },
-        { "c": 20, "answer": "10 m", "wrong": ["20 m", "30 m", "14 m"] },
-        { "c": 30, "answer": "15 m", "wrong": ["30 m", "45 m", "19 m"] }
+        { "c": 12, "answer": "6 m", "wrong": [ "12 m", "18 m", "10 m" ] },
+        { "c": 20, "answer": "10 m", "wrong": [ "20 m", "30 m", "14 m" ] },
+        { "c": 30, "answer": "15 m", "wrong": [ "30 m", "45 m", "19 m" ] }
       ]
     },
     {
       "id": "length-cos60",
       "level": 2,
       "type": "length",
+      "figure": {
+        "kind": "triangle",
+        "angle": "60°",
+        "opp": "",
+        "adj": "?",
+        "hyp": "{c} m"
+      },
       "text": {
-        "ja": "斜辺が {c}m で cos 60° = 1/2 のとき、隣辺の長さは?",
-        "ko": "빗변이 {c}m이고 cos 60° = 1/2일 때, 이웃 변의 길이는?",
-        "en": "The hypotenuse is {c} m and cos 60° = 1/2. How long is the adjacent side?"
+        "ja": "図の直角三角形で、? の辺の長さは? (cos 60° = 1/2)",
+        "ko": "그림의 직각삼각형에서 ?로 표시한 변의 길이는? (cos 60° = 1/2)",
+        "en": "In the right triangle shown, how long is the side marked ? (cos 60° = 1/2)"
       },
       "explain": {
         "ja": "隣辺 = 斜辺 × cos 60° = {c} × 1/2 = {answer}",
@@ -97,19 +150,25 @@
         "en": "Adjacent = hypotenuse × cos 60° = {c} × 1/2 = {answer}"
       },
       "items": [
-        { "c": 16, "answer": "8 m", "wrong": ["16 m", "24 m", "12 m"] },
-        { "c": 24, "answer": "12 m", "wrong": ["24 m", "36 m", "16 m"] },
-        { "c": 36, "answer": "18 m", "wrong": ["36 m", "54 m", "22 m"] }
+        { "c": 16, "answer": "8 m", "wrong": [ "16 m", "24 m", "12 m" ] },
+        { "c": 24, "answer": "12 m", "wrong": [ "24 m", "36 m", "16 m" ] },
+        { "c": 36, "answer": "18 m", "wrong": [ "36 m", "54 m", "22 m" ] }
       ]
     },
     {
       "id": "tower-height",
       "level": 2,
       "type": "height",
+      "figure": {
+        "kind": "tower",
+        "angle": "{deg}°",
+        "dist": "{d} m",
+        "height": "?"
+      },
       "text": {
-        "ja": "水平距離 {d}m の地点から塔の先端を見上げた角が {deg}° である。塔の高さは?",
-        "ko": "수평거리 {d}m인 지점에서 탑 꼭대기를 올려본 각이 {deg}°이다. 탑의 높이는?",
-        "en": "From a point {d} m away horizontally, the angle of elevation to the top of a tower is {deg}°. How tall is the tower?"
+        "ja": "図のように、{d}m 離れた地点から塔の先端を見上げた角が {deg}° である。塔の高さは?",
+        "ko": "그림처럼 {d}m 떨어진 지점에서 탑 꼭대기를 올려본 각이 {deg}°이다. 탑의 높이는?",
+        "en": "As shown, from a point {d} m away the angle of elevation to the top of the tower is {deg}°. How tall is the tower?"
       },
       "explain": {
         "ja": "高さ = {d} × tan {deg}° = {answer}",
@@ -117,22 +176,29 @@
         "en": "Height = {d} × tan {deg}° = {answer}"
       },
       "items": [
-        { "d": 8, "deg": 30, "answer": "8√3/3 m", "wrong": ["8√3 m", "4 m", "4√3 m"] },
-        { "d": 12, "deg": 45, "answer": "12 m", "wrong": ["6√2 m", "14 m", "13 m"] },
-        { "d": 16, "deg": 60, "answer": "16√3 m", "wrong": ["16√3/3 m", "8√3 m", "8 m"] },
-        { "d": 15, "deg": 30, "answer": "5√3 m", "wrong": ["15√3 m", "15/2 m", "5 m"] },
-        { "d": 18, "deg": 45, "answer": "18 m", "wrong": ["9√2 m", "20 m", "9 m"] },
-        { "d": 25, "deg": 60, "answer": "25√3 m", "wrong": ["25√3/3 m", "25√3/2 m", "25 m"] }
+        { "d": 8, "deg": 30, "answer": "8√3/3 m", "wrong": [ "8√3 m", "4 m", "4√3 m" ] },
+        { "d": 12, "deg": 45, "answer": "12 m", "wrong": [ "6√2 m", "14 m", "13 m" ] },
+        { "d": 16, "deg": 60, "answer": "16√3 m", "wrong": [ "16√3/3 m", "8√3 m", "8 m" ] },
+        { "d": 15, "deg": 30, "answer": "5√3 m", "wrong": [ "15√3 m", "15/2 m", "5 m" ] },
+        { "d": 18, "deg": 45, "answer": "18 m", "wrong": [ "9√2 m", "20 m", "9 m" ] },
+        { "d": 25, "deg": 60, "answer": "25√3 m", "wrong": [ "25√3/3 m", "25√3/2 m", "25 m" ] }
       ]
     },
     {
       "id": "two-points",
       "level": 3,
       "type": "twopoint",
+      "figure": {
+        "kind": "twopoint",
+        "far": "{a}°",
+        "near": "{b}°",
+        "gap": "{g} m",
+        "height": "?"
+      },
       "text": {
-        "ja": "塔と同じ側にある2地点の間隔は {g}m である。遠い地点からの仰角が {a}°、近い地点からの仰角が {b}° のとき、塔の高さは?",
-        "ko": "탑과 같은 쪽에 있는 두 관측점의 간격은 {g}m이다. 먼 지점에서 올려본 각이 {a}°, 가까운 지점에서 올려본 각이 {b}°일 때 탑의 높이는?",
-        "en": "Two observation points on the same side of a tower are {g} m apart. The angle of elevation is {a}° from the farther point and {b}° from the nearer one. How tall is the tower?"
+        "ja": "図のように、{g}m 離れた2地点から塔の先端を見上げた角が {a}° と {b}° である。塔の高さは?",
+        "ko": "그림처럼 {g}m 떨어진 두 지점에서 탑 꼭대기를 올려본 각이 {a}°와 {b}°이다. 탑의 높이는?",
+        "en": "As shown, from two points {g} m apart the angles of elevation to the top of the tower are {a}° and {b}°. How tall is the tower?"
       },
       "explain": {
         "ja": "高さ = {g} × tan {a}° × tan {b}° ÷ (tan {b}° − tan {a}°) = {answer}",
@@ -140,10 +206,10 @@
         "en": "Height = {g} × tan {a}° × tan {b}° ÷ (tan {b}° − tan {a}°) = {answer}"
       },
       "items": [
-        { "g": 6, "a": 30, "b": 45, "answer": "(3 + 3√3) m", "wrong": ["2√3 m", "6 m", "(9 − 3√3) m"] },
-        { "g": 8, "a": 30, "b": 60, "answer": "4√3 m", "wrong": ["8√3/3 m", "8√3 m", "2√3 m"] },
-        { "g": 10, "a": 45, "b": 60, "answer": "(15 + 5√3) m", "wrong": ["10 m", "10√3 m", "(5√3 − 5) m"] },
-        { "g": 12, "a": 30, "b": 45, "answer": "(6 + 6√3) m", "wrong": ["4√3 m", "12 m", "(18 − 6√3) m"] }
+        { "g": 6, "a": 30, "b": 45, "answer": "(3 + 3√3) m", "wrong": [ "2√3 m", "6 m", "(9 − 3√3) m" ] },
+        { "g": 8, "a": 30, "b": 60, "answer": "4√3 m", "wrong": [ "8√3/3 m", "8√3 m", "2√3 m" ] },
+        { "g": 10, "a": 45, "b": 60, "answer": "(15 + 5√3) m", "wrong": [ "10 m", "10√3 m", "(5√3 − 5) m" ] },
+        { "g": 12, "a": 30, "b": 45, "answer": "(6 + 6√3) m", "wrong": [ "4√3 m", "12 m", "(18 − 6√3) m" ] }
       ]
     }
   ]

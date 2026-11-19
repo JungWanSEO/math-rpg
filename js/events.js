@@ -4,6 +4,7 @@ import { CONFIG } from './config.js';
 import { t, pick } from './i18n.js';
 import { next, nextByType, questionText, explainText } from './questions.js';
 import { UPGRADES, SHOP, rollUpgrades } from './run.js';
+import { showFigure } from './figures.js';
 import { $, twoLineButton } from './ui.js';
 
 export function createEvents({ getRun, data, unit, record, onChange }) {
@@ -46,6 +47,7 @@ export function createEvents({ getRun, data, unit, record, onChange }) {
     $('evQuiz').hidden = false;
     $('evQMeta').textContent = t('ui.level', { n: state.q.level, type: pick(unit.types[state.q.type]) });
     $('evQText').textContent = questionText(state.q.raw);
+    showFigure($('evQFigure'), state.q.raw);
     const box = $('evAnswers');
     box.innerHTML = '';
     state.q.options.forEach((text, i) => {

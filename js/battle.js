@@ -4,6 +4,7 @@
 import { CONFIG } from './config.js';
 import { t, pick } from './i18n.js';
 import { next, questionText, explainText } from './questions.js';
+import { showFigure } from './figures.js';
 import { $ } from './ui.js';
 
 export function createBattle({ stage, unit, getRun, record, tutorial, onChange }) {
@@ -55,6 +56,7 @@ export function createBattle({ stage, unit, getRun, record, tutorial, onChange }
 
     $('qMeta').textContent = t('ui.level', { n: B.cur.level, type: typeName(B.cur.type) });
     $('qText').textContent = questionText(B.cur.raw);
+    showFigure($('qFigure'), B.cur.raw);
     const box = $('answers');
     box.innerHTML = '';
     B.cur.options.forEach((text, i) => {
