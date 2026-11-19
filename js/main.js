@@ -10,16 +10,8 @@ import { createBattle } from './battle.js';
 import { createMap } from './map.js';
 import { createEvents } from './events.js';
 import { createCodex } from './codex.js';
+import { createTutorial } from './tutorial.js';
 import { $, show } from './ui.js';
-
-// 튜토리얼이 없을 때 쓰는 빈 자리 (feature/tutorial 에서 진짜로 바뀝니다)
-const noTutorial = {
-  active: () => false,
-  only: () => null,
-  emit() {},
-  coach: () => null,
-  setUltReady() {},
-};
 
 async function boot() {
   const data = load();
@@ -38,8 +30,19 @@ async function boot() {
   if (!data.run || data.run.unit !== CONFIG.unit) data.run = newRun(CONFIG.unit);
   const getRun = () => data.run;
   const persist = () => store(data);
-  const tutorial = noTutorial;
   let screen = 'screenMap';
+
+  // 튜토리얼 안내 줄
+  function updateCoach() {
+    const key = tutorial.coach();
+    const el = $('coach');
+    el.hidden = !key || screen === 'screenCodex';
+    if (key) el.textContent = t(key);
+  }
+  const tutorial = createTutorial(data, () => {
+    persist();
+    updateCoach();
+  });
 
   // 유형별 정답 기록 (도감과 복습에 씁니다)
   function record(type, ok) {
@@ -66,6 +69,7 @@ async function boot() {
       gold: run.gold,
       hints: run.hints,
     });
+    updateCoach();
   }
 
   const stage = createStage($('stage'));
@@ -124,6 +128,7 @@ async function boot() {
     data.seen[monster.id] = true;
     persist();
 
+    tutorial.emit('fight');
     go('screenBattle');
     battle.start({ monster, kind, safe: tutorial.active() }, (result) => {
       if (result === 'lose') {

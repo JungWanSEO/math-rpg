@@ -295,3 +295,14 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 .badge-done { color: var(--ground); background: var(--teal); border-color: var(--teal); }
 .badge-open { color: var(--ground); background: var(--rose); border-color: var(--rose); }
 .badge-progress { color: var(--ground); background: var(--amber); border-color: var(--amber); }
+
+/* tutorial coach line */
+.coach {
+  margin: 0;
+  padding: 10px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--ground);
+  background: var(--amber);
+}

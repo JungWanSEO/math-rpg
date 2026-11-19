@@ -129,5 +129,17 @@
       "progress": "In progress",
       "done": "Mastered"
     }
+  },
+  "tut": {
+    "start": "Tap the first space on the map to start a battle.",
+    "basic": "Tap Attack.",
+    "answer": "Pick an answer to attack. There is no time limit.",
+    "skill": "Now try Skill. The question is harder, but it hits harder.",
+    "defend": "The enemy is preparing a heavy attack. Tap Defend.",
+    "guard": "Answer correctly to block the attack completely and counter.",
+    "free": "Now fight freely. Three correct answers in a row charge your ultimate.",
+    "ult": "The gauge is full. Tap the Ultimate button.",
+    "reward": "When you win, choose one upgrade. It lasts until the map ends.",
+    "map": "Choose the next space. At a fork, pick the one you want."
   }
 }
