@@ -20,7 +20,8 @@
     "hint": "Use a hint ({n} left)",
     "status": "HP {hp}/{max} · {gold}G · Hints {hints}",
     "elite": "Elite {name}",
-    "boss": "Boss {name}"
+    "boss": "Boss {name}",
+    "codex": "Codex"
   },
   "msg": {
     "choose": "Choose an action.",
@@ -109,6 +110,24 @@
     "weak": {
       "name": "Weak-point insight",
       "desc": "Weak-point multiplier +0.5"
+    }
+  },
+  "codex": {
+    "title": "Codex",
+    "summary": "Battles won {wins} · Units cleared {clears}",
+    "monsters": "Monsters",
+    "types": "Record by type",
+    "unseen": "???",
+    "unseenSub": "Not met yet.",
+    "mistake": "Mistake it stands for: {text}",
+    "record": "Right {right} · Wrong {wrong} · Accuracy {rate}%",
+    "toDone": "{n} more in a row to master",
+    "close": "Close",
+    "status": {
+      "new": "Not tried",
+      "open": "Not mastered",
+      "progress": "In progress",
+      "done": "Mastered"
     }
   }
 }

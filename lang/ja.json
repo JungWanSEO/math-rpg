@@ -20,7 +20,8 @@
     "hint": "ヒントを使う (残り{n}個)",
     "status": "体力 {hp}/{max} · {gold}G · ヒント {hints}",
     "elite": "強敵 {name}",
-    "boss": "ボス {name}"
+    "boss": "ボス {name}",
+    "codex": "図鑑"
   },
   "msg": {
     "choose": "行動を選んでください。",
@@ -109,6 +110,24 @@
     "weak": {
       "name": "弱点を見抜く",
       "desc": "弱点ダメージの倍率 +0.5"
+    }
+  },
+  "codex": {
+    "title": "図鑑",
+    "summary": "勝ったバトル {wins} · 単元クリア {clears}",
+    "monsters": "モンスター",
+    "types": "タイプ別の記録",
+    "unseen": "???",
+    "unseenSub": "まだ出会っていません。",
+    "mistake": "表すミス: {text}",
+    "record": "正解 {right} · 不正解 {wrong} · 正答率 {rate}%",
+    "toDone": "あと {n} 回連続で正解すると制覇",
+    "close": "閉じる",
+    "status": {
+      "new": "未挑戦",
+      "open": "未制覇",
+      "progress": "挑戦中",
+      "done": "制覇"
     }
   }
 }

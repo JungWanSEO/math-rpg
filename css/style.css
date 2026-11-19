@@ -56,7 +56,8 @@ html, body {
   background: var(--deep);
   border-bottom: 1px solid var(--line);
 }
-.unit { display: flex; flex-direction: column; gap: 2px; }
+.unit { flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px; }
+.top-btn { min-height: 44px; padding: 0 12px; font-size: 14px; }
 .unit span { font-size: 12px; color: var(--muted); }
 .unit strong { font-size: 15px; }
 .lang select {
@@ -274,3 +275,23 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 .options b { font-size: 15px; }
 .options small { font-size: 12px; color: var(--muted); }
 .answers button.gone { visibility: hidden; }
+
+/* codex */
+.event h3 { margin: 6px 0 0; font-size: 14px; color: var(--muted); font-weight: 600; }
+.cards { display: flex; flex-direction: column; gap: 8px; }
+.codex-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.codex-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.codex-card b { font-size: 15px; }
+.codex-card small { font-size: 12px; line-height: 1.5; color: var(--muted); }
+.badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); }
+.badge-done { color: var(--ground); background: var(--teal); border-color: var(--teal); }
+.badge-open { color: var(--ground); background: var(--rose); border-color: var(--rose); }
+.badge-progress { color: var(--ground); background: var(--amber); border-color: var(--amber); }
