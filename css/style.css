@@ -185,28 +185,92 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 .notice { margin: 0; min-height: 42px; font-size: 14px; line-height: 1.5; color: var(--muted); }
 
-/* result overlay */
-.overlay {
-  position: absolute;
-  inset: 0;
+/* shared screen pieces */
+.screen { flex: 1 1 auto; display: flex; flex-direction: column; }
+.screen[hidden], [hidden] { display: none !important; }
+.statusbar {
+  padding: 6px 16px;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--deep);
+  border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+.screen-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px 4px;
+}
+.screen-head h2, .event h2 { margin: 0; font-size: 20px; }
+.screen-head span { font-size: 12px; color: var(--muted); }
+.hint { min-height: 44px; font-size: 13px; background: transparent; }
+.primary {
+  min-height: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  background: #12564d;
+  border-color: var(--teal);
+}
+
+/* map: the boss is at the top, the start at the bottom */
+.map { display: flex; flex-direction: column; gap: 8px; padding: 10px 16px 20px; }
+.map-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+}
+.map-row.now { border-color: var(--amber); background: #16244c; }
+.map-row .step {
+  flex: 0 0 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  background: rgba(5, 11, 28, 0.88);
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
-.card {
-  width: 100%;
-  max-width: 340px;
+.node {
+  flex: 1 1 0;
+  min-height: 52px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 22px;
-  text-align: center;
-  border-radius: 16px;
-  border: 1px solid var(--line);
-  background: var(--panel);
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 4px;
+  border-left-width: 5px;
 }
-.card h2 { margin: 0; font-size: 24px; }
-.card p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
-.card button { min-height: 50px; font-size: 16px; font-weight: 700; background: #12564d; border-color: var(--teal); }
+.node b { font-size: 14px; }
+.node small { font-size: 11px; color: var(--muted); }
+.node.type-battle { border-left-color: #5aa9ff; }
+.node.type-elite { border-left-color: var(--rose); }
+.node.type-shop { border-left-color: var(--amber); }
+.node.type-rest { border-left-color: var(--teal); }
+.node.type-treasure { border-left-color: #c9a0ff; }
+.node.type-boss { border-left-color: #ff5a5a; background: #3a1c33; }
+.node.done { opacity: 1; background: #12564d; }
+.node:disabled:not(.done) { opacity: 0.4; }
+
+/* shop, rest, treasure, reward, result */
+.event { display: flex; flex-direction: column; gap: 12px; padding: 18px 16px max(20px, env(safe-area-inset-bottom)); }
+.event > p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
+#evQuiz { display: flex; flex-direction: column; gap: 10px; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+.options button {
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 14px;
+  text-align: left;
+}
+.options b { font-size: 15px; }
+.options small { font-size: 12px; color: var(--muted); }
+.answers button.gone { visibility: hidden; }

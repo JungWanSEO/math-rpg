@@ -270,7 +270,29 @@ export function createStage(canvas) {
     ctx.fillText(reduced ? '4' : '8', 0, 17);
     ctx.restore();
   }
-  const FOE_DRAW = { twins: drawTwins, bat: drawBat, golem: drawGolem };
+  // 안개 탑 (보스): 고유 동작은 안개로 높이를 가리기
+  function drawTower(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    rrect(-24, -44, 48, 90, 3, '#5b6a94');
+    rrect(-30, -56, 12, 16, 2, '#6c7cab');
+    rrect(-6, -56, 12, 16, 2, '#6c7cab');
+    rrect(18, -56, 12, 16, 2, '#6c7cab');
+    rrect(-30, -44, 60, 8, 2, '#6c7cab');
+    rrect(-8, 22, 16, 24, 6, '#2a3558');
+    for (let y = -24; y <= 30; y += 12) line(-24, y, -17, y, '#c7d3f2', 1.5);
+    eye(-9, -18, 6, true, '#e5484d', 0.3);
+    eye(9, -18, 6, true, '#e5484d', 0.3);
+    line(-8, 0, 8, 0, '#1c2740', 2);
+    const drift = S.idle ? Math.sin(S.t * 0.9) * 6 : 0;
+    const fog = 0.4 + 0.55 * Math.sin(sp * Math.PI);
+    const before = ctx.globalAlpha;
+    ctx.globalAlpha = before * fog;
+    ell(-18 + drift, -52, 30, 11, '#dfe8ff');
+    ell(16 - drift, -42, 34, 12, '#dfe8ff');
+    ell(-4 + drift * 0.5, -62 - sp * 6, 26, 10, '#dfe8ff');
+    ctx.globalAlpha = before;
+  }
+  const FOE_DRAW = { twins: drawTwins, bat: drawBat, golem: drawGolem, tower: drawTower };
 
   // 대기·공격·피격을 위치와 크기로 바꾼 값
   function pose(actor, dirX, dirY, amp, phase) {

@@ -16,7 +16,11 @@
     "intentNormal": "次のターン: 攻撃 (ダメージ {d})",
     "intentBig": "次のターン: 強い攻撃 (ダメージ {d})",
     "level": "レベル{n} · {type}",
-    "defendWait": "連続では使えません"
+    "defendWait": "連続では使えません",
+    "hint": "ヒントを使う (残り{n}個)",
+    "status": "体力 {hp}/{max} · {gold}G · ヒント {hints}",
+    "elite": "強敵 {name}",
+    "boss": "ボス {name}"
   },
   "msg": {
     "choose": "行動を選んでください。",
@@ -31,12 +35,80 @@
     "guardFail": "防ぎきれず、ダメージを半分受けた。{explain}",
     "blocked": "ガード"
   },
-  "result": {
-    "winTitle": "勝利",
-    "winText": "モンスターを倒しました。体力を少し回復して、次の敵に進みます。",
-    "next": "次のバトル",
-    "loseTitle": "敗北",
-    "loseText": "集めたものは消えません。同じ敵にもう一度挑戦します。",
-    "retry": "もう一度"
+  "map": {
+    "title": "分かれ道マップ",
+    "progress": "全{total}マス中 {n}マス目"
+  },
+  "node": {
+    "battle": "バトル",
+    "battleSub": "モンスターと戦う",
+    "elite": "強敵",
+    "eliteSub": "手強いが報酬が多い",
+    "shop": "ショップ",
+    "shopSub": "ゴールドで強化を買う",
+    "rest": "休憩",
+    "restSub": "回復か復習",
+    "treasure": "宝箱",
+    "treasureSub": "正解すると開く",
+    "boss": "ボス",
+    "bossSub": "勝てば単元クリア"
+  },
+  "ev": {
+    "rewardTitle": "勝利",
+    "rewardText": "{gold}G を手に入れた。強化を1つ選んでください。",
+    "shopTitle": "ショップ",
+    "shopText": "所持ゴールド: {gold}G",
+    "leave": "出る",
+    "continue": "つづける",
+    "restTitle": "休憩",
+    "restText": "休みますか、それとも間違えた問題を復習しますか?",
+    "restSleep": "休む",
+    "restSleepSub": "体力を {n} 回復",
+    "restReview": "復習する",
+    "restReviewSub": "間違えたタイプをもう一度解いてボーナス",
+    "restSlept": "ゆっくり休んだ。体力が {n} 回復した。",
+    "reviewText": "正解するとヒント1個と体力 {n} がもらえます。",
+    "reviewOk": "正解! ヒント1個と体力 {n} を手に入れた。",
+    "reviewFail": "おしい。{explain}",
+    "treasureTitle": "宝箱",
+    "treasureText": "問題に正解すると宝箱が開きます。",
+    "treasureOk": "宝箱が開いた。{gold}G とヒント1個を手に入れた。",
+    "treasureFail": "鍵は開かなかったが、落ちていた {gold}G を拾った。{explain}",
+    "defeatTitle": "敗北",
+    "defeatText": "集めたものは消えません。体力を全回復して、同じマスにもう一度挑戦します。",
+    "retry": "もう一度",
+    "clearTitle": "単元クリア",
+    "clearText": "ボスを倒しました。これまでに {n} 回クリアしました。",
+    "newRun": "新しいマップを始める"
+  },
+  "up": {
+    "maxhp": {
+      "name": "丈夫なマント",
+      "desc": "最大体力 +4"
+    },
+    "heal": {
+      "name": "回復薬",
+      "desc": "体力を 8 回復"
+    },
+    "hint": {
+      "name": "ヒントのメモ",
+      "desc": "ヒント +1"
+    },
+    "basic": {
+      "name": "かたい巻き尺",
+      "desc": "通常攻撃のダメージ +1"
+    },
+    "skill": {
+      "name": "精密な分度器",
+      "desc": "スキルのダメージ +1"
+    },
+    "counter": {
+      "name": "カウンター",
+      "desc": "防御成功時の反撃ダメージ +1"
+    },
+    "weak": {
+      "name": "弱点を見抜く",
+      "desc": "弱点ダメージの倍率 +0.5"
+    }
   }
 }

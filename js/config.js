@@ -10,7 +10,8 @@ export const CONFIG = {
 
   player: {
     hp: 20,          // 최대 체력
-    healOnWin: 5,    // 전투에서 이기면 회복하는 체력
+    hints: 1,        // 지도 한 장을 시작할 때 가진 힌트 수
+    healOnWin: 2,    // 전투에서 이기면 회복하는 체력
   },
 
   damage: {
@@ -21,7 +22,6 @@ export const CONFIG = {
     weakBonus: 1.5,  // 적의 약점 유형을 맞혔을 때 곱하는 값
   },
 
-  basicLevel: 1,     // 기본 공격이 내는 문제 단계
   ultNeed: 3,        // 필살기에 필요한 연속 정답 수
   guardLevel: 1,     // 방어가 내는 문제 단계
   defendReduce: 0.5, // 방어 문제를 틀렸을 때 받는 피해 비율 (맞히면 0)
@@ -31,6 +31,28 @@ export const CONFIG = {
     big: 9,          // 적의 강한 공격 (막지 않으면 체력의 절반 가까이)
     bigEvery: 3,     // 몇 턴마다 강한 공격을 하는지
   },
+
+  elite: { hpMul: 1.5, attackAdd: 1 }, // 강적: 체력 배수, 공격 추가
+  boss: { attackAdd: 1 },              // 보스: 공격 추가 (체력은 monsters.json)
+
+  map: {
+    rows: 9,         // 지도 한 장의 칸 수 (마지막 칸은 보스)
+  },
+
+  gold: {
+    battle: 20,       // 전투 승리 보상
+    elite: 35,        // 강적 승리 보상
+    boss: 50,         // 보스 승리 보상
+    treasureWin: 30,  // 보물 문제를 맞혔을 때
+    treasureLose: 10, // 보물 문제를 틀렸을 때
+  },
+
+  rest: {
+    healRatio: 0.3,  // 쉬기: 최대 체력의 몇 배를 회복하는지
+    reviewHeal: 3,   // 복습 문제를 맞혔을 때 회복하는 체력
+  },
+
+  codexStreak: 3,    // 한 유형을 몇 번 연속으로 맞히면 "정복"인지
 
   saveKey: 'mathrpg_save_v1',
 };

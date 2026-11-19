@@ -5,6 +5,7 @@
     "mistake": { "ja": "sin と cos の取り違え", "ko": "사인과 코사인을 바꿔 쓰기", "en": "Mixing up sin and cos" },
     "hp": 14,
     "weak": "ratio",
+    "basicLevel": 1,
     "skillLevel": 2
   },
   {
@@ -13,14 +14,26 @@
     "mistake": { "ja": "プラスとマイナスの間違い", "ko": "플러스와 마이너스를 틀리기", "en": "Getting the sign wrong" },
     "hp": 16,
     "weak": "value",
+    "basicLevel": 1,
     "skillLevel": 2
   },
   {
     "id": "golem",
     "name": { "ja": "約分わすれゴーレム", "ko": "덜약분 골렘", "en": "Unreduced Golem" },
     "mistake": { "ja": "約分していない答え", "ko": "약분하지 않은 답", "en": "Leaving an answer unreduced" },
-    "hp": 22,
+    "hp": 20,
     "weak": "height",
+    "basicLevel": 1,
     "skillLevel": 2
+  },
+  {
+    "id": "tower",
+    "boss": true,
+    "name": { "ja": "霧の塔", "ko": "안개 탑", "en": "Fog Tower" },
+    "mistake": { "ja": "図をかかずに解こうとすること", "ko": "그림을 그리지 않고 풀려는 것", "en": "Solving without drawing the figure" },
+    "hp": 32,
+    "weak": "twopoint",
+    "basicLevel": 2,
+    "skillLevel": 3
   }
 ]

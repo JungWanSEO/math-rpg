@@ -6,7 +6,11 @@ function blank() {
     v: 1,                      // 저장 형식 버전
     lang: CONFIG.defaultLang,  // 고른 언어
     wins: 0,                   // 이긴 전투 수
-    codex: {},                 // 유형별 기록: { 유형: { right, wrong } }
+    clears: 0,                 // 단원을 클리어한 횟수
+    codex: {},                 // 유형별 기록: { 유형: { right, wrong, streak } }
+    seen: {},                  // 만난 몬스터: { 몬스터 id: true }
+    tut: 'start',              // 튜토리얼 진행 단계 ('done' 이면 끝)
+    run: null,                 // 진행 중인 지도 한 장 (js/run.js)
   };
 }
 
