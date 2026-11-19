@@ -1,0 +1,38 @@
+{
+  "ui": {
+    "language": "언어",
+    "hp": "체력",
+    "ult": "필살기",
+    "combo": "연속 {n}",
+    "basic": "기본 공격",
+    "basicSub": "쉬운 문제",
+    "skill": "스킬",
+    "skillSub": "어려운 문제",
+    "defend": "방어",
+    "defendSub": "문제 없음",
+    "ultReady": "필살기 사용 가능",
+    "ultCharge": "필살기 {n} / {need}",
+    "weak": "약점: {type}",
+    "intentNormal": "다음 턴 예고: 공격 (피해 {d})",
+    "intentBig": "다음 턴 예고: 강한 공격 (피해 {d})",
+    "level": "{n}단계 · {type}"
+  },
+  "msg": {
+    "choose": "행동을 고르세요.",
+    "solve": "문제를 풀어 공격하세요. 시간 제한은 없습니다.",
+    "correct": "정답! 피해 {d}",
+    "correctWeak": "정답! 약점을 찔렀습니다. 피해 {d}",
+    "wrong": "오답. {explain}",
+    "miss": "빗나감",
+    "defend": "방어 자세를 취했습니다.",
+    "ult": "필살기! 피해 {d}"
+  },
+  "result": {
+    "winTitle": "승리",
+    "winText": "몬스터를 쓰러뜨렸습니다. 체력을 조금 회복하고 다음 적에게 갑니다.",
+    "next": "다음 전투",
+    "loseTitle": "패배",
+    "loseText": "모은 것은 사라지지 않습니다. 같은 적에게 다시 도전합니다.",
+    "retry": "다시 도전"
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "twins",
+    "name": { "ja": "サインコス双子", "ko": "사코 쌍둥이", "en": "Sico Twins" },
+    "mistake": { "ja": "sin と cos の取り違え", "ko": "사인과 코사인을 바꿔 쓰기", "en": "Mixing up sin and cos" },
+    "hp": 14,
+    "weak": "ratio",
+    "skillLevel": 2
+  },
+  {
+    "id": "bat",
+    "name": { "ja": "符号コウモリ", "ko": "부호 박쥐", "en": "Sign Bat" },
+    "mistake": { "ja": "プラスとマイナスの間違い", "ko": "플러스와 마이너스를 틀리기", "en": "Getting the sign wrong" },
+    "hp": 16,
+    "weak": "value",
+    "skillLevel": 2
+  },
+  {
+    "id": "golem",
+    "name": { "ja": "約分わすれゴーレム", "ko": "덜약분 골렘", "en": "Unreduced Golem" },
+    "mistake": { "ja": "約分していない答え", "ko": "약분하지 않은 답", "en": "Leaving an answer unreduced" },
+    "hp": 22,
+    "weak": "height",
+    "skillLevel": 2
+  }
+]
