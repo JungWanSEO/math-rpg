@@ -20,7 +20,8 @@
     "hint": "힌트 쓰기 (남은 {n}개)",
     "status": "체력 {hp}/{max} · {gold}G · 힌트 {hints}",
     "elite": "강적 {name}",
-    "boss": "보스 {name}"
+    "boss": "보스 {name}",
+    "codex": "도감"
   },
   "msg": {
     "choose": "행동을 고르세요.",
@@ -109,6 +110,24 @@
     "weak": {
       "name": "약점 간파",
       "desc": "약점 피해 배수 +0.5"
+    }
+  },
+  "codex": {
+    "title": "도감",
+    "summary": "이긴 전투 {wins} · 단원 클리어 {clears}",
+    "monsters": "몬스터",
+    "types": "유형별 기록",
+    "unseen": "???",
+    "unseenSub": "아직 만나지 않았습니다.",
+    "mistake": "뜻하는 실수: {text}",
+    "record": "정답 {right} · 오답 {wrong} · 정답률 {rate}%",
+    "toDone": "{n}번 더 연속으로 맞히면 정복",
+    "close": "닫기",
+    "status": {
+      "new": "아직 안 풂",
+      "open": "미정복",
+      "progress": "진행 중",
+      "done": "정복"
     }
   }
 }

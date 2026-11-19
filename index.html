@@ -15,6 +15,7 @@
       <span id="subjectName"></span>
       <strong id="unitName"></strong>
     </div>
+    <button type="button" class="top-btn" id="codexBtn" data-i18n="ui.codex"></button>
     <label class="lang">
       <span class="sr" data-i18n="ui.language"></span>
       <select id="langSelect">
@@ -96,6 +97,19 @@
       </div>
       <div class="options" id="evOptions"></div>
       <button type="button" class="primary" id="evLeave" hidden></button>
+    </div>
+  </section>
+
+  <!-- 도감 -->
+  <section class="screen" id="screenCodex" hidden>
+    <div class="event">
+      <h2 data-i18n="codex.title"></h2>
+      <p id="codexSummary"></p>
+      <h3 data-i18n="codex.monsters"></h3>
+      <div class="cards" id="codexMonsters"></div>
+      <h3 data-i18n="codex.types"></h3>
+      <div class="cards" id="codexTypes"></div>
+      <button type="button" class="primary" id="codexClose" data-i18n="codex.close"></button>
     </div>
   </section>
 

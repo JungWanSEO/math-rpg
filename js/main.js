@@ -9,6 +9,7 @@ import { createStage } from './stage.js';
 import { createBattle } from './battle.js';
 import { createMap } from './map.js';
 import { createEvents } from './events.js';
+import { createCodex } from './codex.js';
 import { $, show } from './ui.js';
 
 // 튜토리얼이 없을 때 쓰는 빈 자리 (feature/tutorial 에서 진짜로 바뀝니다)
@@ -71,12 +72,28 @@ async function boot() {
   const battle = createBattle({ stage, unit, getRun, record, tutorial, onChange });
   const events = createEvents({ getRun, data, unit, record, onChange });
   const map = createMap({ getRun, onPick });
+  const codex = createCodex({ data, unit, monsters });
 
   function go(name) {
     screen = name;
     show(name);
+    // 도감은 지도와 이벤트 화면에서만 엽니다. (전투 중에는 숨김)
+    $('codexBtn').hidden = name === 'screenBattle' || name === 'screenCodex';
     onChange();
   }
+
+  // 도감 열고 닫기: 닫으면 보던 화면으로 돌아갑니다.
+  let beforeCodex = 'screenMap';
+  $('codexBtn').addEventListener('click', () => {
+    beforeCodex = screen;
+    go('screenCodex');
+    codex.render();
+  });
+  $('codexClose').addEventListener('click', () => {
+    go(beforeCodex);
+    if (beforeCodex === 'screenMap') map.render();
+    else events.refresh();
+  });
   function goMap() {
     persist();
     go('screenMap');
@@ -163,6 +180,7 @@ async function boot() {
     if (screen === 'screenMap') map.render();
     if (screen === 'screenBattle') battle.refresh();
     if (screen === 'screenEvent') events.refresh();
+    if (screen === 'screenCodex') codex.render();
     onChange();
   });
 
