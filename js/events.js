@@ -186,11 +186,78 @@ export function createEvents({ getRun, data, unit, record, onChange }) {
       });
     },
 
-    // 패배: 같은 칸에 다시 도전합니다.
-    defeat(done) {
+    // ? 칸: 무슨 일이 생길지 모릅니다. 좋은 일, 나쁜 일, 선택, 기습 중 하나가 나옵니다.
+    // ambush 는 기습일 때 전투를 시작하는 함수입니다.
+    mystery(done, ambush) {
+      const run = getRun();
+      const M = CONFIG.mystery;
+      const kinds = ['spring', 'fog', 'purse', 'thief', 'note', 'statue', 'ambush'];
+      const kind = kinds[Math.floor(Math.random() * kinds.length)];
+
+      if (kind === 'ambush') {
+        open(() => {
+          base('mystery.ambush.title', t('mystery.ambush.text'));
+          leave('mystery.ambush.go', ambush);
+        });
+        return;
+      }
+
+      if (kind === 'statue') {
+        // 선택: 문제에 도전하면 강화를 얻지만, 틀리면 체력을 잃습니다.
+        open(() => {
+          base('mystery.statue.title', t('mystery.statue.text', { n: M.statueLoss }));
+          option(t('mystery.statue.try'), t('mystery.statue.trySub', { n: M.statueLoss }), false, () => {
+            quizScreen({
+              titleKey: 'mystery.statue.title',
+              intro: () => t('mystery.statue.quiz'),
+              question: next(2),
+              onResult(ok, q) {
+                if (ok) {
+                  const id = rollUpgrades(1)[0];
+                  UPGRADES[id](run);
+                  return () => t('mystery.statue.ok', { name: t(`up.${id}.name`), desc: t(`up.${id}.desc`) });
+                }
+                run.hp = Math.max(1, run.hp - M.statueLoss);
+                return () => t('mystery.statue.fail', { n: M.statueLoss, explain: explainText(q.raw) });
+              },
+              done,
+            });
+          });
+          leave('mystery.statue.skip', done);
+        });
+        return;
+      }
+
+      // 바로 일어나는 일: 효과를 한 번 적용하고 결과를 보여줍니다.
+      let n = 1;
+      if (kind === 'spring') {
+        const before = run.hp;
+        run.hp = Math.min(run.maxHp, run.hp + M.spring);
+        n = run.hp - before;
+      } else if (kind === 'fog') {
+        const before = run.hp;
+        run.hp = Math.max(1, run.hp - M.fog);
+        n = before - run.hp;
+      } else if (kind === 'purse') {
+        run.gold += M.purse;
+        n = M.purse;
+      } else if (kind === 'thief') {
+        n = Math.min(run.gold, M.thief);
+        run.gold -= n;
+      } else {
+        run.hints += 1; // note
+      }
       open(() => {
-        base('ev.defeatTitle', t('ev.defeatText'));
-        leave('ev.retry', done);
+        base(`mystery.${kind}.title`, t(`mystery.${kind}.text`, { n }));
+        leave('ev.continue', done);
+      });
+    },
+
+    // 게임 오버: 지도 한 장을 처음부터 다시 시작합니다.
+    gameover(info, done) {
+      open(() => {
+        base('ev.overTitle', t('ev.overText', { n: info.floor, total: info.total }));
+        leave('ev.restart', done);
       });
     },
 

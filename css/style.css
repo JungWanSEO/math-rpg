@@ -216,46 +216,48 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 }
 
 /* map: the boss is at the top, the start at the bottom */
-.map { display: flex; flex-direction: column; gap: 8px; padding: 10px 16px 20px; }
-.map-row {
-  display: flex;
-  align-items: stretch;
-  gap: 8px;
-  padding: 6px;
-  border-radius: 14px;
-  border: 1px solid transparent;
-}
-.map-row.now { border-color: var(--amber); background: #16244c; }
-.map-row .step {
-  flex: 0 0 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
+.map-tip { margin: 0; padding: 0 16px 6px; font-size: 12px; color: var(--muted); }
+.map { position: relative; margin: 4px 16px 0; }
+.map-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map-lines .path { stroke: var(--line); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.map-lines .path.walked { stroke: var(--teal); stroke-width: 3; }
+.map-lines .path.open { stroke: var(--amber); stroke-width: 3; stroke-dasharray: 6 5; }
 .node {
-  flex: 1 1 0;
-  min-height: 52px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  padding: 4px;
-  border-left-width: 5px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 72px;
+  min-height: 44px;
+  padding: 2px 4px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  border-bottom-width: 4px;
 }
-.node b { font-size: 14px; }
-.node small { font-size: 11px; color: var(--muted); }
-.node.type-battle { border-left-color: #5aa9ff; }
-.node.type-elite { border-left-color: var(--rose); }
-.node.type-shop { border-left-color: var(--amber); }
-.node.type-rest { border-left-color: var(--teal); }
-.node.type-treasure { border-left-color: #c9a0ff; }
-.node.type-boss { border-left-color: #ff5a5a; background: #3a1c33; }
-.node.done { opacity: 1; background: #12564d; }
-.node:disabled:not(.done) { opacity: 0.4; }
+.node:disabled { transform: translate(-50%, -50%); }
+.node:active { transform: translate(-50%, -50%) scale(0.96); }
+.node.type-battle { border-bottom-color: #5aa9ff; }
+.node.type-elite { border-bottom-color: var(--rose); }
+.node.type-event { border-bottom-color: #9aa6c4; font-size: 18px; }
+.node.type-shop { border-bottom-color: var(--amber); }
+.node.type-rest { border-bottom-color: var(--teal); }
+.node.type-treasure { border-bottom-color: #c9a0ff; }
+.node.type-midboss { width: 96px; border-bottom-color: #ff8a5a; background: #3a2a1c; }
+.node.type-boss { width: 96px; border-bottom-color: #ff5a5a; background: #3a1c33; }
+.node.open { border-color: var(--amber); box-shadow: 0 0 0 2px var(--amber); }
+.node.done { background: #12564d; border-color: var(--teal); opacity: 1; }
+.node:disabled:not(.done) { opacity: 0.55; }
+.legend { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px 24px; }
+.legend div { display: flex; align-items: baseline; gap: 8px; font-size: 12px; }
+.legend b { min-width: 64px; }
+.legend small { color: var(--muted); }
+.dot { flex: 0 0 10px; width: 10px; height: 10px; border-radius: 3px; background: #5aa9ff; align-self: center; }
+.dot.type-elite { background: var(--rose); }
+.dot.type-event { background: #9aa6c4; }
+.dot.type-shop { background: var(--amber); }
+.dot.type-rest { background: var(--teal); }
+.dot.type-treasure { background: #c9a0ff; }
+.dot.type-midboss { background: #ff8a5a; }
+.dot.type-boss { background: #ff5a5a; }
 
 /* shop, rest, treasure, reward, result */
 .event { display: flex; flex-direction: column; gap: 12px; padding: 18px 16px max(20px, env(safe-area-inset-bottom)); }
@@ -309,4 +311,8 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 /* question figure */
 .figure { display: flex; justify-content: center; }
-.figure svg { width: 100%; max-width: 320px; height: auto; font-family: inherit; }
+.figure svg { width: 100%; max-width: 250px; height: auto; font-family: inherit; }
+
+/* while answering: make room for the question by folding the rest of the battle screen */
+.answering .me, .answering #actions, .answering #ultBtn, .answering .intent { display: none; }
+.answering canvas { height: 150px; aspect-ratio: auto; object-fit: cover; object-position: 50% 80%; }

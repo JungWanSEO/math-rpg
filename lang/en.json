@@ -21,7 +21,8 @@
     "status": "HP {hp}/{max} · {gold}G · Hints {hints}",
     "elite": "Elite {name}",
     "boss": "Boss {name}",
-    "codex": "Codex"
+    "codex": "Codex",
+    "midboss": "Mid-boss {name}"
   },
   "msg": {
     "choose": "Choose an action.",
@@ -38,21 +39,26 @@
   },
   "map": {
     "title": "Crossroads map",
-    "progress": "Space {n} of {total}"
+    "progress": "Floor {n} of {total}",
+    "tip": "Pick a starting space at the bottom. You can only move along the lines."
   },
   "node": {
     "battle": "Battle",
     "battleSub": "Fight a monster",
     "elite": "Elite",
-    "eliteSub": "Tougher, better reward",
+    "eliteSub": "Tougher, more gold",
     "shop": "Shop",
     "shopSub": "Spend gold on upgrades",
     "rest": "Rest",
     "restSub": "Heal or review",
-    "treasure": "Treasure",
+    "treasure": "Chest",
     "treasureSub": "Opens if you answer right",
     "boss": "Boss",
-    "bossSub": "Win to clear the unit"
+    "bossSub": "Win to clear the unit",
+    "event": "?",
+    "eventSub": "Could be good, could be bad",
+    "midboss": "Mid-boss",
+    "midbossSub": "A strong enemy you must pass"
   },
   "ev": {
     "rewardTitle": "Victory",
@@ -75,12 +81,12 @@
     "treasureText": "Answer correctly to open the chest.",
     "treasureOk": "The chest opened. You got {gold}G and 1 hint.",
     "treasureFail": "The lock held, but you picked up {gold}G from the floor. {explain}",
-    "defeatTitle": "Defeated",
-    "defeatText": "Nothing you collected is lost. Your HP is fully restored and you retry the same space.",
-    "retry": "Try again",
     "clearTitle": "Unit cleared",
     "clearText": "You defeated the boss. You have cleared this unit {n} time(s).",
-    "newRun": "Start a new map"
+    "newRun": "Start a new map",
+    "overTitle": "Game over",
+    "overText": "You fell on floor {n} of {total}. Your gold and upgrades are gone, but your codex record stays. You start again on a new map.",
+    "restart": "Start over"
   },
   "up": {
     "maxhp": {
@@ -131,7 +137,7 @@
     }
   },
   "tut": {
-    "start": "Tap the first space on the map to start a battle.",
+    "start": "Tap a space on the bottom row to start a battle.",
     "basic": "Tap Attack.",
     "answer": "Pick an answer to attack. There is no time limit.",
     "skill": "Now try Skill. The question is harder, but it hits harder.",
@@ -140,6 +146,43 @@
     "free": "Now fight freely. Three correct answers in a row charge your ultimate.",
     "ult": "The gauge is full. Tap the Ultimate button.",
     "reward": "When you win, choose one upgrade. It lasts until the map ends.",
-    "map": "Choose the next space. At a fork, pick the one you want."
+    "map": "Choose the next space from the ones connected by a line."
+  },
+  "mystery": {
+    "spring": {
+      "title": "Clear spring",
+      "text": "You drink from a clear spring and recover {n} HP."
+    },
+    "fog": {
+      "title": "Thick fog",
+      "text": "You lose your way in the fog and take a fall. You lose {n} HP."
+    },
+    "purse": {
+      "title": "Dropped purse",
+      "text": "You find a purse with no owner in sight. You gain {n}G."
+    },
+    "thief": {
+      "title": "Pickpocket",
+      "text": "Someone brushes past you. {n}G is gone."
+    },
+    "note": {
+      "title": "Surveyor's note",
+      "text": "You find a note left by an older surveyor. You gain {n} hint."
+    },
+    "statue": {
+      "title": "Strange statue",
+      "text": "The statue wants to ask you a question. Answer right for an upgrade; answer wrong and lose {n} HP.",
+      "try": "Take the challenge",
+      "trySub": "Hard question · wrong answer costs {n} HP",
+      "skip": "Walk past",
+      "quiz": "The statue's question.",
+      "ok": "The statue steps aside. You got {name}. ({desc})",
+      "fail": "The statue scolds you. You lose {n} HP. {explain}"
+    },
+    "ambush": {
+      "title": "Ambush",
+      "text": "A monster jumps out of the bushes!",
+      "go": "Fight"
+    }
   }
 }

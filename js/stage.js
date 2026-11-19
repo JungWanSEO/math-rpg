@@ -292,7 +292,32 @@ export function createStage(canvas) {
     ell(-4 + drift * 0.5, -62 - sp * 6, 26, 10, '#dfe8ff');
     ctx.globalAlpha = before;
   }
-  const FOE_DRAW = { twins: drawTwins, bat: drawBat, golem: drawGolem, tower: drawTower };
+  // 단위 도둑 (중간 보스): 고유 동작은 단위 "m" 이 든 자루를 들어 올리기
+  function drawThief(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const lift = Math.sin(sp * Math.PI) * 24;
+    ell(0, 20, 24, 28, '#3a3f5c');
+    poly([-22, -8, 0, -46, 22, -8], '#2b2f47');
+    circ(0, -14, 15, '#e8c9a0');
+    rrect(-16, -21, 32, 10, 3, '#1c2740');
+    eye(-6, -16, 3, true, '#1c2740', 0.9);
+    eye(6, -16, 3, true, '#1c2740', 0.9);
+    ctx.strokeStyle = C('#1c2740');
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(-5, -5);
+    ctx.quadraticCurveTo(0, -1, 6, -6);
+    ctx.stroke();
+    line(18, 10, 30, 6 - lift, '#3a3f5c', 6);
+    circ(36, 12 - lift, 16, '#c9a36b');
+    poly([28, -2 - lift, 36, -12 - lift, 44, -2 - lift], '#a37a45');
+    ctx.fillStyle = C('#3b2a17');
+    ctx.font = '700 15px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('m', 36, 13 - lift);
+  }
+  const FOE_DRAW = { twins: drawTwins, bat: drawBat, golem: drawGolem, thief: drawThief, tower: drawTower };
 
   // 대기·공격·피격을 위치와 크기로 바꾼 값
   function pose(actor, dirX, dirY, amp, phase) {
