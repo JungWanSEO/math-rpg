@@ -12,6 +12,7 @@ import { createMap } from './map.js';
 import { createEvents } from './events.js';
 import { createCodex } from './codex.js';
 import { createTutorial } from './tutorial.js';
+import { createTitle } from './title.js';
 import { $, show } from './ui.js';
 
 const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
@@ -34,13 +35,13 @@ async function boot() {
   if (!data.run || !Array.isArray(data.run.nodes) || data.run.unit !== CONFIG.unit) data.run = newRun(CONFIG.unit);
   const getRun = () => data.run;
   const persist = () => store(data);
-  let screen = 'screenMap';
+  let screen = 'screenTitle';
 
   // 튜토리얼 안내 줄
   function updateCoach() {
     const key = tutorial.coach();
     const el = $('coach');
-    el.hidden = !key || screen === 'screenCodex';
+    el.hidden = !key || screen === 'screenCodex' || screen === 'screenTitle';
     if (key) $('coachText').textContent = t(key);
   }
   const tutorial = createTutorial(data, () => {
@@ -86,7 +87,8 @@ async function boot() {
     screen = name;
     show(name);
     // 도감은 지도와 이벤트 화면에서만 엽니다. (전투 중에는 숨김)
-    $('codexBtn').hidden = name === 'screenBattle' || name === 'screenCodex';
+    $('codexBtn').hidden = name === 'screenBattle' || name === 'screenCodex' || name === 'screenTitle';
+    $('runStatus').hidden = name === 'screenTitle';
     onChange();
   }
 
@@ -98,14 +100,16 @@ async function boot() {
 
   // 도감 열고 닫기: 닫으면 보던 화면으로 돌아갑니다.
   let beforeCodex = 'screenMap';
-  $('codexBtn').addEventListener('click', () => {
+  function openCodex() {
     beforeCodex = screen;
     go('screenCodex');
     codex.render();
-  });
+  }
+  $('codexBtn').addEventListener('click', openCodex);
   $('codexClose').addEventListener('click', () => {
     go(beforeCodex);
     if (beforeCodex === 'screenMap') map.render();
+    else if (beforeCodex === 'screenTitle') title.render();
     else events.refresh();
   });
 
@@ -128,6 +132,16 @@ async function boot() {
     data.run = newRun(CONFIG.unit);
     goMap();
   }
+
+  // 처음 화면: 이어서 하기 / 처음부터 시작 / 도감
+  const title = createTitle({ getRun, unit, onContinue: goMap, onNew: startOver, onCodex: openCodex });
+  function goTitle() {
+    persist();
+    title.reset();
+    go('screenTitle');
+    title.render();
+  }
+  $('toTitle').addEventListener('click', goTitle);
 
   function chooseMonster(kind) {
     const run = getRun();
@@ -207,6 +221,7 @@ async function boot() {
     persist();
     await loadLang(data.lang);
     applyStatic();
+    if (screen === 'screenTitle') title.render();
     if (screen === 'screenMap') map.render();
     if (screen === 'screenBattle') battle.refresh();
     if (screen === 'screenEvent') events.refresh();
@@ -214,7 +229,7 @@ async function boot() {
     onChange();
   });
 
-  goMap();
+  goTitle();
 }
 
 boot().catch((err) => {
