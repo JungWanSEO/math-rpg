@@ -1,0 +1,142 @@
+{
+  "id": "math1-data",
+  "name": {
+    "ja": "データの分析",
+    "ko": "데이터의 분석",
+    "en": "Data analysis"
+  },
+  "types": {
+    "mean": {
+      "ja": "平均値",
+      "ko": "평균",
+      "en": "Mean"
+    },
+    "median": {
+      "ja": "中央値",
+      "ko": "중앙값",
+      "en": "Median"
+    },
+    "iqr": {
+      "ja": "四分位範囲",
+      "ko": "사분위범위",
+      "en": "Interquartile range"
+    },
+    "variance": {
+      "ja": "分散",
+      "ko": "분산",
+      "en": "Variance"
+    },
+    "sd": {
+      "ja": "標準偏差",
+      "ko": "표준편차",
+      "en": "Standard deviation"
+    }
+  },
+  "groups": [
+    {
+      "name": {
+        "ja": "データの代表値",
+        "ko": "자료의 대푯값",
+        "en": "Averages"
+      },
+      "types": [
+        "mean",
+        "median"
+      ]
+    },
+    {
+      "name": {
+        "ja": "データの散らばり",
+        "ko": "자료의 흩어진 정도",
+        "en": "Spread"
+      },
+      "types": [
+        "iqr",
+        "variance",
+        "sd"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "mean",
+      "level": 1,
+      "type": "mean",
+      "gen": "mean",
+      "text": {
+        "ja": "データ {list} の平均値は?",
+        "ko": "자료 {list}의 평균은?",
+        "en": "What is the mean of {list}?"
+      },
+      "explain": {
+        "ja": "すべての値を足して個数で割ると {answer}",
+        "ko": "모든 값을 더해 개수로 나누면 {answer}",
+        "en": "Add all the values and divide by how many there are: {answer}"
+      }
+    },
+    {
+      "id": "median",
+      "level": 1,
+      "type": "median",
+      "gen": "median",
+      "text": {
+        "ja": "データ {list} の中央値は?",
+        "ko": "자료 {list}의 중앙값은?",
+        "en": "What is the median of {list}?"
+      },
+      "explain": {
+        "ja": "小さい順に並べてから中央の値を見る。中央値は {answer}",
+        "ko": "작은 순서로 늘어놓은 뒤 가운데 값을 봅니다. 중앙값은 {answer}",
+        "en": "Sort the values first, then take the middle one: {answer}"
+      }
+    },
+    {
+      "id": "iqr",
+      "level": 2,
+      "type": "iqr",
+      "gen": "iqr",
+      "text": {
+        "ja": "小さい順に並べたデータ {list} の四分位範囲は?",
+        "ko": "작은 순서로 늘어놓은 자료 {list}의 사분위범위는?",
+        "en": "The data {list} are in order. What is the interquartile range?"
+      },
+      "explain": {
+        "ja": "第3四分位数 − 第1四分位数 = {answer}",
+        "ko": "제3사분위수 − 제1사분위수 = {answer}",
+        "en": "Third quartile − first quartile = {answer}"
+      }
+    },
+    {
+      "id": "variance",
+      "level": 2,
+      "type": "variance",
+      "gen": "variance",
+      "text": {
+        "ja": "データ {list} の分散は?",
+        "ko": "자료 {list}의 분산은?",
+        "en": "What is the variance of {list}?"
+      },
+      "explain": {
+        "ja": "偏差(平均との差)の2乗の平均を求めると {answer}",
+        "ko": "편차(평균과의 차)의 제곱의 평균을 구하면 {answer}",
+        "en": "Take the mean of the squared deviations from the mean: {answer}"
+      }
+    },
+    {
+      "id": "sd",
+      "level": 3,
+      "type": "sd",
+      "gen": "sd",
+      "text": {
+        "ja": "データ {list} の標準偏差は?",
+        "ko": "자료 {list}의 표준편차는?",
+        "en": "What is the standard deviation of {list}?"
+      },
+      "explain": {
+        "ja": "分散の正の平方根なので {answer}",
+        "ko": "분산의 양의 제곱근이므로 {answer}",
+        "en": "It is the positive square root of the variance: {answer}"
+      }
+    }
+  ]
+}

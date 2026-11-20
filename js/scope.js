@@ -32,8 +32,22 @@ export function createScope({ data, onStart, onBack }) {
     box.innerHTML = '';
     for (const subject of scopeTree()) {
       for (const unit of subject.units) {
+        // 단원 제목 옆의 버튼으로 그 단원의 유형을 한꺼번에 고르거나 뺍니다.
+        const unitKeys = unit.groups.flatMap((group) => group.types);
+        const picked = unitKeys.filter((key) => chosen.has(key)).length;
         const head = document.createElement('h3');
-        head.textContent = `${pick(subject.names)} · ${pick(unit.names)}`;
+        const title = document.createElement('span');
+        title.textContent = `${pick(subject.names)} · ${pick(unit.names)} (${picked}/${unitKeys.length})`;
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'scope-unit';
+        toggle.textContent = t(picked === unitKeys.length ? 'scope.unitNone' : 'scope.unitAll');
+        toggle.addEventListener('click', () => {
+          const all = picked === unitKeys.length;
+          unitKeys.forEach((key) => (all ? chosen.delete(key) : chosen.add(key)));
+          render();
+        });
+        head.append(title, toggle);
         box.appendChild(head);
         for (const group of unit.groups) {
           const sub = document.createElement('h4');

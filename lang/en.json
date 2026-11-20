@@ -212,6 +212,8 @@
     "summary": "{n} types selected · gold +{bonus}%",
     "empty": "Pick at least one type.",
     "start": "Set out with this range",
-    "back": "Back to title"
+    "back": "Back to title",
+    "unitAll": "Select all",
+    "unitNone": "Clear"
   }
 }
