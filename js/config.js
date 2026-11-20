@@ -67,5 +67,6 @@ export const CONFIG = {
 
   codexStreak: 3,    // 한 유형을 몇 번 연속으로 맞히면 "정복"인지
 
+  // 저장 기록의 이름. 바꾸면 기존 플레이어의 기록이 사라지므로 예전 이름을 그대로 둡니다.
   saveKey: 'mathrpg_save_v1',
 };
