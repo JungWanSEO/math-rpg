@@ -7,6 +7,7 @@
 //   triangle  직각삼각형   angle 각 · opp 맞은편 변 · adj 이웃 변 · hyp 빗변
 //   tower     탑 하나      angle 올려본 각 · dist 수평거리 · height 높이
 //   twopoint  탑과 두 지점 far 먼 지점의 각 · near 가까운 지점의 각 · gap 두 지점 사이 · height 높이
+//   anytri    삼각형 ABC   angleA·angleB·angleC 각 · sideA·sideB·sideC 변 (a 는 A 와 마주 보는 변)
 // 그림은 길이의 비율이 정확하지 않은 약도입니다.
 import { fill } from './i18n.js';
 
@@ -68,6 +69,35 @@ const DRAW = {
       `<path d="M30 136 L30 142 M130 136 L130 142 M30 139 L130 139" stroke="${DIM}" stroke-width="1.5"/>` +
       label(80, 151, L.gap) +
       label(264, 84, L.height, 'start')
+    );
+  },
+  // 변 a 는 BC, b 는 CA, c 는 AB.
+  // 적힌 각이 둔각이면 그 꼭짓점이 실제로 벌어져 보이도록 모양을 바꿉니다.
+  // 각을 묻는 문제("?")에서는 모양으로 답이 드러나지 않게 기본 모양을 씁니다.
+  anytri(L) {
+    let P = { A: [45, 122], B: [262, 122], C: [182, 32] };
+    if (parseFloat(L.angleA) > 90) P = { A: [120, 122], B: [268, 122], C: [48, 38] };
+    else if (parseFloat(L.angleB) > 90) P = { A: [32, 122], B: [180, 122], C: [252, 38] };
+    const G = [(P.A[0] + P.B[0] + P.C[0]) / 3, (P.A[1] + P.B[1] + P.C[1]) / 3];
+    // from 에서 to 방향으로 dist 만큼 옮긴 점 (dist 가 음수이면 반대 방향)
+    const move = (from, to, dist) => {
+      const dx = to[0] - from[0];
+      const dy = to[1] - from[1];
+      const len = Math.hypot(dx, dy) || 1;
+      return [Math.round(from[0] + (dx / len) * dist), Math.round(from[1] + (dy / len) * dist) + 5];
+    };
+    const mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+    const corner = (p, text) => {
+      const [x, y] = move(p, G, -13);
+      return `<text x="${x}" y="${y}" text-anchor="middle" font-size="13" font-weight="700" fill="${DIM}">${text}</text>`;
+    };
+    const angle = (p, text) => label(...move(p, G, 30), text);
+    const side = (p, q, text) => label(...move(mid(p, q), G, -15), text);
+    return frame(
+      `<path d="M${P.A[0]} ${P.A[1]} L${P.B[0]} ${P.B[1]} L${P.C[0]} ${P.C[1]} Z" stroke="${LINE}" stroke-width="2.5"/>` +
+      corner(P.A, 'A') + corner(P.B, 'B') + corner(P.C, 'C') +
+      angle(P.A, L.angleA) + angle(P.B, L.angleB) + angle(P.C, L.angleC) +
+      side(P.B, P.C, L.sideA) + side(P.C, P.A, L.sideB) + side(P.A, P.B, L.sideC)
     );
   },
 };

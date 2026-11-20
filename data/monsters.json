@@ -12,7 +12,7 @@
       "en": "Mixing up sin and cos"
     },
     "hp": 14,
-    "weak": "math1-trig/ratio",
+    "weak": "math1-trig/relation",
     "basicLevel": 1,
     "skillLevel": 2
   },
@@ -29,7 +29,7 @@
       "en": "Getting the sign wrong"
     },
     "hp": 16,
-    "weak": "math1-trig/value",
+    "weak": "math1-trig/obtuse",
     "basicLevel": 1,
     "skillLevel": 2
   },
