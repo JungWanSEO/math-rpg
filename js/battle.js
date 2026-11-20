@@ -7,6 +7,7 @@ import { next, explainText, typeLabel, optionText } from './questions.js';
 import { fillQuestion } from './qview.js';
 import { $ } from './ui.js';
 import { play } from './sound.js';
+import { fitBattle } from './fit.js';
 
 export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   const B = {
@@ -155,6 +156,10 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     renderQuestion();
     tutorial.setUltReady(ready && choosing);
     onChange();
+    // 문제를 푸는 동안에는 위쪽 줄들을 줄여 문제에 자리를 내 줍니다. 그다음 화면 높이에 맞춥니다.
+    document.body.classList.toggle('is-answering', $('screenBattle').classList.contains('answering'));
+    fitBattle();
+    if (B.phase === 'review') $('notice').scrollIntoView({ block: 'nearest' });
   }
 
   // ---- 턴 진행 ----
@@ -320,6 +325,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   function finish(result) {
     play(result === 'win' ? 'win' : 'lose');
     B.phase = 'busy';
+    document.body.classList.remove('is-answering');
     const done = B.onEnd;
     B.onEnd = null;
     if (done) done(result);
@@ -363,6 +369,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     B.cur = null;
     B.picked = -1;
     render();
+    document.body.classList.remove('is-answering');
   }
 
   return {

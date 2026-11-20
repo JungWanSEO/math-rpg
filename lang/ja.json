@@ -17,7 +17,7 @@
     "intentBig": "強い攻撃が来る! 防御でしか防げない (ダメージ {d})",
     "level": "レベル{n} · {type}",
     "defendWait": "連続では使えません",
-    "hint": "ヒントを使う (残り{n}個)",
+    "hint": "ヒント ({n})",
     "status": "体力 {hp}/{max} · {gold}G · ヒント {hints}",
     "elite": "強敵 {name}",
     "boss": "ボス {name}",
@@ -30,7 +30,8 @@
     "soundOn": "サウンド: オン",
     "soundOff": "サウンド: オフ",
     "figNote": "図は実際の長さ・角度どおりではありません。",
-    "cond": "条件: {text}"
+    "cond": "条件: {text}",
+    "rotate": "画面を縦向きにしてください。"
   },
   "msg": {
     "choose": "行動を選んでください。",
