@@ -135,6 +135,11 @@
         "ja": "偏差(平均との差)の2乗の平均を求めると {answer}",
         "ko": "편차(평균과의 차)의 제곱의 평균을 구하면 {answer}",
         "en": "Take the mean of the squared deviations from the mean: {answer}"
+      },
+      "note": {
+        "ja": "分散は「偏差の2乗の平均」(データの個数 n で割る)で求める。",
+        "ko": "분산은 '편차 제곱의 평균'(자료의 개수 n으로 나눔)으로 구한다.",
+        "en": "Variance means the mean of the squared deviations (divide by the number of data n)."
       }
     },
     {
@@ -151,6 +156,11 @@
         "ja": "分散の正の平方根なので {answer}",
         "ko": "분산의 양의 제곱근이므로 {answer}",
         "en": "It is the positive square root of the variance: {answer}"
+      },
+      "note": {
+        "ja": "分散は「偏差の2乗の平均」(データの個数 n で割る)で求める。",
+        "ko": "분산은 '편차 제곱의 평균'(자료의 개수 n으로 나눔)으로 구한다.",
+        "en": "Variance means the mean of the squared deviations (divide by the number of data n)."
       }
     },
     {
@@ -183,6 +193,11 @@
         "ja": "x の偏差 × y の偏差 の平均を求めると {answer}",
         "ko": "(x의 편차) × (y의 편차)의 평균을 구하면 {answer}",
         "en": "Take the mean of (deviation of x) × (deviation of y): {answer}"
+      },
+      "note": {
+        "ja": "共分散は「x の偏差 × y の偏差」の平均(データの個数 n で割る)で求める。",
+        "ko": "공분산은 '(x의 편차) × (y의 편차)'의 평균(자료의 개수 n으로 나눔)으로 구한다.",
+        "en": "Covariance means the mean of (deviation of x) × (deviation of y), dividing by the number of data n."
       }
     }
   ]

@@ -2,9 +2,9 @@
 // 모두 같은 화면(#screenEvent)을 씁니다. 제목, 설명, 고를 것 목록, 나가기 버튼으로 이루어집니다.
 import { CONFIG } from './config.js';
 import { t } from './i18n.js';
-import { next, nextByType, questionText, explainText, typeLabel } from './questions.js';
+import { next, nextByType, explainText, typeLabel, optionText } from './questions.js';
+import { fillQuestion } from './qview.js';
 import { UPGRADES, SHOP, rollUpgrades } from './run.js';
-import { showFigure } from './figures.js';
 import { $, twoLineButton } from './ui.js';
 import { play } from './sound.js';
 
@@ -47,14 +47,13 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
   function drawQuiz(state, onPick) {
     $('evQuiz').hidden = false;
     $('evQMeta').textContent = t('ui.level', { n: state.q.level, type: typeLabel(state.q.type) });
-    $('evQText').textContent = questionText(state.q.raw);
-    showFigure($('evQFigure'), state.q.raw);
     const box = $('evAnswers');
+    fillQuestion({ text: $('evQText'), figure: $('evQFigure'), cap: $('evQCap'), note: $('evQNote'), answers: box }, state.q);
     box.innerHTML = '';
     state.q.options.forEach((text, i) => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.textContent = text;
+      btn.textContent = optionText(text);
       btn.disabled = state.picked >= 0;
       if (state.picked >= 0) {
         if (i === state.q.correct) btn.classList.add('right');

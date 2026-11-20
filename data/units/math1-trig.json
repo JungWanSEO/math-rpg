@@ -491,6 +491,11 @@
         "ja": "高さ = {d} × tan {deg}° = {answer}",
         "ko": "높이 = {d} × tan {deg}° = {answer}",
         "en": "Height = {d} × tan {deg}° = {answer}"
+      },
+      "note": {
+        "ja": "目の高さは考えないものとする。",
+        "ko": "눈높이는 생각하지 않는다.",
+        "en": "Ignore the height of the observer's eyes."
       }
     },
     {
@@ -514,6 +519,11 @@
         "ja": "高さ = {g} × tan {a}° × tan {b}° ÷ (tan {b}° − tan {a}°) = {answer}",
         "ko": "높이 = {g} × tan {a}° × tan {b}° ÷ (tan {b}° − tan {a}°) = {answer}",
         "en": "Height = {g} × tan {a}° × tan {b}° ÷ (tan {b}° − tan {a}°) = {answer}"
+      },
+      "note": {
+        "ja": "目の高さは考えないものとする。",
+        "ko": "눈높이는 생각하지 않는다.",
+        "en": "Ignore the height of the observer's eyes."
       }
     },
     {
@@ -646,6 +656,13 @@
         "ja": "AG = √(AB² + AD² + AE²) = {answer}",
         "ko": "AG = √(AB² + AD² + AE²) = {answer}",
         "en": "AG = √(AB² + AD² + AE²) = {answer}"
+      },
+      "figure": {
+        "kind": "cuboid",
+        "ab": "{a}",
+        "ad": "{b}",
+        "ae": "{c}",
+        "ag": "AG = ?"
       }
     },
     {
@@ -662,6 +679,18 @@
         "ja": "PH = h とすると AH = h ÷ tan {al}°、BH = h ÷ tan {be}°。AB² = AH² + BH² より h = {answer}",
         "ko": "PH = h라 하면 AH = h ÷ tan {al}°, BH = h ÷ tan {be}°입니다. AB² = AH² + BH²에서 h = {answer}",
         "en": "Let PH = h. Then AH = h ÷ tan {al}° and BH = h ÷ tan {be}°. From AB² = AH² + BH², h = {answer}"
+      },
+      "figure": {
+        "kind": "space",
+        "angleA": "{al}°",
+        "angleB": "{be}°",
+        "ab": "{d} m",
+        "ph": "PH = ?"
+      },
+      "note": {
+        "ja": "目の高さは考えないものとする。",
+        "ko": "눈높이는 생각하지 않는다.",
+        "en": "Ignore the height of the observer's eyes."
       }
     }
   ]

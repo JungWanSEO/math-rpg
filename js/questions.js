@@ -7,7 +7,7 @@
 //
 // 유형의 이름은 "단원/유형" 입니다. (예: math1-trig/sinerule)
 // 플레이어가 고른 범위(유형 목록) 안에서만 문제를 냅니다.
-import { fill, pick } from './i18n.js';
+import { fill, pick, t } from './i18n.js';
 import { GENERATORS } from './generators.js';
 
 let catalog = null;
@@ -177,11 +177,29 @@ export function nextByType(key) {
 
 // 지금 언어로 문제 문장과 해설을 만듭니다. 언어를 바꾸면 다시 부르면 됩니다.
 export function questionText(raw) {
-  return fill(pick(raw.tpl.text), raw.item);
+  return fill(pick(raw.tpl.text), shown(raw.item));
 }
 
 export function explainText(raw) {
-  return fill(pick(raw.tpl.explain), raw.item);
+  return fill(pick(raw.tpl.explain), shown(raw.item));
+}
+
+// 보기가 말로 된 문제: 보기에 "@이름" 을 적으면 lang 파일의 opt.<이름> 문구가 지금 언어로 나옵니다.
+export function optionText(text) {
+  const s = String(text);
+  return s.startsWith('@') ? t(`opt.${s.slice(1)}`) : s;
+}
+// 문장 틀에 넣을 값들 ("@이름" 은 지금 언어의 글로 바꿉니다)
+function shown(item) {
+  const out = {};
+  for (const [key, value] of Object.entries(item)) out[key] = typeof value === 'string' ? optionText(value) : value;
+  return out;
+}
+
+// 문제를 풀 때 지켜야 하는 조건. 틀에 "note" 가 있으면 문제 아래에 따로 보여 줍니다.
+// 예: "x 는 실수", "눈높이는 생각하지 않는다", "원주율은 3.14 로 계산한다"
+export function noteText(raw) {
+  return raw.tpl.note ? fill(pick(raw.tpl.note), shown(raw.item)) : '';
 }
 
 // 자동 검사 도구가 방금 낸 문제의 정답을 확인할 때 씁니다. 게임에서는 쓰지 않습니다.

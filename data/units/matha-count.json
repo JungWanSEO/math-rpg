@@ -78,6 +78,11 @@
         "ja": "順番を区別するので順列。{n} から {r} 個の数を順にかけて {answer}",
         "ko": "순서를 구별하므로 순열입니다. {n}부터 차례로 {r}개의 수를 곱하면 {answer}",
         "en": "Order matters, so it is a permutation. Multiply {r} numbers counting down from {n}: {answer}"
+      },
+      "note": {
+        "ja": "人はすべて区別する。",
+        "ko": "사람은 모두 서로 구별한다.",
+        "en": "All the people are distinguishable."
       }
     },
     {
@@ -94,6 +99,11 @@
         "ja": "順番を区別しないので組合せ。順列を {r}! で割って {answer}",
         "ko": "순서를 구별하지 않으므로 조합입니다. 순열을 {r}!로 나누면 {answer}",
         "en": "Order does not matter, so it is a combination. Divide the permutation count by {r}!: {answer}"
+      },
+      "note": {
+        "ja": "人はすべて区別する。",
+        "ko": "사람은 모두 서로 구별한다.",
+        "en": "All the people are distinguishable."
       }
     },
     {
@@ -110,6 +120,11 @@
         "ja": "円順列は (n − 1)! 通り。{answer}",
         "ko": "원순열은 (n − 1)!가지입니다. {answer}",
         "en": "A circular arrangement has (n − 1)! ways: {answer}"
+      },
+      "note": {
+        "ja": "回転して一致する並び方は同じものとみなす。",
+        "ko": "돌려서 같아지는 배열은 같은 것으로 본다.",
+        "en": "Arrangements that match after rotation count as the same."
       }
     },
     {
@@ -142,6 +157,11 @@
         "ja": "全部で 36 通り。和が {s} になる場合を数えて {answer}",
         "ko": "전체는 36가지입니다. 합이 {s}가 되는 경우를 세면 {answer}",
         "en": "There are 36 outcomes. Count those with sum {s}: {answer}"
+      },
+      "note": {
+        "ja": "さいころの目の出方は同様に確からしいものとする。",
+        "ko": "주사위의 각 눈이 나올 가능성은 모두 같다.",
+        "en": "Every face of a die is equally likely."
       }
     },
     {
@@ -158,6 +178,11 @@
         "ja": "余事象(すべて裏)の確率を 1 から引いて {answer}",
         "ko": "여사건(모두 뒷면)의 확률을 1에서 빼면 {answer}",
         "en": "Subtract the probability of the complement (all tails) from 1: {answer}"
+      },
+      "note": {
+        "ja": "表と裏の出方は同様に確からしいものとする。",
+        "ko": "앞면과 뒷면이 나올 가능성은 같다.",
+        "en": "Heads and tails are equally likely."
       }
     },
     {
