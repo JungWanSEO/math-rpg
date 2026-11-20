@@ -408,3 +408,13 @@ button, select, .node { touch-action: manipulation; } /* 두 번 눌러 확대�
 .me.low .fill.teal { background: var(--rose); }
 .me.low .num { color: var(--rose); font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .hurt, #screenBattle.flash { animation: none; } }
+
+/* question: figure caption, conditions, long options */
+.q-cap { font-size: 11px; color: var(--muted); text-align: center; }
+.q-note {
+  font-size: 13px; line-height: 1.5; color: var(--amber);
+  padding: 6px 10px; border-radius: 8px; background: rgba(255, 200, 87, 0.1); border: 1px dashed rgba(255, 200, 87, 0.5);
+}
+.answers.long { grid-template-columns: 1fr; }
+.answers.long button { min-height: 46px; }
+.answers.wordy button { font-size: 14px; font-weight: 600; padding: 6px 12px; line-height: 1.4; }

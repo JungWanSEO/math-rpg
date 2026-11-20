@@ -3,7 +3,7 @@
 //
 //   "figure": { "kind": "triangle", "angle": "θ", "opp": "{a}", "adj": "{b}", "hyp": "{c}" }
 //
-// kind 는 세 가지입니다. 빈 글("")을 적은 자리에는 아무것도 표시하지 않습니다.
+// kind 는 아래와 같습니다. (数学A 와 공간도형용 그림은 파일 아래쪽 설명을 보세요) 빈 글("")을 적은 자리에는 아무것도 표시하지 않습니다.
 //   triangle  직각삼각형   angle 각 · opp 맞은편 변 · adj 이웃 변 · hyp 빗변
 //   tower     탑 하나      angle 올려본 각 · dist 수평거리 · height 높이
 //   twopoint  탑과 두 지점 far 먼 지점의 각 · near 가까운 지점의 각 · gap 두 지점 사이 · height 높이
@@ -32,8 +32,53 @@ function label(x, y, text, anchor = 'middle') {
     `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="17" font-weight="800" fill="${ASK}">${esc(text)}</text>`;
 }
 
-const frame = (inner) =>
-  `<svg viewBox="0 0 326 152" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const frame = (inner, height = 152) =>
+  `<svg viewBox="0 0 326 ${height}" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+
+// ---- 도형을 그리는 작은 도구 (점은 [x, y]) ----
+const r1 = (n) => Math.round(n * 10) / 10;
+const seg = (p, q, color = LINE, width = 2.5, dash = '') =>
+  `<path d="M${r1(p[0])} ${r1(p[1])} L${r1(q[0])} ${r1(q[1])}" stroke="${color}" stroke-width="${width}"${dash ? ` stroke-dasharray="${dash}"` : ''}/>`;
+const shape = (pts, color = LINE, width = 2.5) =>
+  `<path d="M${pts.map((p) => `${r1(p[0])} ${r1(p[1])}`).join(' L')} Z" stroke="${color}" stroke-width="${width}"/>`;
+const ring = (c, r, color = LINE) => `<circle cx="${c[0]}" cy="${c[1]}" r="${r}" stroke="${color}" stroke-width="2.5"/>`;
+const dot = (p, color = INK) => `<circle cx="${r1(p[0])}" cy="${r1(p[1])}" r="3.5" fill="${color}"/>`;
+const unit = (from, to) => {
+  const len = Math.hypot(to[0] - from[0], to[1] - from[1]) || 1;
+  return [(to[0] - from[0]) / len, (to[1] - from[1]) / len];
+};
+const along = (from, to, dist) => {
+  const [ux, uy] = unit(from, to);
+  return [from[0] + ux * dist, from[1] + uy * dist];
+};
+const between = (p, q, k = 0.5) => [p[0] + (q[0] - p[0]) * k, p[1] + (q[1] - p[1]) * k];
+const onCircle = (c, r, deg) => [c[0] + r * Math.cos((deg * Math.PI) / 180), c[1] + r * Math.sin((deg * Math.PI) / 180)];
+// 꼭짓점 v 에서 p 쪽 변과 q 쪽 변 사이의 각을 나타내는 작은 호
+function arc(v, p, q, r = 18, color = ASK) {
+  const a = along(v, p, r);
+  const b = along(v, q, r);
+  const cross = (a[0] - v[0]) * (b[1] - v[1]) - (a[1] - v[1]) * (b[0] - v[0]);
+  return `<path d="M${r1(a[0])} ${r1(a[1])} A${r} ${r} 0 0 ${cross > 0 ? 1 : 0} ${r1(b[0])} ${r1(b[1])}" stroke="${color}" stroke-width="2"/>`;
+}
+// 각 안쪽(두 변의 가운데 방향)으로 dist 만큼 들어간 점
+function inside(v, p, q, dist) {
+  const [ax, ay] = unit(v, p);
+  const [bx, by] = unit(v, q);
+  return along(v, [v[0] + ax + bx, v[1] + ay + by], dist);
+}
+// 꼭짓점 이름 (도형의 중심 반대쪽에 작게 적습니다)
+function vertex(p, name, center, dist = 13) {
+  const [x, y] = along(p, center, -dist);
+  return `<text x="${r1(x)}" y="${r1(y + 5)}" text-anchor="middle" font-size="13" font-weight="700" fill="${DIM}">${name}</text>`;
+}
+// 글의 가운데가 [x, y] 근처에 오도록 적습니다. side 가 -1 이면 글의 끝을, 1 이면 처음을 맞춥니다.
+const tag = (p, text, side = 0) => label(r1(p[0]), r1(p[1] + 5), text, side < 0 ? 'end' : side > 0 ? 'start' : 'middle');
+// 선분 pq 의 가운데에서 수직으로 off 만큼 떨어진 점 (off 의 부호로 어느 쪽인지 정합니다)
+function beside(p, q, off, k = 0.5) {
+  const [ux, uy] = unit(p, q);
+  const m = between(p, q, k);
+  return [m[0] - uy * off, m[1] + ux * off];
+}
 
 const DRAW = {
   // θ 는 왼쪽 아래, 직각은 오른쪽 아래
@@ -121,6 +166,177 @@ const DRAW = {
     );
   },
 };
+
+// ---------- 数学A 図形の性質 · 空間図形 ----------
+Object.assign(DRAW, {
+  // 각의 이등분선: ab, ac, bc 는 변의 길이, bd 는 BD
+  bisect(L) {
+    const A = [150, 24];
+    const B = [40, 126];
+    const C = [286, 126];
+    const D = [142, 126];
+    const G = [159, 92];
+    return frame(
+      shape([A, B, C]) + seg(A, D, ASK, 2) +
+      arc(A, B, D, 22) + arc(A, D, C, 26) +
+      vertex(A, 'A', G) + vertex(B, 'B', G) + vertex(C, 'C', G) + vertex(D, 'D', [D[0], 0], 15) +
+      tag(beside(A, B, 12), L.ab, -1) + tag(beside(A, C, -12), L.ac, 1) +
+      tag([91, 147], L.bd) + tag([228, 147], L.bc),
+      164,
+    );
+  },
+  // 중선과 무게중심: am 은 AM, ag 는 AG
+  median(L) {
+    const A = [150, 24];
+    const B = [40, 126];
+    const C = [286, 126];
+    const M = between(B, C);
+    const G = between(A, M, 2 / 3);
+    const tick = (p) => seg([p[0], p[1] - 5], [p[0], p[1] + 5], INK, 1.5);
+    return frame(
+      shape([A, B, C]) + seg(A, M, ASK, 2) + dot(G) +
+      tick(between(B, M)) + tick(between(M, C)) +
+      vertex(A, 'A', G) + vertex(B, 'B', G) + vertex(C, 'C', G) + vertex(M, 'M', [M[0], 0], 15) +
+      `<text x="${r1(G[0] + 12)}" y="${r1(G[1] + 5)}" text-anchor="start" font-size="13" font-weight="700" fill="${DIM}">G</text>` +
+      tag([98, 44], L.ag, -1) + tag([246, 147], L.am),
+      164,
+    );
+  },
+  // 원주각과 중심각. names 는 "위, 왼쪽, 오른쪽" 점의 이름. chord 가 있으면 아래 현도 그립니다. (외심 그림)
+  circleangle(L) {
+    const O = [163, 92];
+    const R = 74;
+    const P = onCircle(O, R, 262);
+    const A = onCircle(O, R, 142);
+    const B = onCircle(O, R, 38);
+    const [top, left, right] = (L.names || 'P,A,B').split(',');
+    return frame(
+      ring(O, R) + seg(P, A) + seg(P, B) + seg(O, A, ASK, 2) + seg(O, B, ASK, 2) +
+      (L.chord ? seg(A, B) : '') + dot(O) +
+      arc(P, A, B, 20) + arc(O, A, B, 16) +
+      vertex(P, top, O) + vertex(A, left, O) + vertex(B, right, O) +
+      `<text x="${O[0] + 12}" y="${O[1] - 4}" text-anchor="start" font-size="13" font-weight="700" fill="${DIM}">O</text>` +
+      tag(inside(P, A, B, 46), L.insc) + tag([O[0], O[1] + 32], L.central),
+      184,
+    );
+  },
+  // 내심: angleA 는 ∠A, bic 는 ∠BIC
+  incenter(L) {
+    const A = [150, 22];
+    const B = [36, 140];
+    const C = [290, 140];
+    const a = Math.hypot(B[0] - C[0], B[1] - C[1]);
+    const b = Math.hypot(A[0] - C[0], A[1] - C[1]);
+    const c = Math.hypot(A[0] - B[0], A[1] - B[1]);
+    const I = [(a * A[0] + b * B[0] + c * C[0]) / (a + b + c), (a * A[1] + b * B[1] + c * C[1]) / (a + b + c)];
+    return frame(
+      shape([A, B, C]) + seg(B, I, ASK, 2) + seg(C, I, ASK, 2) + dot(I) +
+      arc(A, B, C, 20) + arc(I, B, C, 14) +
+      vertex(A, 'A', I) + vertex(B, 'B', I) + vertex(C, 'C', I) + `<text x="${r1(I[0] + 14)}" y="${r1(I[1] - 6)}" text-anchor="start" font-size="13" font-weight="700" fill="${DIM}">I</text>` +
+      tag(inside(A, B, C, 38), L.angleA) + tag([I[0], I[1] + 22], L.bic),
+      164,
+    );
+  },
+  // 원에 내접하는 사각형: angleA, angleC
+  cyclic(L) {
+    const O = [163, 92];
+    const R = 74;
+    const A = onCircle(O, R, 205);
+    const B = onCircle(O, R, 118);
+    const C = onCircle(O, R, 22);
+    const D = onCircle(O, R, 300);
+    return frame(
+      ring(O, R) + shape([A, B, C, D]) + arc(A, B, D, 18) + arc(C, B, D, 18) +
+      vertex(A, 'A', O) + vertex(B, 'B', O) + vertex(C, 'C', O) + vertex(D, 'D', O) +
+      tag(inside(A, B, D, 36), L.angleA) + tag(inside(C, B, D, 38), L.angleC),
+      184,
+    );
+  },
+  // 두 현이 원 안에서 만날 때: pa, pb, pc, pd
+  chords(L) {
+    const O = [163, 92];
+    const R = 74;
+    const A = onCircle(O, R, 200);
+    const B = onCircle(O, R, 15);
+    const C = onCircle(O, R, 250);
+    const D = onCircle(O, R, 95);
+    // 두 현의 교점 P
+    const d1 = [B[0] - A[0], B[1] - A[1]];
+    const d2 = [D[0] - C[0], D[1] - C[1]];
+    const k = ((C[0] - A[0]) * d2[1] - (C[1] - A[1]) * d2[0]) / (d1[0] * d2[1] - d1[1] * d2[0]);
+    const P = [A[0] + d1[0] * k, A[1] + d1[1] * k];
+    return frame(
+      ring(O, R) + seg(A, B) + seg(C, D) + dot(P) +
+      vertex(A, 'A', O) + vertex(B, 'B', O) + vertex(C, 'C', O) + vertex(D, 'D', O) +
+      `<text x="${r1(P[0] + 9)}" y="${r1(P[1] - 8)}" text-anchor="start" font-size="13" font-weight="700" fill="${DIM}">P</text>` +
+      tag(beside(A, P, 14, 0.45), L.pa) + tag(beside(P, B, 13, 0.6), L.pb) +
+      tag(beside(C, P, 12, 0.45), L.pc, -1) + tag(beside(P, D, -14, 0.6), L.pd, 1),
+      184,
+    );
+  },
+  // 원 밖의 점에서 그은 할선과 접선: pa, pb 는 P 에서 잰 길이, pt 는 접선의 길이
+  tangent(L) {
+    const O = [214, 96];
+    const R = 62;
+    const P = [26, 128];
+    // 접점 T (위쪽)
+    const dist = Math.hypot(O[0] - P[0], O[1] - P[1]);
+    const base = Math.atan2(O[1] - P[1], O[0] - P[0]);
+    const turn = Math.asin(R / dist);
+    const len = Math.sqrt(dist * dist - R * R);
+    const T = [P[0] + len * Math.cos(base - turn), P[1] + len * Math.sin(base - turn)];
+    // 할선: P 에서 중심보다 조금 아래를 지나는 직선
+    const dir = unit(P, [O[0], O[1] + 26]);
+    const mid = (O[0] - P[0]) * dir[0] + (O[1] - P[1]) * dir[1];
+    const gap = Math.hypot(P[0] + dir[0] * mid - O[0], P[1] + dir[1] * mid - O[1]);
+    const half = Math.sqrt(R * R - gap * gap);
+    const A = [P[0] + dir[0] * (mid - half), P[1] + dir[1] * (mid - half)];
+    const B = [P[0] + dir[0] * (mid + half), P[1] + dir[1] * (mid + half)];
+    return frame(
+      ring(O, R) + seg(P, B) + seg(P, T, ASK, 2) + dot(P) + dot(A) + dot(B) + dot(T) +
+      vertex(P, 'P', O) + vertex(T, 'T', O) + vertex(A, 'A', [A[0], 0], 14) + vertex(B, 'B', O) +
+      tag(beside(P, T, -13, 0.45), L.pt) + tag([between(P, A)[0], between(P, A)[1] + 18], L.pa) + tag([B[0] + 16, B[1] + 36], L.pb, -1),
+      186,
+    );
+  },
+  // 직육면체 ABCD-EFGH: ab, ad, ae 는 모서리, ag 는 대각선
+  cuboid(L) {
+    const A = [64, 46];
+    const B = [208, 46];
+    const E = [64, 136];
+    const F = [208, 136];
+    const back = (p) => [p[0] + 58, p[1] - 28];
+    const [D, C, H, G] = [back(A), back(B), back(E), back(F)];
+    return frame(
+      shape([A, B, F, E]) + seg(A, D) + seg(B, C) + seg(D, C) + seg(C, G) + seg(F, G) +
+      seg(E, H, DIM, 2, '5 5') + seg(H, G, DIM, 2, '5 5') + seg(D, H, DIM, 2, '5 5') +
+      seg(A, G, ASK, 2, '7 5') +
+      [['A', A, -13, 0], ['B', B, 11, 16], ['C', C, 12, -2], ['D', D, -6, -8], ['E', E, -13, 4], ['F', F, 2, 16], ['G', G, 13, 6], ['H', H, 12, -8]]
+        .map(([n, p, dx, dy]) => `<text x="${p[0] + dx}" y="${p[1] + dy + 4}" text-anchor="middle" font-size="13" font-weight="700" fill="${DIM}">${n}</text>`).join('') +
+      tag([between(A, B)[0] + 22, A[1] - 13], L.ab) + tag(beside(A, D, -12), L.ad, -1) + tag([A[0] - 10, between(A, E)[1] + 12], L.ae, -1) +
+      tag([between(A, G, 0.62)[0], between(A, G, 0.62)[1] + 22], L.ag),
+      156,
+    );
+  },
+  // 두 지점에서 올려본 탑 (∠AHB = 90°): angleA, angleB, ab, ph
+  space(L) {
+    const H = [176, 112];
+    const P = [176, 20];
+    const A = [52, 138];
+    const B = [286, 150];
+    const mark = [along(H, A, 13), [along(H, A, 13)[0] + along(H, B, 13)[0] - H[0], along(H, A, 13)[1] + along(H, B, 13)[1] - H[1]], along(H, B, 13)];
+    return frame(
+      seg(H, A, DIM, 2) + seg(H, B, DIM, 2) + seg(A, B, DIM, 2, '5 5') +
+      `<path d="M${mark.map((p) => `${r1(p[0])} ${r1(p[1])}`).join(' L')}" stroke="${DIM}" stroke-width="1.5"/>` +
+      seg(H, P, LINE, 4) + seg(A, P, LINE, 2, '6 5') + seg(B, P, LINE, 2, '6 5') +
+      dot(A) + dot(B) + arc(A, H, P, 26) + arc(B, H, P, 26) +
+      vertex(P, 'P', H) + vertex(H, 'H', [H[0] + 30, 0], 14) + vertex(A, 'A', H) + vertex(B, 'B', H) +
+      tag(inside(A, H, P, 44), L.angleA) + tag(inside(B, H, P, 46), L.angleB) +
+      tag([between(A, B)[0], between(A, B)[1] + 16], L.ab) + tag([P[0] + 12, 62], L.ph, 1),
+      176,
+    );
+  },
+});
 
 // 문제의 그림을 만듭니다. 그림이 없는 문제면 null.
 // alt 는 화면을 읽어 주는 도구를 위한 설명입니다. (그림에 적힌 값들)

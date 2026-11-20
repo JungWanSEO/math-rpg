@@ -557,6 +557,34 @@ Object.assign(GENERATORS, {
     return item({ stmt: imp(P, Q) }, answer, rest);
   },
 
+  // 필요조건·충분조건: "p 는 q 이기 위한 ○○조건". 보기는 말이라서 "@이름" 으로 적습니다. (lang 파일의 opt)
+  // pq 는 "p ⟹ q" 가 참인지, qp 는 "q ⟹ p" 가 참인지입니다.
+  condition() {
+    const a = pickOne(range(2, 7));
+    const b = a + 1 + rand(3);
+    const k = pickOne([2, 3, 4, 5]);
+    // [p, q, p ⟹ q, q ⟹ p]
+    const forms = [
+      [`x = ${a}`, `x² = ${a * a}`, true, false],
+      [`x > ${b}`, `x > ${a}`, true, false],
+      [`|x| = ${a}`, `x² = ${a * a}`, true, true],
+      [`x > ${a}`, `x² > ${a * a}`, true, false],
+      [`x > ${a}`, `x < ${b}`, false, false],
+      [`${k}x = ${k * a}`, `x = ${a}`, true, true],
+      [`|x| < ${a}`, `x < ${a}`, true, false],
+      [`x < ${MINUS}${a}`, `x² > ${a * a}`, true, false],
+      [`x = ${b}`, `x > ${a}`, true, false],
+      [`x > ${MINUS}${a}`, `x² > ${a * a}`, false, false],
+      [`x + ${a} > 0`, `x > ${MINUS}${a}`, true, true],
+      [`x² = ${a * a}`, `x > 0`, false, false],
+    ];
+    let [p, q, pq, qp] = pickOne(forms);
+    if (pq !== qp && Math.random() < 0.5) [p, q, pq, qp] = [q, p, qp, pq];
+    const name = pq && qp ? '@necsuf' : pq ? '@suf' : qp ? '@nec' : '@neither';
+    const all = ['@necsuf', '@suf', '@nec', '@neither'];
+    return { p, q, pq: pq ? '@true' : '@false', qp: qp ? '@true' : '@false', answer: name, wrong: all.filter((n) => n !== name) };
+  },
+
   // ---------- 図形と計量: 空間図形 ----------
 
   // 직육면체의 대각선: √(a² + b² + c²)

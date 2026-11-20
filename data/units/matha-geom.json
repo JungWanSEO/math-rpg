@@ -66,6 +66,13 @@
         "ja": "BD : DC = AB : AC = {c} : {b} より BD = {answer}",
         "ko": "BD : DC = AB : AC = {c} : {b}이므로 BD = {answer}",
         "en": "BD : DC = AB : AC = {c} : {b}, so BD = {answer}"
+      },
+      "figure": {
+        "kind": "bisect",
+        "ab": "{c}",
+        "ac": "{b}",
+        "bc": "BC = {a}",
+        "bd": "BD = ?"
       }
     },
     {
@@ -82,6 +89,11 @@
         "ja": "重心は中線を 2 : 1 に分けるので AG = {answer}",
         "ko": "무게중심은 중선을 2 : 1로 나누므로 AG = {answer}",
         "en": "The centroid divides a median 2 : 1, so AG = {answer}"
+      },
+      "figure": {
+        "kind": "median",
+        "am": "AM = {m}",
+        "ag": "AG = ?"
       }
     },
     {
@@ -98,6 +110,13 @@
         "ja": "中心角は円周角の 2 倍なので ∠BOC = {answer}",
         "ko": "중심각은 원주각의 2배이므로 ∠BOC = {answer}",
         "en": "A central angle is twice the inscribed angle, so ∠BOC = {answer}"
+      },
+      "figure": {
+        "kind": "circleangle",
+        "names": "A,B,C",
+        "chord": "1",
+        "central": "?",
+        "insc": "{A}°"
       }
     },
     {
@@ -114,6 +133,11 @@
         "ja": "∠BIC = 90° + ∠A ÷ 2 = {answer}",
         "ko": "∠BIC = 90° + ∠A ÷ 2 = {answer}",
         "en": "∠BIC = 90° + ∠A ÷ 2 = {answer}"
+      },
+      "figure": {
+        "kind": "incenter",
+        "angleA": "{A}°",
+        "bic": "?"
       }
     },
     {
@@ -125,14 +149,19 @@
         "ask": "inscribed"
       },
       "text": {
-        "ja": "弧 AB に対する中心角が {x}° のとき、同じ弧に対する円周角は?",
-        "ko": "호 AB에 대한 중심각이 {x}°일 때, 같은 호에 대한 원주각은?",
-        "en": "The central angle on arc AB is {x}°. What is the inscribed angle on the same arc?"
+        "ja": "図で、弧 AB に対する中心角が {x}° のとき、円周角 ∠APB は?",
+        "ko": "그림에서 호 AB에 대한 중심각이 {x}°일 때, 원주각 ∠APB는?",
+        "en": "In the figure, the central angle on arc AB is {x}°. What is the inscribed angle ∠APB?"
       },
       "explain": {
         "ja": "円周角は中心角の半分なので {answer}",
         "ko": "원주각은 중심각의 절반이므로 {answer}",
         "en": "An inscribed angle is half the central angle: {answer}"
+      },
+      "figure": {
+        "kind": "circleangle",
+        "central": "{x}°",
+        "insc": "?"
       }
     },
     {
@@ -144,14 +173,19 @@
         "ask": "central"
       },
       "text": {
-        "ja": "弧 AB に対する円周角が {x}° のとき、同じ弧に対する中心角は?",
-        "ko": "호 AB에 대한 원주각이 {x}°일 때, 같은 호에 대한 중심각은?",
-        "en": "The inscribed angle on arc AB is {x}°. What is the central angle on the same arc?"
+        "ja": "図で、弧 AB に対する円周角 ∠APB が {x}° のとき、中心角 ∠AOB は?",
+        "ko": "그림에서 호 AB에 대한 원주각 ∠APB가 {x}°일 때, 중심각 ∠AOB는?",
+        "en": "In the figure, the inscribed angle ∠APB on arc AB is {x}°. What is the central angle ∠AOB?"
       },
       "explain": {
         "ja": "中心角は円周角の 2 倍なので {answer}",
         "ko": "중심각은 원주각의 2배이므로 {answer}",
         "en": "A central angle is twice the inscribed angle: {answer}"
+      },
+      "figure": {
+        "kind": "circleangle",
+        "central": "?",
+        "insc": "{x}°"
       }
     },
     {
@@ -168,6 +202,11 @@
         "ja": "円に内接する四角形の対角の和は 180° なので {answer}",
         "ko": "원에 내접하는 사각형은 마주 보는 각의 합이 180°이므로 {answer}",
         "en": "Opposite angles of a cyclic quadrilateral add to 180°: {answer}"
+      },
+      "figure": {
+        "kind": "cyclic",
+        "angleA": "{A}°",
+        "angleC": "?"
       }
     },
     {
@@ -184,6 +223,13 @@
         "ja": "方べきの定理 PA × PB = PC × PD より PD = {answer}",
         "ko": "방멱 정리 PA × PB = PC × PD에서 PD = {answer}",
         "en": "By the power of a point, PA × PB = PC × PD, so PD = {answer}"
+      },
+      "figure": {
+        "kind": "chords",
+        "pa": "{a}",
+        "pb": "{b}",
+        "pc": "{c}",
+        "pd": "?"
       }
     },
     {
@@ -200,6 +246,12 @@
         "ja": "方べきの定理 PT² = PA × PB より PT = {answer}",
         "ko": "방멱 정리 PT² = PA × PB에서 PT = {answer}",
         "en": "By the power of a point, PT² = PA × PB, so PT = {answer}"
+      },
+      "figure": {
+        "kind": "tangent",
+        "pa": "PA = {a}",
+        "pb": "PB = {b}",
+        "pt": "PT = ?"
       }
     }
   ]

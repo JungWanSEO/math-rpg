@@ -3,8 +3,8 @@
 // 체력, 힌트, 강화는 "지도 한 장"의 상태(run)에서 가져옵니다.
 import { CONFIG } from './config.js';
 import { t, pick } from './i18n.js';
-import { next, questionText, explainText, typeLabel } from './questions.js';
-import { showFigure } from './figures.js';
+import { next, explainText, typeLabel, optionText } from './questions.js';
+import { fillQuestion } from './qview.js';
 import { $ } from './ui.js';
 import { play } from './sound.js';
 
@@ -70,6 +70,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     $('answers').hidden = !showing;
     // 문제를 푸는 동안에는 행동 버튼을 접어 문제와 답이 한 화면에 보이게 합니다.
     $('screenBattle').classList.toggle('answering', Boolean(showing));
+    if (!showing) $('screenBattle').classList.remove('has-figure');
     const hint = $('hintBtn');
     hint.hidden = B.phase !== 'answer';
     $('nextBtn').hidden = B.phase !== 'review';
@@ -80,14 +81,14 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     hint.disabled = run.hints <= 0 || B.cur.removed >= 0;
 
     $('qMeta').textContent = t('ui.level', { n: B.cur.level, type: typeName(B.cur.type) });
-    $('qText').textContent = questionText(B.cur.raw);
-    showFigure($('qFigure'), B.cur.raw);
     const box = $('answers');
+    fillQuestion({ text: $('qText'), figure: $('qFigure'), cap: $('qCap'), note: $('qNote'), answers: box }, B.cur);
+    $('screenBattle').classList.toggle('has-figure', !$('qFigure').hidden);
     box.innerHTML = '';
     B.cur.options.forEach((text, i) => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.textContent = text;
+      btn.textContent = optionText(text);
       btn.disabled = B.phase !== 'answer' || i === B.cur.removed;
       if (i === B.cur.removed) btn.classList.add('gone');
       if (B.picked >= 0) {

@@ -28,7 +28,9 @@
     "menu": "Menu",
     "next": "Got it, next",
     "soundOn": "Sound: on",
-    "soundOff": "Sound: off"
+    "soundOff": "Sound: off",
+    "figNote": "The figure is not drawn to scale.",
+    "cond": "Given: {text}"
   },
   "msg": {
     "choose": "Choose an action.",
@@ -229,5 +231,13 @@
     "textMap": "Your progress is saved automatically. You can come back with \"Continue\".",
     "textBattle": "If you leave now, this battle restarts from the beginning. Your HP and hints are saved as they are. There is no time limit, so you can also just leave the screen as it is.",
     "textEvent": "If you leave now, this space restarts from the beginning. The rest of your progress is saved."
+  },
+  "opt": {
+    "necsuf": "necessary and sufficient",
+    "suf": "sufficient but not necessary",
+    "nec": "necessary but not sufficient",
+    "neither": "neither necessary nor sufficient",
+    "true": "true",
+    "false": "false"
   }
 }

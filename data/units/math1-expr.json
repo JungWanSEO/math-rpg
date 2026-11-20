@@ -35,6 +35,11 @@
       "ja": "命題(逆・裏・対偶)",
       "ko": "명제 (역·이·대우)",
       "en": "Propositions (converse, inverse, contrapositive)"
+    },
+    "condition": {
+      "ja": "必要条件・十分条件",
+      "ko": "필요조건·충분조건",
+      "en": "Necessary and sufficient conditions"
     }
   },
   "groups": [
@@ -68,7 +73,8 @@
       "types": [
         "inequality",
         "sets",
-        "proposition"
+        "proposition",
+        "condition"
       ]
     }
   ],
@@ -224,6 +230,11 @@
         "ja": "逆は仮定と結論を入れかえたもの。{answer}",
         "ko": "역은 가정과 결론을 서로 바꾼 것입니다. {answer}",
         "en": "The converse swaps the hypothesis and the conclusion: {answer}"
+      },
+      "note": {
+        "ja": "x は実数とする。",
+        "ko": "x는 실수이다.",
+        "en": "x is a real number."
       }
     },
     {
@@ -243,6 +254,11 @@
         "ja": "裏は仮定と結論をそれぞれ否定したもの。{answer}",
         "ko": "이는 가정과 결론을 각각 부정한 것입니다. {answer}",
         "en": "The inverse negates both the hypothesis and the conclusion: {answer}"
+      },
+      "note": {
+        "ja": "x は実数とする。",
+        "ko": "x는 실수이다.",
+        "en": "x is a real number."
       }
     },
     {
@@ -262,6 +278,32 @@
         "ja": "対偶は仮定と結論を入れかえて、それぞれ否定したもの。{answer}",
         "ko": "대우는 가정과 결론을 서로 바꾸고 각각 부정한 것입니다. {answer}",
         "en": "The contrapositive swaps and negates both parts: {answer}"
+      },
+      "note": {
+        "ja": "x は実数とする。",
+        "ko": "x는 실수이다.",
+        "en": "x is a real number."
+      }
+    },
+    {
+      "id": "condition",
+      "level": 3,
+      "type": "condition",
+      "gen": "condition",
+      "text": {
+        "ja": "p: {p}、q: {q} とする。p は q であるための何条件?",
+        "ko": "p: {p}, q: {q}라 하자. p는 q이기 위한 무슨 조건인가?",
+        "en": "Let p: {p} and q: {q}. What kind of condition is p for q?"
+      },
+      "note": {
+        "ja": "x は実数とする。",
+        "ko": "x는 실수이다.",
+        "en": "x is a real number."
+      },
+      "explain": {
+        "ja": "「p ⟹ q」は{pq}、「q ⟹ p」は{qp}。よって p は q であるための {answer}",
+        "ko": "'p ⟹ q'는 {pq}, 'q ⟹ p'는 {qp}입니다. 따라서 p는 q이기 위한: {answer}",
+        "en": "\"p ⟹ q\" is {pq} and \"q ⟹ p\" is {qp}. So p is: {answer}"
       }
     }
   ]
