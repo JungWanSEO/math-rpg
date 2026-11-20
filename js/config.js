@@ -1,9 +1,6 @@
 // 게임의 숫자를 한곳에 모아 둔 파일입니다.
 // 재미를 조정할 때는 이 파일의 값만 바꾸면 됩니다. 모두 임시 값입니다.
 export const CONFIG = {
-  // 처음 열 단원 (data/units/ 안의 파일 이름)
-  unit: 'math1-trig',
-
   // 지원 언어와 기본 언어 (lang/ 안의 파일 이름)
   langs: ['ja', 'ko', 'en'],
   defaultLang: 'ja',
@@ -63,6 +60,11 @@ export const CONFIG = {
   rest: {
     healRatio: 0.3,  // 쉬기: 최대 체력의 몇 배를 회복하는지
     reviewHeal: 3,   // 복습 문제를 맞혔을 때 회복하는 체력
+  },
+
+  scope: {
+    bonusPerType: 0.05, // 범위에 유형을 하나 더 넣을 때마다 늘어나는 골드 비율
+    bonusMax: 0.5,      // 골드 보너스의 최대
   },
 
   codexStreak: 3,    // 한 유형을 몇 번 연속으로 맞히면 "정복"인지

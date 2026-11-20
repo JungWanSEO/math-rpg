@@ -1,18 +1,20 @@
 // 처음 화면: 이어서 하기 / 처음부터 시작 / 도감
-import { t, pick } from './i18n.js';
+import { t } from './i18n.js';
+import { allTypeKeys, subjectNames } from './questions.js';
 import { nodeOf } from './run.js';
 import { $ } from './ui.js';
 
 // 진행 중인 지도가 있는지 (칸을 하나라도 골랐는지)
 export const hasProgress = (run) => run.at !== null || run.pending !== null;
 
-export function createTitle({ getRun, unit, onContinue, onNew, onCodex }) {
+export function createTitle({ getRun, onContinue, onNew, onCodex }) {
   let confirming = false; // "처음부터 시작"을 한 번 눌러 확인을 기다리는 중
 
   function render() {
     const run = getRun();
     const going = hasProgress(run);
-    $('titleUnit').textContent = `${pick(unit.subject)} · ${pick(unit.name)}`;
+    const all = allTypeKeys();
+    $('titleUnit').textContent = t('title.sub', { subjects: subjectNames(all).join(' · '), n: all.length });
 
     const cont = $('titleContinue');
     cont.hidden = !going;
@@ -24,6 +26,7 @@ export function createTitle({ getRun, unit, onContinue, onNew, onCodex }) {
         total: run.floors,
         hp: run.hp,
         max: run.maxHp,
+        types: run.scope.length,
       });
     }
 

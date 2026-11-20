@@ -1,17 +1,11 @@
 // 도감 화면. 만난 몬스터와, 유형별 정답 기록(오답 노트)을 보여줍니다.
 import { CONFIG } from './config.js';
 import { t, pick } from './i18n.js';
+import { allTypeKeys, typeLabel, hasType } from './questions.js';
+import { statusOf } from './scope.js';
 import { $ } from './ui.js';
 
-export function createCodex({ data, unit, monsters }) {
-  // 유형의 상태: new 아직 안 풂 | open 미정복 | progress 진행 중 | done 정복
-  function statusOf(entry) {
-    if (!entry || (!entry.right && !entry.wrong)) return 'new';
-    if ((entry.streak || 0) >= CONFIG.codexStreak) return 'done';
-    if (entry.wrong > 0) return 'open';
-    return 'progress';
-  }
-
+export function createCodex({ data, monsters }) {
   function card(title, lines, badge) {
     const el = document.createElement('div');
     el.className = 'codex-card';
@@ -42,10 +36,9 @@ export function createCodex({ data, unit, monsters }) {
     mBox.innerHTML = '';
     for (const m of monsters) {
       if (data.seen[m.id]) {
-        mBox.appendChild(card(pick(m.name), [
-          t('codex.mistake', { text: pick(m.mistake) }),
-          t('ui.weak', { type: pick(unit.types[m.weak]) }),
-        ]));
+        const lines = [t('codex.mistake', { text: pick(m.mistake) })];
+        if (hasType(m.weak)) lines.push(t('ui.weak', { type: typeLabel(m.weak) }));
+        mBox.appendChild(card(pick(m.name), lines));
       } else {
         mBox.appendChild(card(t('codex.unseen'), [t('codex.unseenSub')]));
       }
@@ -53,7 +46,7 @@ export function createCodex({ data, unit, monsters }) {
 
     const tBox = $('codexTypes');
     tBox.innerHTML = '';
-    for (const [type, names] of Object.entries(unit.types)) {
+    for (const type of allTypeKeys()) {
       const entry = data.codex[type];
       const status = statusOf(entry);
       const lines = [];
@@ -68,7 +61,7 @@ export function createCodex({ data, unit, monsters }) {
       if (status === 'open' || status === 'progress') {
         lines.push(t('codex.toDone', { n: CONFIG.codexStreak - (entry.streak || 0) }));
       }
-      tBox.appendChild(card(pick(names), lines, status));
+      tBox.appendChild(card(typeLabel(type), lines, status));
     }
   }
 

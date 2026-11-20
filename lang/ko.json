@@ -22,7 +22,8 @@
     "elite": "강적 {name}",
     "boss": "보스 {name}",
     "codex": "도감",
-    "midboss": "중간 보스 {name}"
+    "midboss": "중간 보스 {name}",
+    "scopeCount": "유형 {n} / {total}"
   },
   "msg": {
     "choose": "행동을 고르세요.",
@@ -84,10 +85,10 @@
     "treasureFail": "자물쇠를 풀지 못했지만 떨어진 {gold}G를 주웠습니다. {explain}",
     "clearTitle": "단원 클리어",
     "clearText": "보스를 쓰러뜨렸습니다. 지금까지 {n}번 클리어했습니다.",
-    "newRun": "새 지도 시작",
+    "newRun": "범위 고르기로",
     "overTitle": "게임 오버",
-    "overText": "{total}층 중 {n}층에서 쓰러졌습니다. 골드와 강화는 사라지고, 도감 기록은 남습니다. 새 지도로 처음부터 다시 시작합니다.",
-    "restart": "처음부터 다시"
+    "overText": "{total}층 중 {n}층에서 쓰러졌습니다. 골드와 강화는 사라지고, 도감 기록은 남습니다. 범위를 다시 골라 새 지도에서 시작합니다.",
+    "restart": "범위 고르기로"
   },
   "up": {
     "maxhp": {
@@ -189,13 +190,26 @@
   },
   "title": {
     "continue": "이어서 하기",
-    "continueSub": "{total}층 중 {n}층 · 체력 {hp}/{max}",
+    "continueSub": "{total}층 중 {n}층 · 체력 {hp}/{max} · 유형 {types}개",
     "start": "시작하기",
-    "startSub": "새 지도에서 출발합니다.",
+    "startSub": "범위를 고르고 새 지도에서 출발합니다.",
     "restart": "처음부터 다시",
-    "restartSub": "진행 중인 지도를 버리고 새 지도에서 시작합니다.",
+    "restartSub": "진행 중인 지도를 버리고 범위부터 다시 고릅니다.",
     "confirm": "한 번 더 누르면 진행 중인 지도가 사라집니다.",
     "codexSub": "만난 몬스터와 유형별 기록",
-    "note": "진행 상황은 이 기기에 자동으로 저장됩니다. 도감 기록은 처음부터 다시 해도 남습니다."
+    "note": "진행 상황은 이 기기에 자동으로 저장됩니다. 도감 기록은 처음부터 다시 해도 남습니다.",
+    "sub": "{subjects} · 유형 {n}개"
+  },
+  "scope": {
+    "title": "범위 고르기",
+    "text": "이번 판에 나올 문제 유형을 고르세요. 부족한 유형만 골라 집중하거나, 넓게 골라 무엇이 나올지 모르게 할 수 있습니다.",
+    "all": "전체",
+    "weak": "미정복만",
+    "same": "지난번과 같게",
+    "record": "정답률 {rate}% · {status}",
+    "summary": "유형 {n}개 선택 · 골드 +{bonus}%",
+    "empty": "유형을 하나 이상 고르세요.",
+    "start": "이 범위로 출발",
+    "back": "처음 화면으로"
   }
 }

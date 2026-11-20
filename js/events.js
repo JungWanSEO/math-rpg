@@ -1,13 +1,13 @@
 // 전투가 아닌 칸과 결과 화면: 보상, 상점, 휴식, 보물, 패배, 단원 클리어.
 // 모두 같은 화면(#screenEvent)을 씁니다. 제목, 설명, 고를 것 목록, 나가기 버튼으로 이루어집니다.
 import { CONFIG } from './config.js';
-import { t, pick } from './i18n.js';
-import { next, nextByType, questionText, explainText } from './questions.js';
+import { t } from './i18n.js';
+import { next, nextByType, questionText, explainText, typeLabel } from './questions.js';
 import { UPGRADES, SHOP, rollUpgrades } from './run.js';
 import { showFigure } from './figures.js';
 import { $, twoLineButton } from './ui.js';
 
-export function createEvents({ getRun, data, unit, record, onChange }) {
+export function createEvents({ getRun, data, record, onChange }) {
   let draw = null; // 지금 화면을 다시 그리는 함수 (언어를 바꿀 때 씁니다)
 
   function open(fn) {
@@ -45,7 +45,7 @@ export function createEvents({ getRun, data, unit, record, onChange }) {
   }
   function drawQuiz(state, onPick) {
     $('evQuiz').hidden = false;
-    $('evQMeta').textContent = t('ui.level', { n: state.q.level, type: pick(unit.types[state.q.type]) });
+    $('evQMeta').textContent = t('ui.level', { n: state.q.level, type: typeLabel(state.q.type) });
     $('evQText').textContent = questionText(state.q.raw);
     showFigure($('evQFigure'), state.q.raw);
     const box = $('evAnswers');
@@ -84,8 +84,9 @@ export function createEvents({ getRun, data, unit, record, onChange }) {
 
   // 가장 자주 틀린 유형의 문제를 고릅니다. 틀린 적이 없으면 쉬운 문제를 냅니다.
   function reviewQuestion() {
+    const scope = getRun().scope;
     const missed = Object.entries(data.codex)
-      .filter(([, entry]) => entry.wrong > 0 && (entry.streak || 0) < CONFIG.codexStreak)
+      .filter(([key, entry]) => scope.includes(key) && entry.wrong > 0 && (entry.streak || 0) < CONFIG.codexStreak)
       .sort((a, b) => b[1].wrong - a[1].wrong);
     if (missed.length) {
       const q = nextByType(missed[0][0]);
