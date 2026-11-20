@@ -90,6 +90,10 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     $('foeHpBar').style.width = `${Math.max(0, (B.foeHp / B.foeMax) * 100)}%`;
     $('foeHpText').textContent = `${Math.max(0, B.foeHp)} / ${B.foeMax}`;
     $('foeIntent').textContent = t(B.intent === 'big' ? 'ui.intentBig' : 'ui.intentNormal', { d: intentDamage() });
+    $('foeIntent').classList.toggle('big', B.intent === 'big');
+    // 강한 공격 턴에는 공격 버튼에도 "맞혀도 피해를 받는다"는 것을 적어 둡니다.
+    $('basicSub').textContent = t(B.intent === 'big' ? 'ui.attackBigSub' : 'ui.basicSub');
+    $('skillSub').textContent = t(B.intent === 'big' ? 'ui.attackBigSub' : 'ui.skillSub');
     $('hpBar').style.width = `${Math.max(0, (run.hp / run.maxHp) * 100)}%`;
     $('hpText').textContent = `${Math.max(0, run.hp)} / ${run.maxHp}`;
     $('comboText').textContent = t('ui.combo', { n: B.combo });
@@ -230,7 +234,9 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     if (B.foeHp <= 0) {
       win();
     } else if (B.intent === 'big' || CONFIG.foeAttack.hitOnCorrect) {
-      foeTurn(1); // 강한 공격은 방어로만 막을 수 있습니다.
+      // 강한 공격은 방어로만 막을 수 있습니다. 맞혔는데 왜 맞았는지 알려 줍니다.
+      if (B.intent === 'big') say('msg.bigHit', { d: intentDamage() });
+      foeTurn(1);
     } else {
       backToChoose(); // 공격 문제를 맞히면 적의 보통 공격은 오지 않습니다.
     }
