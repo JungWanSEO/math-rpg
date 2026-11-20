@@ -70,6 +70,21 @@
       "ja": "空間図形への応用",
       "ko": "공간도형 응용",
       "en": "Solid figures"
+    },
+    "convert": {
+      "ja": "90° − θ・180° − θ の三角比",
+      "ko": "90° − θ·180° − θ의 삼각비",
+      "en": "Ratios of 90° − θ and 180° − θ"
+    },
+    "trigeq": {
+      "ja": "三角比から角を求める",
+      "ko": "삼각비에서 각 구하기",
+      "en": "Finding the angle from a ratio"
+    },
+    "inradius": {
+      "ja": "内接円の半径",
+      "ko": "내접원의 반지름",
+      "en": "Inradius"
     }
   },
   "groups": [
@@ -84,7 +99,9 @@
         "obtuse",
         "ratio",
         "relation",
-        "length"
+        "length",
+        "convert",
+        "trigeq"
       ]
     },
     {
@@ -98,7 +115,8 @@
         "twopoint",
         "sinerule",
         "cosrule",
-        "area"
+        "area",
+        "inradius"
       ]
     },
     {
@@ -691,6 +709,66 @@
         "ja": "目の高さは考えないものとする。",
         "ko": "눈높이는 생각하지 않는다.",
         "en": "Ignore the height of the observer's eyes."
+      }
+    },
+    {
+      "id": "cofunction",
+      "level": 2,
+      "type": "convert",
+      "gen": "cofunction",
+      "text": {
+        "ja": "{expr} と等しいものは?",
+        "ko": "{expr}와 같은 것은?",
+        "en": "Which is equal to {expr}?"
+      },
+      "explain": {
+        "ja": "単位円(または直角三角形)で考えると {expr} = {answer}",
+        "ko": "단위원(또는 직각삼각형)에서 생각하면 {expr} = {answer}",
+        "en": "Using the unit circle (or a right triangle), {expr} = {answer}"
+      }
+    },
+    {
+      "id": "trig-eq",
+      "level": 2,
+      "type": "trigeq",
+      "gen": "trigeq",
+      "text": {
+        "ja": "{fn} θ = {val} を満たす θ は?",
+        "ko": "{fn} θ = {val}을 만족하는 θ는?",
+        "en": "Find θ such that {fn} θ = {val}."
+      },
+      "note": {
+        "ja": "0° ≦ θ ≦ 180° とする。",
+        "ko": "0° ≦ θ ≦ 180°이다.",
+        "en": "0° ≦ θ ≦ 180°."
+      },
+      "explain": {
+        "ja": "単位円で {fn} θ = {val} となる角を探すと θ = {answer}",
+        "ko": "단위원에서 {fn} θ = {val}이 되는 각을 찾으면 θ = {answer}",
+        "en": "On the unit circle, {fn} θ = {val} when θ = {answer}"
+      }
+    },
+    {
+      "id": "inradius",
+      "level": 2,
+      "type": "inradius",
+      "gen": "inradius",
+      "text": {
+        "ja": "3辺の長さが {a}, {b}, {c} で、面積が {S} の三角形の内接円の半径 r は?",
+        "ko": "세 변의 길이가 {a}, {b}, {c}이고 넓이가 {S}인 삼각형의 내접원의 반지름 r은?",
+        "en": "A triangle has sides {a}, {b}, {c} and area {S}. What is the radius r of its inscribed circle?"
+      },
+      "figure": {
+        "kind": "incircle",
+        "ab": "{c}",
+        "bc": "{a}",
+        "ca": "{b}",
+        "r": "r = ?"
+      },
+      "explain": {
+        "ja": "S = r(a + b + c) ÷ 2 より r = 2S ÷ (a + b + c) = {answer}",
+        "ko": "S = r(a + b + c) ÷ 2에서 r = 2S ÷ (a + b + c) = {answer}",
+        "en": "From S = r(a + b + c) ÷ 2, r = 2S ÷ (a + b + c) = {answer}"
       }
     }
   ]

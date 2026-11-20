@@ -40,6 +40,16 @@
       "ja": "必要条件・十分条件",
       "ko": "필요조건·충분조건",
       "en": "Necessary and sufficient conditions"
+    },
+    "absolute": {
+      "ja": "絶対値を含む方程式・不等式",
+      "ko": "절댓값이 있는 방정식·부등식",
+      "en": "Absolute value equations and inequalities"
+    },
+    "symmetric": {
+      "ja": "式の値(対称式)",
+      "ko": "식의 값 (대칭식)",
+      "en": "Values of symmetric expressions"
     }
   },
   "groups": [
@@ -51,7 +61,8 @@
       },
       "types": [
         "expand",
-        "factor"
+        "factor",
+        "symmetric"
       ]
     },
     {
@@ -61,7 +72,8 @@
         "en": "Real numbers"
       },
       "types": [
-        "surd"
+        "surd",
+        "absolute"
       ]
     },
     {
@@ -304,6 +316,129 @@
         "ja": "「p ⟹ q」は{pq}、「q ⟹ p」は{qp}。よって p は q であるための {answer}",
         "ko": "'p ⟹ q'는 {pq}, 'q ⟹ p'는 {qp}입니다. 따라서 p는 q이기 위한: {answer}",
         "en": "\"p ⟹ q\" is {pq} and \"q ⟹ p\" is {qp}. So p is: {answer}"
+      }
+    },
+    {
+      "id": "abs-eq",
+      "level": 1,
+      "type": "absolute",
+      "gen": "abseq",
+      "text": {
+        "ja": "方程式 {lhs} = {b} を解くと?",
+        "ko": "방정식 {lhs} = {b}의 해는?",
+        "en": "Solve {lhs} = {b}."
+      },
+      "explain": {
+        "ja": "絶対値の中身が {b} または −{b} になる。{answer}",
+        "ko": "절댓값 안이 {b} 또는 −{b}가 됩니다. {answer}",
+        "en": "The inside of the absolute value is {b} or −{b}: {answer}"
+      }
+    },
+    {
+      "id": "abs-ineq",
+      "level": 2,
+      "type": "absolute",
+      "gen": "absineq",
+      "text": {
+        "ja": "不等式 {lhs} {op} {b} を解くと?",
+        "ko": "부등식 {lhs} {op} {b}의 해는?",
+        "en": "Solve {lhs} {op} {b}."
+      },
+      "explain": {
+        "ja": "|X| < b は −b < X < b、|X| > b は X < −b, b < X。{answer}",
+        "ko": "|X| < b는 −b < X < b, |X| > b는 X < −b, b < X입니다. {answer}",
+        "en": "|X| < b means −b < X < b, and |X| > b means X < −b or b < X: {answer}"
+      }
+    },
+    {
+      "id": "system",
+      "level": 2,
+      "type": "inequality",
+      "gen": "system",
+      "text": {
+        "ja": "連立不等式 {i1}、{i2} を解くと?",
+        "ko": "연립부등식 {i1}, {i2}의 해는?",
+        "en": "Solve the system {i1} and {i2}."
+      },
+      "explain": {
+        "ja": "それぞれを解いて、共通する範囲を求めると {answer}",
+        "ko": "각각을 풀어 공통 범위를 구하면 {answer}",
+        "en": "Solve each one and take the overlap: {answer}"
+      }
+    },
+    {
+      "id": "symmetric",
+      "level": 2,
+      "type": "symmetric",
+      "gen": "symmetric",
+      "text": {
+        "ja": "x + y = {s}、xy = {p} のとき、x² + y² の値は?",
+        "ko": "x + y = {s}, xy = {p}일 때, x² + y²의 값은?",
+        "en": "If x + y = {s} and xy = {p}, what is x² + y²?"
+      },
+      "explain": {
+        "ja": "x² + y² = (x + y)² − 2xy = {answer}",
+        "ko": "x² + y² = (x + y)² − 2xy = {answer}",
+        "en": "x² + y² = (x + y)² − 2xy = {answer}"
+      }
+    },
+    {
+      "id": "set-cap",
+      "level": 1,
+      "type": "sets",
+      "gen": "setop",
+      "params": {
+        "ask": "cap"
+      },
+      "text": {
+        "ja": "A = {A}、B = {B} のとき、A ∩ B は?",
+        "ko": "A = {A}, B = {B}일 때, A ∩ B는?",
+        "en": "If A = {A} and B = {B}, what is A ∩ B?"
+      },
+      "explain": {
+        "ja": "A ∩ B は両方に入っている要素の集合。{answer}",
+        "ko": "A ∩ B는 양쪽에 모두 들어 있는 원소의 집합입니다. {answer}",
+        "en": "A ∩ B holds the elements that are in both sets: {answer}"
+      }
+    },
+    {
+      "id": "set-cup",
+      "level": 1,
+      "type": "sets",
+      "gen": "setop",
+      "params": {
+        "ask": "cup"
+      },
+      "text": {
+        "ja": "A = {A}、B = {B} のとき、A ∪ B は?",
+        "ko": "A = {A}, B = {B}일 때, A ∪ B는?",
+        "en": "If A = {A} and B = {B}, what is A ∪ B?"
+      },
+      "explain": {
+        "ja": "A ∪ B は少なくとも一方に入っている要素の集合。{answer}",
+        "ko": "A ∪ B는 적어도 한쪽에 들어 있는 원소의 집합입니다. {answer}",
+        "en": "A ∪ B holds the elements that are in at least one set: {answer}"
+      }
+    },
+    {
+      "id": "counterexample",
+      "level": 2,
+      "type": "proposition",
+      "gen": "counter",
+      "text": {
+        "ja": "命題「{stmt}」が偽であることを示す反例は?",
+        "ko": "명제 「{stmt}」가 거짓임을 보이는 반례는?",
+        "en": "Which value is a counterexample showing \"{stmt}\" is false?"
+      },
+      "note": {
+        "ja": "x は実数とする。",
+        "ko": "x는 실수이다.",
+        "en": "x is a real number."
+      },
+      "explain": {
+        "ja": "仮定は成り立つが結論が成り立たない値が反例。{answer}",
+        "ko": "가정은 성립하지만 결론이 성립하지 않는 값이 반례입니다. {answer}",
+        "en": "A counterexample satisfies the hypothesis but not the conclusion: {answer}"
       }
     }
   ]

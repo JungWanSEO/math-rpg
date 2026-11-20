@@ -25,6 +25,21 @@
       "ja": "方べきの定理",
       "ko": "방멱 정리",
       "en": "Power of a point"
+    },
+    "ceva": {
+      "ja": "チェバの定理",
+      "ko": "체바의 정리",
+      "en": "Ceva's theorem"
+    },
+    "tangent": {
+      "ja": "接線の性質",
+      "ko": "접선의 성질",
+      "en": "Tangents"
+    },
+    "twocircles": {
+      "ja": "2つの円の位置関係",
+      "ko": "두 원의 위치 관계",
+      "en": "Two circles"
     }
   },
   "groups": [
@@ -36,7 +51,8 @@
       },
       "types": [
         "bisector",
-        "centers"
+        "centers",
+        "ceva"
       ]
     },
     {
@@ -47,7 +63,9 @@
       },
       "types": [
         "circle",
-        "power"
+        "power",
+        "tangent",
+        "twocircles"
       ]
     }
   ],
@@ -252,6 +270,90 @@
         "pa": "PA = {a}",
         "pb": "PB = {b}",
         "pt": "PT = ?"
+      }
+    },
+    {
+      "id": "ceva",
+      "level": 3,
+      "type": "ceva",
+      "gen": "ceva",
+      "text": {
+        "ja": "△ABC の辺 BC, CA, AB 上に点 D, E, F があり、AD, BE, CF が1点で交わる。AF : FB = {p} : {q}、BD : DC = {r} : {s} のとき、CE : EA は?",
+        "ko": "△ABC의 변 BC, CA, AB 위에 점 D, E, F가 있고, AD, BE, CF가 한 점에서 만난다. AF : FB = {p} : {q}, BD : DC = {r} : {s}일 때, CE : EA는?",
+        "en": "Points D, E, F lie on sides BC, CA, AB of △ABC, and AD, BE, CF meet at one point. If AF : FB = {p} : {q} and BD : DC = {r} : {s}, what is CE : EA?"
+      },
+      "figure": {
+        "kind": "ceva",
+        "af": "{p}",
+        "fb": "{q}",
+        "bd": "{r}",
+        "dc": "{s}",
+        "ce": "?"
+      },
+      "explain": {
+        "ja": "チェバの定理 (AF/FB) × (BD/DC) × (CE/EA) = 1 より CE : EA = {answer}",
+        "ko": "체바의 정리 (AF/FB) × (BD/DC) × (CE/EA) = 1에서 CE : EA = {answer}",
+        "en": "By Ceva's theorem, (AF/FB) × (BD/DC) × (CE/EA) = 1, so CE : EA = {answer}"
+      }
+    },
+    {
+      "id": "tangent-chord",
+      "level": 2,
+      "type": "tangent",
+      "gen": "tanchord",
+      "text": {
+        "ja": "直線 AT は点 A で円に接している。∠ACB = {x}° のとき、∠BAT は?",
+        "ko": "직선 AT는 점 A에서 원에 접한다. ∠ACB = {x}°일 때, ∠BAT는?",
+        "en": "Line AT touches the circle at A. If ∠ACB = {x}°, what is ∠BAT?"
+      },
+      "figure": {
+        "kind": "tanchord",
+        "acb": "{x}°",
+        "bat": "?"
+      },
+      "explain": {
+        "ja": "接線と弦のつくる角は、その弦に対する円周角に等しい。{answer}",
+        "ko": "접선과 현이 이루는 각은 그 현에 대한 원주각과 같습니다. {answer}",
+        "en": "The angle between a tangent and a chord equals the inscribed angle on that chord: {answer}"
+      }
+    },
+    {
+      "id": "tangent-length",
+      "level": 2,
+      "type": "tangent",
+      "gen": "tangentlen",
+      "text": {
+        "ja": "△ABC の内接円が辺 AB と点 F で接している。BC = {a}、CA = {b}、AB = {c} のとき、AF の長さは?",
+        "ko": "△ABC의 내접원이 변 AB와 점 F에서 접한다. BC = {a}, CA = {b}, AB = {c}일 때, AF의 길이는?",
+        "en": "The inscribed circle of △ABC touches AB at F. If BC = {a}, CA = {b} and AB = {c}, how long is AF?"
+      },
+      "figure": {
+        "kind": "incircle",
+        "ab": "{c}",
+        "bc": "{a}",
+        "ca": "{b}",
+        "af": "AF = ?"
+      },
+      "explain": {
+        "ja": "1点から引いた2本の接線の長さは等しいので AF = (AB + CA − BC) ÷ 2 = {answer}",
+        "ko": "한 점에서 그은 두 접선의 길이는 같으므로 AF = (AB + CA − BC) ÷ 2 = {answer}",
+        "en": "Tangents from one point are equal, so AF = (AB + CA − BC) ÷ 2 = {answer}"
+      }
+    },
+    {
+      "id": "two-circles",
+      "level": 2,
+      "type": "twocircles",
+      "gen": "twocircles",
+      "text": {
+        "ja": "半径 {r1} と半径 {r2} の2つの円がある。中心間の距離が {d} のとき、共通接線は何本?",
+        "ko": "반지름이 {r1}, {r2}인 두 원이 있다. 중심 사이의 거리가 {d}일 때, 공통접선은 몇 개?",
+        "en": "Two circles have radii {r1} and {r2}, and their centers are {d} apart. How many common tangents do they have?"
+      },
+      "explain": {
+        "ja": "中心間の距離を、半径の和 {r1} + {r2} と差 {r1} − {r2} と比べると {answer} 本",
+        "ko": "중심 사이의 거리를 반지름의 합 {r1} + {r2}, 차 {r1} − {r2}와 비교하면 {answer}개",
+        "en": "Compare the distance with the sum {r1} + {r2} and the difference {r1} − {r2} of the radii: {answer}"
       }
     }
   ]

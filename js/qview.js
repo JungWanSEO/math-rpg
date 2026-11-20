@@ -2,14 +2,14 @@
 // 문제 문장, 그림, 그림 설명, 조건을 채우고, 보기 글의 길이에 따라 답 버튼 배치를 정합니다.
 import { t } from './i18n.js';
 import { questionText, noteText, optionText } from './questions.js';
-import { showFigure } from './figures.js';
+import { showFigure, isSketch } from './figures.js';
 
 // els: { text, figure, cap, note, answers } (모두 화면의 요소)
 export function fillQuestion(els, q) {
   els.text.textContent = questionText(q.raw);
   showFigure(els.figure, q.raw);
   // 그림은 비율이 정확하지 않은 약도라는 것을 알려 줍니다.
-  els.cap.hidden = els.figure.hidden;
+  els.cap.hidden = els.figure.hidden || !isSketch(q.raw);
   els.cap.textContent = t('ui.figNote');
   const note = noteText(q.raw);
   els.note.hidden = !note;

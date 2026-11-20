@@ -338,6 +338,146 @@ Object.assign(DRAW, {
   },
 });
 
+// ---------- 내접원, 체바, 접선과 현, 격자 길, 통계 그래프 ----------
+const small = (p, text, anchor = 'middle', color = DIM, size = 12) =>
+  `<text x="${r1(p[0])}" y="${r1(p[1])}" text-anchor="${anchor}" font-size="${size}" font-weight="700" fill="${color}">${esc(text)}</text>`;
+const list = (text) => String(text).split(',').map(Number);
+
+Object.assign(DRAW, {
+  // 삼각형과 내접원. ab, bc, ca 는 변의 길이, r 은 반지름. af 를 적으면 접점 D, E, F 와 AF 를 표시합니다.
+  incircle(L) {
+    const A = [140, 22];
+    const B = [36, 146];
+    const C = [292, 146];
+    const a = Math.hypot(B[0] - C[0], B[1] - C[1]);
+    const b = Math.hypot(A[0] - C[0], A[1] - C[1]);
+    const c = Math.hypot(A[0] - B[0], A[1] - B[1]);
+    const I = [(a * A[0] + b * B[0] + c * C[0]) / (a + b + c), (a * A[1] + b * B[1] + c * C[1]) / (a + b + c)];
+    const R = B[1] - I[1];
+    const s = (a + b + c) / 2;
+    const F = along(A, B, s - a);
+    const E = along(A, C, s - a);
+    const D = [I[0], B[1]];
+    const touch = L.af ? dot(D) + dot(E) + dot(F) + vertex(D, 'D', I, 14) + vertex(E, 'E', I) + vertex(F, 'F', I) : '';
+    return frame(
+      shape([A, B, C]) + ring(I, r1(R), ASK) + touch +
+      (L.r ? seg(I, D, ASK, 2, '4 4') + dot(I) + tag([I[0] + 12, I[1] + R / 2], L.r, 1) : '') +
+      vertex(A, 'A', I) + vertex(B, 'B', I) + vertex(C, 'C', I) +
+      tag(beside(A, B, 12, L.af ? 0.72 : 0.5), L.ab, -1) + tag(beside(A, C, -12), L.ca, 1) + tag([between(B, C)[0] + (L.af ? 44 : 0), 164], L.bc) +
+      (L.af ? tag(beside(A, F, 12), L.af, -1) : ''),
+      176,
+    );
+  },
+  // 체바의 정리: af, fb, bd, dc 는 비의 값, ce 는 묻는 자리
+  ceva(L) {
+    const A = [150, 22];
+    const B = [40, 140];
+    const C = [290, 140];
+    const D = between(B, C, 0.45);
+    const E = between(C, A, 0.5);
+    // AD 와 BE 의 교점 P 를 지나도록 F 를 정합니다.
+    const cross = (p, q, r, t) => {
+      const d1 = [q[0] - p[0], q[1] - p[1]];
+      const d2 = [t[0] - r[0], t[1] - r[1]];
+      const k = ((r[0] - p[0]) * d2[1] - (r[1] - p[1]) * d2[0]) / (d1[0] * d2[1] - d1[1] * d2[0]);
+      return [p[0] + d1[0] * k, p[1] + d1[1] * k];
+    };
+    const P = cross(A, D, B, E);
+    const F = cross(C, P, A, B);
+    return frame(
+      shape([A, B, C]) + seg(A, D, ASK, 2) + seg(B, E, ASK, 2) + seg(C, F, ASK, 2) + dot(P) +
+      vertex(A, 'A', P) + vertex(B, 'B', P) + vertex(C, 'C', P) + vertex(D, 'D', [D[0], 0], 15) + vertex(E, 'E', P) + vertex(F, 'F', P) +
+      tag(beside(A, F, 13), L.af, -1) + tag(beside(F, B, 13), L.fb, -1) +
+      tag([between(B, D)[0], 158], L.bd) + tag([between(D, C)[0], 158], L.dc) +
+      tag(beside(C, A, 16, 0.5), L.ce, 1),
+      172,
+    );
+  },
+  // 접선과 현이 이루는 각: acb 는 원주각, bat 는 접선과 현 사이의 각
+  tanchord(L) {
+    const O = [150, 86];
+    const R = 68;
+    const A = onCircle(O, R, 90);
+    const B = onCircle(O, R, 335);
+    const C = onCircle(O, R, 215);
+    const T = [A[0] + 120, A[1]];
+    const S = [A[0] - 110, A[1]];
+    return frame(
+      ring(O, R) + shape([A, B, C]) + seg(S, T, LINE, 2.5) + dot(A) +
+      arc(C, A, B, 20) + arc(A, B, T, 24) +
+      vertex(A, 'A', [A[0], 0], 15) + vertex(B, 'B', O) + vertex(C, 'C', O) + small([T[0] + 4, T[1] - 8], 'T', 'middle', DIM, 13) +
+      tag(inside(C, A, B, 42), L.acb) + tag(inside(A, B, T, 46), L.bat),
+      184,
+    );
+  },
+  // 격자 길: cols × rows, 왼쪽 아래 A 에서 오른쪽 위 B 까지
+  grid(L) {
+    const cols = Number(L.cols);
+    const rows = Number(L.rows);
+    const cell = Math.min(46, 250 / cols, 118 / rows);
+    const x0 = 163 - (cols * cell) / 2;
+    const y0 = 20;
+    let out = '';
+    for (let i = 0; i <= cols; i++) out += seg([x0 + i * cell, y0], [x0 + i * cell, y0 + rows * cell], LINE, 2);
+    for (let j = 0; j <= rows; j++) out += seg([x0, y0 + j * cell], [x0 + cols * cell, y0 + j * cell], LINE, 2);
+    const A = [x0, y0 + rows * cell];
+    const B = [x0 + cols * cell, y0];
+    return frame(out + dot(A, ASK) + dot(B, ASK) + small([A[0] - 12, A[1] + 6], 'A', 'middle', INK, 14) + small([B[0] + 12, B[1] + 2], 'B', 'middle', INK, 14), y0 + rows * cell + 22);
+  },
+  // 히스토그램: freq 는 "2,5,8,4,1", from 은 첫 계급의 시작, step 은 계급의 폭
+  histogram(L) {
+    const freq = list(L.freq);
+    const from = Number(L.from);
+    const step = Number(L.step);
+    const top = Math.max(...freq);
+    const x0 = 44;
+    const y0 = 132;
+    const w = 46;
+    const unitH = 104 / top;
+    let out = seg([x0, y0], [x0 + w * freq.length + 8, y0], INK, 2) + seg([x0, y0], [x0, 14], INK, 2);
+    freq.forEach((f, i) => {
+      const h = f * unitH;
+      out += `<rect x="${x0 + i * w}" y="${r1(y0 - h)}" width="${w}" height="${r1(h)}" fill="#2f4f8f" stroke="${LINE}" stroke-width="2"/>`;
+      out += small([x0 + i * w + w / 2, y0 - h - 5], String(f), 'middle', INK, 13);
+    });
+    for (let i = 0; i <= freq.length; i++) out += small([x0 + i * w, y0 + 15], String(from + step * i), 'middle', INK, 12);
+    return frame(out, 154);
+  },
+  // 상자그림: five 는 "최솟값,Q1,중앙값,Q3,최댓값"
+  boxplot(L) {
+    const five = list(L.five);
+    const lo = five[0];
+    const hi = five[4];
+    const x = (v) => 30 + ((v - lo) / (hi - lo)) * 266;
+    const y = 48;
+    let out = seg([x(lo), y], [x(five[1]), y]) + seg([x(five[3]), y], [x(hi), y]) +
+      `<rect x="${r1(x(five[1]))}" y="${y - 22}" width="${r1(x(five[3]) - x(five[1]))}" height="44" fill="#2f4f8f" stroke="${LINE}" stroke-width="2.5"/>` +
+      seg([x(five[2]), y - 22], [x(five[2]), y + 22], ASK, 3) + seg([x(lo), y - 12], [x(lo), y + 12]) + seg([x(hi), y - 12], [x(hi), y + 12]);
+    five.forEach((v) => {
+      out += seg([x(v), y + 30], [x(v), y + 38], DIM, 1.5) + small([x(v), y + 54], String(v), 'middle', INK, 13);
+    });
+    return frame(out, 114);
+  },
+  // 산포도: pts 는 "x,y;x,y;…" (1 ~ 9)
+  scatter(L) {
+    const pts = String(L.pts).split(';').map((p) => p.split(',').map(Number));
+    const x = (v) => 60 + v * 22;
+    const y = (v) => 150 - v * 13.5;
+    let out = seg([60, 150], [276, 150], INK, 2) + seg([60, 150], [60, 14], INK, 2) + small([282, 154], 'x', 'start', INK, 13) + small([60, 10], 'y', 'middle', INK, 13);
+    const seen = {};
+    pts.forEach(([px, py]) => {
+      const key = `${px},${py}`;
+      seen[key] = (seen[key] || 0) + 1;
+      out += `<circle cx="${x(px) + (seen[key] - 1) * 5}" cy="${r1(y(py))}" r="4.5" fill="${ASK}"/>`;
+    });
+    return frame(out, 164);
+  },
+});
+
+// 길이와 각도를 정확히 그리지 않은 약도인지. 통계 그래프와 격자 길은 정확한 그림입니다.
+const EXACT = ['histogram', 'boxplot', 'scatter', 'grid'];
+export const isSketch = (raw) => Boolean(raw.tpl.figure) && !EXACT.includes(raw.tpl.figure.kind);
+
 // 문제의 그림을 만듭니다. 그림이 없는 문제면 null.
 // alt 는 화면을 읽어 주는 도구를 위한 설명입니다. (그림에 적힌 값들)
 export function figureFor(raw) {
