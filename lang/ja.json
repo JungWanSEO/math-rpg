@@ -14,7 +14,7 @@
     "ultCharge": "必殺技 {n} / {need}",
     "weak": "弱点: {type}",
     "intentNormal": "次のターン: 攻撃 (まちがえるとダメージ {d})",
-    "intentBig": "次のターン: 強い攻撃 (防がないとダメージ {d})",
+    "intentBig": "強い攻撃が来る! 防御でしか防げない (ダメージ {d})",
     "level": "レベル{n} · {type}",
     "defendWait": "連続では使えません",
     "hint": "ヒントを使う (残り{n}個)",
@@ -23,7 +23,8 @@
     "boss": "ボス {name}",
     "codex": "図鑑",
     "midboss": "中ボス {name}",
-    "scopeCount": "タイプ {n} / {total}"
+    "scopeCount": "タイプ {n} / {total}",
+    "attackBigSub": "正解でもダメージ"
   },
   "msg": {
     "choose": "行動を選んでください。",
@@ -36,7 +37,8 @@
     "solveGuard": "正解すると攻撃を完全に防いで反撃します。",
     "guardOk": "完全に防いだ! 反撃する。",
     "guardFail": "防ぎきれず、ダメージを半分受けた。{explain}",
-    "blocked": "ガード"
+    "blocked": "ガード",
+    "bigHit": "攻撃は成功したが、強い攻撃を受けた。強い攻撃は防御でしか防げません。(ダメージ {d})"
   },
   "map": {
     "title": "分かれ道マップ",

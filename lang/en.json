@@ -14,7 +14,7 @@
     "ultCharge": "Ultimate {n} / {need}",
     "weak": "Weak to: {type}",
     "intentNormal": "Next turn: attack ({d} damage if you miss)",
-    "intentBig": "Next turn: heavy attack ({d} damage unless blocked)",
+    "intentBig": "Heavy attack incoming! Only Defend blocks it ({d} damage)",
     "level": "Level {n} · {type}",
     "defendWait": "Not twice in a row",
     "hint": "Use a hint ({n} left)",
@@ -23,7 +23,8 @@
     "boss": "Boss {name}",
     "codex": "Codex",
     "midboss": "Mid-boss {name}",
-    "scopeCount": "Types {n} / {total}"
+    "scopeCount": "Types {n} / {total}",
+    "attackBigSub": "You take damage anyway"
   },
   "msg": {
     "choose": "Choose an action.",
@@ -36,7 +37,8 @@
     "solveGuard": "Answer correctly to block the attack completely and counter.",
     "guardOk": "Perfect block! You counterattack.",
     "guardFail": "The block failed, so you take half damage. {explain}",
-    "blocked": "Blocked"
+    "blocked": "Blocked",
+    "bigHit": "Your attack landed, but the heavy attack hit you. Only Defend can block a heavy attack. ({d} damage)"
   },
   "map": {
     "title": "Crossroads map",

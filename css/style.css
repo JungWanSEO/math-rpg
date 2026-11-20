@@ -100,6 +100,7 @@ html, body {
 .fill.rose { background: var(--rose); }
 .fill.teal { background: var(--teal); }
 canvas { display: block; width: 100%; aspect-ratio: 360 / 230; }
+.intent.big { border-color: var(--rose); background: #5a2333; font-weight: 700; }
 .intent {
   align-self: center;
   font-size: 12px;

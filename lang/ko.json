@@ -14,7 +14,7 @@
     "ultCharge": "필살기 {n} / {need}",
     "weak": "약점: {type}",
     "intentNormal": "다음 턴 예고: 공격 (틀리면 피해 {d})",
-    "intentBig": "다음 턴 예고: 강한 공격 (막지 않으면 피해 {d})",
+    "intentBig": "강한 공격이 옵니다! 방어로만 막을 수 있음 (피해 {d})",
     "level": "{n}단계 · {type}",
     "defendWait": "연속 사용 불가",
     "hint": "힌트 쓰기 (남은 {n}개)",
@@ -23,7 +23,8 @@
     "boss": "보스 {name}",
     "codex": "도감",
     "midboss": "중간 보스 {name}",
-    "scopeCount": "유형 {n} / {total}"
+    "scopeCount": "유형 {n} / {total}",
+    "attackBigSub": "맞혀도 피해 받음"
   },
   "msg": {
     "choose": "행동을 고르세요.",
@@ -36,7 +37,8 @@
     "solveGuard": "문제를 맞히면 공격을 완전히 막고 반격합니다.",
     "guardOk": "완벽하게 막았습니다! 반격합니다.",
     "guardFail": "막지 못해 피해를 절반 받았습니다. {explain}",
-    "blocked": "막음"
+    "blocked": "막음",
+    "bigHit": "공격은 성공했지만 강한 공격을 맞았습니다. 강한 공격은 방어로만 막을 수 있습니다. (피해 {d})"
   },
   "map": {
     "title": "갈림길 지도",
