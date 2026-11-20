@@ -330,3 +330,15 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 /* while answering: make room for the question by folding the rest of the battle screen */
 .answering .me, .answering #actions, .answering #ultBtn, .answering .intent { display: none; }
 .answering canvas { height: 150px; aspect-ratio: auto; object-fit: cover; object-position: 50% 80%; }
+
+/* title screen */
+.title { display: flex; flex-direction: column; gap: 14px; padding: 48px 20px 24px; }
+.title h1 { margin: 0; font-size: 40px; letter-spacing: 2px; color: var(--teal); text-align: center; }
+.title > p { margin: 0; text-align: center; font-size: 15px; color: var(--muted); }
+.title .options { margin-top: 18px; }
+.title .options button { min-height: 64px; }
+.title .options button.primary { background: #12564d; border-color: var(--teal); font-size: inherit; }
+.title .options button.danger { background: #5a2333; border-color: var(--rose); }
+.title .title-note { margin-top: 8px; font-size: 12px; line-height: 1.6; }
+.screen-head h2 { flex: 1 1 auto; }
+.top-btn.small { min-height: 36px; padding: 0 10px; font-size: 12px; }

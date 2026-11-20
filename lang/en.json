@@ -40,7 +40,8 @@
   "map": {
     "title": "Crossroads map",
     "progress": "Floor {n} of {total}",
-    "tip": "Pick a starting space at the bottom. You can only move along the lines."
+    "tip": "Pick a starting space at the bottom. You can only move along the lines.",
+    "toTitle": "Title"
   },
   "node": {
     "battle": "Battle",
@@ -185,5 +186,16 @@
       "text": "A monster jumps out of the bushes!",
       "go": "Fight"
     }
+  },
+  "title": {
+    "continue": "Continue",
+    "continueSub": "Floor {n} of {total} · HP {hp}/{max}",
+    "start": "Start",
+    "startSub": "Set out on a new map.",
+    "restart": "Start over",
+    "restartSub": "Abandon the current map and begin a new one.",
+    "confirm": "Tap again to discard the map in progress.",
+    "codexSub": "Monsters you met and your record by type",
+    "note": "Progress is saved on this device automatically. Your codex record stays even if you start over."
   }
 }

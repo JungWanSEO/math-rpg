@@ -1,7 +1,7 @@
 // 화면 전환에 쓰는 작은 도구.
 export const $ = (id) => document.getElementById(id);
 
-const SCREENS = ['screenMap', 'screenBattle', 'screenEvent', 'screenCodex'];
+const SCREENS = ['screenTitle', 'screenMap', 'screenBattle', 'screenEvent', 'screenCodex'];
 
 // 화면 하나만 보이게 합니다.
 export function show(id) {

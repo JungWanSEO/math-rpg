@@ -31,11 +31,26 @@
     <button type="button" id="coachSkip" data-i18n="tut.skip"></button>
   </div>
 
+  <!-- 처음 화면 -->
+  <section class="screen" id="screenTitle">
+    <div class="title">
+      <h1>MATH RPG</h1>
+      <p id="titleUnit"></p>
+      <div class="options">
+        <button type="button" id="titleContinue" hidden><b></b><small></small></button>
+        <button type="button" id="titleNew"><b></b><small></small></button>
+        <button type="button" id="titleCodex"><b data-i18n="ui.codex"></b><small data-i18n="title.codexSub"></small></button>
+      </div>
+      <p class="title-note" data-i18n="title.note"></p>
+    </div>
+  </section>
+
   <!-- 갈림길 지도 -->
-  <section class="screen" id="screenMap">
+  <section class="screen" id="screenMap" hidden>
     <div class="screen-head">
       <h2 data-i18n="map.title"></h2>
       <span id="mapProgress"></span>
+      <button type="button" class="top-btn small" id="toTitle" data-i18n="map.toTitle"></button>
     </div>
     <p class="map-tip" data-i18n="map.tip"></p>
     <div class="map" id="mapRows"></div>
