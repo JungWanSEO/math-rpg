@@ -429,9 +429,85 @@ export function createStage(canvas) {
       line(x - 4, 63 - h - bob, x + 4, 63 - h - bob, '#1c2740', 1.5);
     }
   }
+  // 이항 마술사 (중간 보스, 数と式): 고유 동작은 카드의 부호를 그대로 둔 채 반대편으로 넘기기
+  function drawMagician(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const side = f.flag ? 1 : -1;
+    const cx = side * 40 + (-side * 80) * ease(sp);
+    const cy = -26 - Math.sin(sp * Math.PI) * 26;
+    ctx.save();
+    ctx.setLineDash([4, 4]);
+    line(0, -76, 0, 50, '#8fb4ff', 1.5); // 등호의 자리 (좌변 | 우변)
+    ctx.restore();
+    glyph('=', 0, -84, 16, '#8fb4ff');
+    poly([-26, 46, 0, -18, 26, 46], '#5b3fa6');
+    poly([-8, 46, 0, 4, 8, 46], '#7a5cd0');
+    circ(0, -22, 15, '#f0d2a8');
+    rrect(-20, -38, 40, 6, 2, '#1c2740');
+    rrect(-13, -62, 26, 26, 3, '#1c2740');
+    rrect(-13, -44, 26, 4, 1, '#e5484d');
+    eye(-6, -22, 3, true, '#1c2740', 1.4);
+    eye(6, -22, 3, true, '#1c2740', 1.4);
+    ctx.strokeStyle = C('#1c2740');
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(-6, -13);
+    ctx.quadraticCurveTo(0, -8, 7, -14);
+    ctx.stroke();
+    line(-14, 6, -30, -8, '#5b3fa6', 5);
+    line(14, 6, 30, -8, '#5b3fa6', 5);
+    rrect(cx - 12, cy - 15, 24, 30, 4, '#ffffff');
+    glyph('+3', cx, cy, 13, '#e5484d'); // 넘어가도 부호가 그대로인 것이 실수
+  }
+  // 이상값 거인 (중간 보스, データの分析): 고유 동작은 혼자 높이 뛰어올라 평균선을 끌어올리기
+  function drawGiant(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const jump = Math.sin(sp * Math.PI) * 30;
+    const mean = 24 - jump * 0.45;
+    for (const x of [-52, -40, 40, 52]) circ(x, 36, 5, '#8fb4ff');
+    ctx.save();
+    ctx.setLineDash([6, 4]);
+    line(-60, mean, 60, mean, '#ffc857', 2);
+    ctx.restore();
+    ctx.save();
+    ctx.translate(0, -jump);
+    ell(0, 10, 28, 36, '#3f6fd9');
+    circ(0, -30, 20, '#5a8cf0');
+    rrect(-34, -4, 12, 30, 5, '#3f6fd9');
+    rrect(22, -4, 12, 30, 5, '#3f6fd9');
+    eye(-8, -32, 5, true, '#1c2740', 0.2);
+    eye(8, -32, 5, true, '#1c2740', 0.2);
+    line(-7, -20, 7, -20, '#1c2740', 2);
+    glyph('!', 0, 12, 22, '#ffffff');
+    ctx.restore();
+  }
+  // 판별식 용 (보스, 二次関数): 고유 동작은 배의 판별식 부호 바꾸기 (D > 0 ↔ D < 0)
+  function drawDragon(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const negative = f.flag !== sp > 0.5;
+    const flap = S.idle ? Math.sin(S.t * 4) * 6 : 0;
+    const puff = 1 + Math.sin(sp * Math.PI) * 0.1;
+    poly([-20, -10, -66, -40 - flap, -56, 4, -40, -4, -34, 14], '#2f8f6b');
+    poly([20, -10, 66, -40 - flap, 56, 4, 40, -4, 34, 14], '#2f8f6b');
+    poly([18, 34, 52, 46, 30, 22], '#3fae83');
+    ctx.save();
+    ctx.scale(puff, puff);
+    ell(0, 14, 30, 34, '#3fae83');
+    ell(0, 20, 20, 24, '#e9f7c9');
+    circ(0, -30, 21, '#3fae83');
+    poly([-16, -44, -22, -64, -6, -48], '#ffc857');
+    poly([16, -44, 22, -64, 6, -48], '#ffc857');
+    eye(-8, -34, 5, true, '#e5484d', 0.8);
+    eye(8, -34, 5, true, '#e5484d', 0.8);
+    circ(-4, -20, 1.5, '#1c2740');
+    circ(4, -20, 1.5, '#1c2740');
+    glyph(negative ? 'D<0' : 'D>0', 0, 20, 14, '#1f6f5c');
+    ctx.restore();
+  }
   const FOE_DRAW = {
     twins: drawTwins, bat: drawBat, golem: drawGolem, thief: drawThief, tower: drawTower,
     crab: drawCrab, slime: drawSlime, ghost: drawGhost, bars: drawBars,
+    magician: drawMagician, giant: drawGiant, dragon: drawDragon,
   };
 
   // 대기·공격·피격을 위치와 크기로 바꾼 값

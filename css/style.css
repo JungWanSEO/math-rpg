@@ -391,3 +391,20 @@ button, select, .node { touch-action: manipulation; } /* 두 번 눌러 확대�
 .top { padding-top: max(8px, env(safe-area-inset-top)); }
 .top { position: sticky; top: 0; z-index: 10; } /* 긴 화면에서도 메뉴 버튼이 항상 보이게 */
 .menu-box .danger { border-color: var(--rose); color: var(--rose); }
+
+/* settings row (sound + language) on the title screen and in the menu */
+.settings { display: flex; gap: 8px; }
+.settings > * { flex: 1 1 0; }
+.settings .lang select { width: 100%; }
+.top[hidden] { display: none; }
+
+/* damage feedback */
+@keyframes hurt-shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
+@keyframes hurt-bar { 0% { filter: brightness(2.4); } 100% { filter: none; } }
+@keyframes hurt-flash { 0% { box-shadow: inset 0 0 0 100vmax rgba(255, 90, 110, 0.22); } 100% { box-shadow: inset 0 0 0 100vmax rgba(255, 90, 110, 0); } }
+.hurt { animation: hurt-shake 0.4s; }
+.hurt .fill, .bar.hurt .fill { animation: hurt-bar 0.45s; }
+#screenBattle.flash { animation: hurt-flash 0.45s; }
+.me.low .fill.teal { background: var(--rose); }
+.me.low .num { color: var(--rose); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .hurt, #screenBattle.flash { animation: none; } }

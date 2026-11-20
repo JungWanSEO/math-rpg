@@ -74,7 +74,13 @@
         "ko": "삼각비",
         "en": "Trigonometric ratios"
       },
-      "types": ["value", "obtuse", "ratio", "relation", "length"]
+      "types": [
+        "value",
+        "obtuse",
+        "ratio",
+        "relation",
+        "length"
+      ]
     },
     {
       "name": {
@@ -82,7 +88,13 @@
         "ko": "삼각비와 도형",
         "en": "Trigonometry and figures"
       },
-      "types": ["height", "twopoint", "sinerule", "cosrule", "area"]
+      "types": [
+        "height",
+        "twopoint",
+        "sinerule",
+        "cosrule",
+        "area"
+      ]
     }
   ],
   "templates": [
@@ -101,15 +113,96 @@
         "en": "{fn} {deg}° = {answer}"
       },
       "items": [
-        { "fn": "sin", "deg": 30, "answer": "1/2", "wrong": [ "√2/2", "√3/2", "√3/3" ] },
-        { "fn": "sin", "deg": 45, "answer": "√2/2", "wrong": [ "1/2", "√3/2", "√3/3" ] },
-        { "fn": "sin", "deg": 60, "answer": "√3/2", "wrong": [ "1/2", "√2/2", "√3/3" ] },
-        { "fn": "cos", "deg": 30, "answer": "√3/2", "wrong": [ "1/2", "√2/2", "√3/3" ] },
-        { "fn": "cos", "deg": 45, "answer": "√2/2", "wrong": [ "1/2", "√3/2", "√3/3" ] },
-        { "fn": "cos", "deg": 60, "answer": "1/2", "wrong": [ "√2/2", "√3/2", "√3/3" ] },
-        { "fn": "tan", "deg": 30, "answer": "√3/3", "wrong": [ "1/2", "√2/2", "√3/2" ] },
-        { "fn": "tan", "deg": 45, "answer": "1", "wrong": [ "1/2", "√2/2", "√3/2" ] },
-        { "fn": "tan", "deg": 60, "answer": "√3", "wrong": [ "1/2", "√2/2", "√3/2" ] }
+        {
+          "fn": "sin",
+          "deg": 30,
+          "answer": "1/2",
+          "wrong": [
+            "√2/2",
+            "√3/2",
+            "√3/3"
+          ]
+        },
+        {
+          "fn": "sin",
+          "deg": 45,
+          "answer": "√2/2",
+          "wrong": [
+            "1/2",
+            "√3/2",
+            "√3/3"
+          ]
+        },
+        {
+          "fn": "sin",
+          "deg": 60,
+          "answer": "√3/2",
+          "wrong": [
+            "1/2",
+            "√2/2",
+            "√3/3"
+          ]
+        },
+        {
+          "fn": "cos",
+          "deg": 30,
+          "answer": "√3/2",
+          "wrong": [
+            "1/2",
+            "√2/2",
+            "√3/3"
+          ]
+        },
+        {
+          "fn": "cos",
+          "deg": 45,
+          "answer": "√2/2",
+          "wrong": [
+            "1/2",
+            "√3/2",
+            "√3/3"
+          ]
+        },
+        {
+          "fn": "cos",
+          "deg": 60,
+          "answer": "1/2",
+          "wrong": [
+            "√2/2",
+            "√3/2",
+            "√3/3"
+          ]
+        },
+        {
+          "fn": "tan",
+          "deg": 30,
+          "answer": "√3/3",
+          "wrong": [
+            "1/2",
+            "√2/2",
+            "√3/2"
+          ]
+        },
+        {
+          "fn": "tan",
+          "deg": 45,
+          "answer": "1",
+          "wrong": [
+            "1/2",
+            "√2/2",
+            "√3/2"
+          ]
+        },
+        {
+          "fn": "tan",
+          "deg": 60,
+          "answer": "√3",
+          "wrong": [
+            "1/2",
+            "√2/2",
+            "√3/2"
+          ]
+        }
       ]
     },
     {
@@ -127,19 +220,136 @@
         "en": "{fn} {deg}° = {answer} (cos and tan are negative for obtuse angles)"
       },
       "items": [
-        { "fn": "sin", "deg": 120, "answer": "√3/2", "wrong": [ "−√3/2", "1/2", "−1/2" ] },
-        { "fn": "cos", "deg": 120, "answer": "−1/2", "wrong": [ "1/2", "−√3/2", "√3/2" ] },
-        { "fn": "tan", "deg": 120, "answer": "−√3", "wrong": [ "√3", "−√3/3", "√3/3" ] },
-        { "fn": "sin", "deg": 135, "answer": "√2/2", "wrong": [ "−√2/2", "1/2", "−1/2" ] },
-        { "fn": "cos", "deg": 135, "answer": "−√2/2", "wrong": [ "√2/2", "−1/2", "−√3/2" ] },
-        { "fn": "tan", "deg": 135, "answer": "−1", "wrong": [ "1", "−√2/2", "√2/2" ] },
-        { "fn": "sin", "deg": 150, "answer": "1/2", "wrong": [ "−1/2", "√3/2", "−√3/2" ] },
-        { "fn": "cos", "deg": 150, "answer": "−√3/2", "wrong": [ "√3/2", "−1/2", "1/2" ] },
-        { "fn": "tan", "deg": 150, "answer": "−√3/3", "wrong": [ "√3/3", "−√3", "√3" ] },
-        { "fn": "sin", "deg": 90, "answer": "1", "wrong": [ "0", "−1", "1/2" ] },
-        { "fn": "cos", "deg": 90, "answer": "0", "wrong": [ "1", "−1", "1/2" ] },
-        { "fn": "cos", "deg": 180, "answer": "−1", "wrong": [ "1", "0", "−1/2" ] },
-        { "fn": "sin", "deg": 180, "answer": "0", "wrong": [ "1", "−1", "1/2" ] }
+        {
+          "fn": "sin",
+          "deg": 120,
+          "answer": "√3/2",
+          "wrong": [
+            "−√3/2",
+            "1/2",
+            "−1/2"
+          ]
+        },
+        {
+          "fn": "cos",
+          "deg": 120,
+          "answer": "−1/2",
+          "wrong": [
+            "1/2",
+            "−√3/2",
+            "√3/2"
+          ]
+        },
+        {
+          "fn": "tan",
+          "deg": 120,
+          "answer": "−√3",
+          "wrong": [
+            "√3",
+            "−√3/3",
+            "√3/3"
+          ]
+        },
+        {
+          "fn": "sin",
+          "deg": 135,
+          "answer": "√2/2",
+          "wrong": [
+            "−√2/2",
+            "1/2",
+            "−1/2"
+          ]
+        },
+        {
+          "fn": "cos",
+          "deg": 135,
+          "answer": "−√2/2",
+          "wrong": [
+            "√2/2",
+            "−1/2",
+            "−√3/2"
+          ]
+        },
+        {
+          "fn": "tan",
+          "deg": 135,
+          "answer": "−1",
+          "wrong": [
+            "1",
+            "−√2/2",
+            "√2/2"
+          ]
+        },
+        {
+          "fn": "sin",
+          "deg": 150,
+          "answer": "1/2",
+          "wrong": [
+            "−1/2",
+            "√3/2",
+            "−√3/2"
+          ]
+        },
+        {
+          "fn": "cos",
+          "deg": 150,
+          "answer": "−√3/2",
+          "wrong": [
+            "√3/2",
+            "−1/2",
+            "1/2"
+          ]
+        },
+        {
+          "fn": "tan",
+          "deg": 150,
+          "answer": "−√3/3",
+          "wrong": [
+            "√3/3",
+            "−√3",
+            "√3"
+          ]
+        },
+        {
+          "fn": "sin",
+          "deg": 90,
+          "answer": "1",
+          "wrong": [
+            "0",
+            "−1",
+            "1/2"
+          ]
+        },
+        {
+          "fn": "cos",
+          "deg": 90,
+          "answer": "0",
+          "wrong": [
+            "1",
+            "−1",
+            "1/2"
+          ]
+        },
+        {
+          "fn": "cos",
+          "deg": 180,
+          "answer": "−1",
+          "wrong": [
+            "1",
+            "0",
+            "−1/2"
+          ]
+        },
+        {
+          "fn": "sin",
+          "deg": 180,
+          "answer": "0",
+          "wrong": [
+            "1",
+            "−1",
+            "1/2"
+          ]
+        }
       ]
     },
     {
@@ -208,14 +418,14 @@
       "figure": {
         "kind": "triangle",
         "angle": "30°",
-        "opp": "?",
+        "opp": "x = ?",
         "adj": "",
         "hyp": "{c} m"
       },
       "text": {
-        "ja": "図の直角三角形で、? の辺の長さは? (sin 30° = 1/2)",
-        "ko": "그림의 직각삼각형에서 ?로 표시한 변의 길이는? (sin 30° = 1/2)",
-        "en": "In the right triangle shown, how long is the side marked ? (sin 30° = 1/2)"
+        "ja": "図の直角三角形で、辺 x の長さは? (sin 30° = 1/2)",
+        "ko": "그림의 직각삼각형에서 변 x의 길이는? (sin 30° = 1/2)",
+        "en": "In the right triangle shown, how long is side x? (sin 30° = 1/2)"
       },
       "explain": {
         "ja": "対辺 = 斜辺 × sin 30° = {c} × 1/2 = {answer}",
@@ -232,13 +442,13 @@
         "kind": "triangle",
         "angle": "60°",
         "opp": "",
-        "adj": "?",
+        "adj": "x = ?",
         "hyp": "{c} m"
       },
       "text": {
-        "ja": "図の直角三角形で、? の辺の長さは? (cos 60° = 1/2)",
-        "ko": "그림의 직각삼각형에서 ?로 표시한 변의 길이는? (cos 60° = 1/2)",
-        "en": "In the right triangle shown, how long is the side marked ? (cos 60° = 1/2)"
+        "ja": "図の直角三角形で、辺 x の長さは? (cos 60° = 1/2)",
+        "ko": "그림의 직각삼각형에서 변 x의 길이는? (cos 60° = 1/2)",
+        "en": "In the right triangle shown, how long is side x? (cos 60° = 1/2)"
       },
       "explain": {
         "ja": "隣辺 = 斜辺 × cos 60° = {c} × 1/2 = {answer}",
@@ -255,12 +465,12 @@
         "kind": "tower",
         "angle": "{deg}°",
         "dist": "{d} m",
-        "height": "?"
+        "height": "h = ?"
       },
       "text": {
-        "ja": "図のように、{d}m 離れた地点から塔の先端を見上げた角が {deg}° である。塔の高さは?",
-        "ko": "그림처럼 {d}m 떨어진 지점에서 탑 꼭대기를 올려본 각이 {deg}°이다. 탑의 높이는?",
-        "en": "As shown, from a point {d} m away the angle of elevation to the top of the tower is {deg}°. How tall is the tower?"
+        "ja": "図のように、{d}m 離れた地点から塔の先端を見上げた角が {deg}° である。塔の高さ h は?",
+        "ko": "그림처럼 {d}m 떨어진 지점에서 탑 꼭대기를 올려본 각이 {deg}°이다. 탑의 높이 h는?",
+        "en": "As shown, from a point {d} m away the angle of elevation to the top of the tower is {deg}°. What is the height h of the tower?"
       },
       "explain": {
         "ja": "高さ = {d} × tan {deg}° = {answer}",
@@ -278,12 +488,12 @@
         "far": "{a}°",
         "near": "{b}°",
         "gap": "{g} m",
-        "height": "?"
+        "height": "h = ?"
       },
       "text": {
-        "ja": "図のように、{g}m 離れた2地点から塔の先端を見上げた角が {a}° と {b}° である。塔の高さは?",
-        "ko": "그림처럼 {g}m 떨어진 두 지점에서 탑 꼭대기를 올려본 각이 {a}°와 {b}°이다. 탑의 높이는?",
-        "en": "As shown, from two points {g} m apart the angles of elevation to the top of the tower are {a}° and {b}°. How tall is the tower?"
+        "ja": "図のように、{g}m 離れた2地点から塔の先端を見上げた角が {a}° と {b}° である。塔の高さ h は?",
+        "ko": "그림처럼 {g}m 떨어진 두 지점에서 탑 꼭대기를 올려본 각이 {a}°와 {b}°이다. 탑의 높이 h는?",
+        "en": "As shown, from two points {g} m apart the angles of elevation to the top of the tower are {a}° and {b}°. What is the height h of the tower?"
       },
       "explain": {
         "ja": "高さ = {g} × tan {a}° × tan {b}° ÷ (tan {b}° − tan {a}°) = {answer}",

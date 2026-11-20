@@ -8,7 +8,7 @@ import { showFigure } from './figures.js';
 import { $, twoLineButton } from './ui.js';
 import { play } from './sound.js';
 
-export function createEvents({ getRun, data, record, onChange }) {
+export function createEvents({ getRun, data, record, onChange, persist = () => {} }) {
   let draw = null; // 지금 화면을 다시 그리는 함수 (언어를 바꿀 때 씁니다)
 
   function open(fn) {
@@ -191,11 +191,16 @@ export function createEvents({ getRun, data, record, onChange }) {
 
     // ? 칸: 무슨 일이 생길지 모릅니다. 좋은 일, 나쁜 일, 선택, 기습 중 하나가 나옵니다.
     // ambush 는 기습일 때 전투를 시작하는 함수입니다.
-    mystery(done, ambush) {
+    // 한 번 정해진 사건은 칸(node)에 적어 둡니다. 나갔다가 다시 들어와도 같은 사건이 나옵니다.
+    mystery(node, done, ambush) {
       const run = getRun();
       const M = CONFIG.mystery;
       const kinds = ['spring', 'fog', 'purse', 'thief', 'note', 'statue', 'ambush'];
-      const kind = kinds[Math.floor(Math.random() * kinds.length)];
+      if (!kinds.includes(node.mystery)) {
+        node.mystery = kinds[Math.floor(Math.random() * kinds.length)];
+        persist();
+      }
+      const kind = node.mystery;
 
       if (kind === 'ambush') {
         open(() => {
@@ -231,9 +236,11 @@ export function createEvents({ getRun, data, record, onChange }) {
         return;
       }
 
-      // 바로 일어나는 일: 효과를 한 번 적용하고 결과를 보여줍니다.
+      // 바로 일어나는 일: 효과를 한 번만 적용하고 결과를 보여줍니다.
       let n = 1;
-      if (kind === 'spring') {
+      if (typeof node.mysteryN === 'number') {
+        n = node.mysteryN; // 이미 적용한 사건: 결과만 다시 보여줍니다.
+      } else if (kind === 'spring') {
         const before = run.hp;
         run.hp = Math.min(run.maxHp, run.hp + M.spring);
         n = run.hp - before;
@@ -247,9 +254,11 @@ export function createEvents({ getRun, data, record, onChange }) {
       } else if (kind === 'thief') {
         n = Math.min(run.gold, M.thief);
         run.gold -= n;
-      } else {
-        run.hints += 1; // note
+      } else if (kind === 'note') {
+        run.hints += 1;
       }
+      node.mysteryN = n;
+      persist();
       open(() => {
         base(`mystery.${kind}.title`, t(`mystery.${kind}.text`, { n }));
         leave('ev.continue', done);
