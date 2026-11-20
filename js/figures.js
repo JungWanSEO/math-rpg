@@ -8,6 +8,7 @@
 //   tower     탑 하나      angle 올려본 각 · dist 수평거리 · height 높이
 //   twopoint  탑과 두 지점 far 먼 지점의 각 · near 가까운 지점의 각 · gap 두 지점 사이 · height 높이
 //   anytri    삼각형 ABC   angleA·angleB·angleC 각 · sideA·sideB·sideC 변 (a 는 A 와 마주 보는 변)
+//             변은 "b = 7" 처럼 이름이 자동으로 붙습니다. 값만 적으세요.
 // 그림은 길이의 비율이 정확하지 않은 약도입니다.
 import { fill } from './i18n.js';
 
@@ -23,7 +24,12 @@ function esc(text) {
 function label(x, y, text, anchor = 'middle') {
   if (!text) return '';
   const ask = String(text).includes('?');
-  return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="${ask ? 18 : 14}" font-weight="${ask ? 800 : 600}" fill="${ask ? ASK : INK}">${esc(text)}</text>`;
+  if (!ask) return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="14" font-weight="600" fill="${INK}">${esc(text)}</text>`;
+  // 구해야 하는 값은 노란 테두리의 이름표로 눈에 띄게 합니다. 예: "a = ?"
+  const width = String(text).length * 9 + 16;
+  const left = anchor === 'start' ? x - 8 : anchor === 'end' ? x - width + 8 : x - width / 2;
+  return `<rect x="${left}" y="${y - 17}" width="${width}" height="24" rx="8" fill="#3a2f10" stroke="${ASK}" stroke-width="1.5"/>` +
+    `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="17" font-weight="800" fill="${ASK}">${esc(text)}</text>`;
 }
 
 const frame = (inner) =>
@@ -91,13 +97,27 @@ const DRAW = {
       const [x, y] = move(p, G, -13);
       return `<text x="${x}" y="${y}" text-anchor="middle" font-size="13" font-weight="700" fill="${DIM}">${text}</text>`;
     };
-    const angle = (p, text) => label(...move(p, G, 30), text);
-    const side = (p, q, text) => label(...move(mid(p, q), G, -15), text);
+    // 변에는 이름을 붙여 적습니다. ("7" → "b = 7", "?" → "a = ?") 묻는 각도 "A = ?" 로 적습니다.
+    const named = (name, text) => (text ? `${name} = ${text}` : '');
+    // 묻는 각은 꼭짓점에서 조금 더 안쪽에 적어 변과 겹치지 않게 합니다.
+    const angle = (p, name, text) => label(...move(p, G, text === '?' ? 80 : 30), text === '?' ? named(name, text) : text);
+    // 변의 이름표는 삼각형 바깥쪽에 둡니다. 바깥이 왼쪽이면 글의 끝을, 오른쪽이면 글의 처음을 변에 맞춥니다.
+    const side = (p, q, name, text) => {
+      if (!text) return '';
+      const [mx, my] = mid(p, q);
+      const len = Math.hypot(mx - G[0], my - G[1]) || 1;
+      const ux = (mx - G[0]) / len;
+      const uy = (my - G[1]) / len;
+      const anchor = ux > 0.3 ? 'start' : ux < -0.3 ? 'end' : 'middle';
+      const gap = text === '?' ? 16 : 10;
+      const y = my + uy * gap + (uy > 0.3 ? 14 : uy < -0.3 ? -2 : 5);
+      return label(Math.round(mx + ux * gap), Math.round(y), named(name, text), anchor);
+    };
     return frame(
       `<path d="M${P.A[0]} ${P.A[1]} L${P.B[0]} ${P.B[1]} L${P.C[0]} ${P.C[1]} Z" stroke="${LINE}" stroke-width="2.5"/>` +
       corner(P.A, 'A') + corner(P.B, 'B') + corner(P.C, 'C') +
-      angle(P.A, L.angleA) + angle(P.B, L.angleB) + angle(P.C, L.angleC) +
-      side(P.B, P.C, L.sideA) + side(P.C, P.A, L.sideB) + side(P.A, P.B, L.sideC)
+      angle(P.A, 'A', L.angleA) + angle(P.B, 'B', L.angleB) + angle(P.C, 'C', L.angleC) +
+      side(P.B, P.C, 'a', L.sideA) + side(P.C, P.A, 'b', L.sideB) + side(P.A, P.B, 'c', L.sideC)
     );
   },
 };
