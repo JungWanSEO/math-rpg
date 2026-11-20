@@ -27,7 +27,8 @@ export const CONFIG = {
   defendReduce: 0.5, // 방어 문제를 틀렸을 때 받는 피해 비율 (맞히면 0)
 
   foeAttack: {
-    normal: 2,       // 적의 보통 공격
+    normal: 4,       // 적의 보통 공격 (공격 문제를 틀렸을 때만 맞습니다)
+    hitOnCorrect: false, // true 로 바꾸면 문제를 맞혀도 적의 보통 공격을 받습니다
     big: 8,          // 적의 강한 공격 (예고를 보고 방어로 막아야 하는 공격)
     bigEvery: 3,     // 몇 턴마다 강한 공격을 하는지
   },
