@@ -218,3 +218,294 @@ export const GENERATORS = {
     return item({ b, c, A }, answer, [surd(bc, 1, 2), cosMix, times(answer, 2)], [surd(bc), over(answer, 2)]);
   },
 };
+
+// =====================================================================
+// 数と式 · 二次関数 · データの分析 (数学I 의 나머지 단원)
+// =====================================================================
+
+const nonzero = (from, to) => pickOne(range(from, to).filter((n) => n !== 0));
+const numStr = (n) => String(n).replace('-', MINUS);
+const shuffled = (arr) => [...arr].sort(() => Math.random() - 0.5);
+const int = (n) => ({ s: numStr(n), v: n });
+const dec = (v) => ({ s: numStr(Number.isInteger(v) ? v : Math.round(v * 10) / 10), v });
+
+// c2·x² + c1·x + c0 을 글로 씁니다. 예: polyStr(1, -5, 6) → "x² − 5x + 6"
+function polyStr(c2, c1, c0) {
+  const parts = [];
+  const term = (coef, sym) => {
+    if (!coef) return;
+    const abs = Math.abs(coef);
+    parts.push([coef < 0, `${abs === 1 && sym ? '' : abs}${sym}`]);
+  };
+  term(c2, 'x²');
+  term(c1, 'x');
+  term(c0, '');
+  if (!parts.length) return '0';
+  return parts.map(([neg, body], i) => (i === 0 ? `${neg ? MINUS : ''}${body}` : ` ${neg ? MINUS : '+'} ${body}`)).join('');
+}
+// 다항식 보기: 값이 같은 식끼리 겹치지 않도록 x = 1.37 에서의 값으로 구별합니다.
+const poly = (c2, c1, c0) => ({ s: polyStr(c2, c1, c0), v: c2 * 1.8769 + c1 * 1.37 + c0 });
+
+// (ax + b) 를 글로 씁니다.
+function lin(a, b) {
+  const head = `${a === 1 ? '' : a === -1 ? MINUS : numStr(a)}x`;
+  return b === 0 ? head : `(${head} ${b < 0 ? MINUS : '+'} ${Math.abs(b)})`;
+}
+// (ax + b)(cx + d) 꼴의 보기
+function product(a, b, c, d) {
+  const s = a === c && b === d ? `${lin(a, b)}²` : `${lin(a, b)}${lin(c, d)}`;
+  return { s, v: poly(a * c, a * d + b * c, b * d).v };
+}
+
+// y = a(x − p)² + q 를 글로 씁니다.
+function vertexForm(a, p, q) {
+  const head = a === 1 ? '' : a === -1 ? MINUS : numStr(a);
+  const inner = p === 0 ? 'x²' : `(x ${p > 0 ? MINUS : '+'} ${Math.abs(p)})²`;
+  const tail = q === 0 ? '' : ` ${q < 0 ? MINUS : '+'} ${Math.abs(q)}`;
+  return `y = ${head}${inner}${tail}`;
+}
+const point = (p, q) => ({ s: `(${numStr(p)}, ${numStr(q)})`, v: p * 1000.5 + q });
+// 두 해 "x = a, b" (작은 수부터)
+function roots(a, b) {
+  const [lo, hi] = a <= b ? [a, b] : [b, a];
+  return { s: lo === hi ? `x = ${numStr(lo)}` : `x = ${numStr(lo)}, ${numStr(hi)}`, v: lo * 100.5 + hi };
+}
+// 이차부등식의 해: inside 이면 "a < x < b", 아니면 "x < a, b < x"
+function interval(a, b, inside) {
+  const [lo, hi] = a <= b ? [a, b] : [b, a];
+  return {
+    s: inside ? `${numStr(lo)} < x < ${numStr(hi)}` : `x < ${numStr(lo)}, ${numStr(hi)} < x`,
+    v: (inside ? 1 : 2) * 100000 + lo * 100.5 + hi,
+  };
+}
+// 일차부등식의 해 "x < k" 등
+const OPS = ['<', '>', '≦', '≧'];
+const flipOp = (op) => ({ '<': '>', '>': '<', '≦': '≧', '≧': '≦' })[op];
+const half = (op, k) => ({ s: `x ${op} ${numStr(k)}`, v: OPS.indexOf(op) * 1000 + k });
+
+// 평균이 정수가 되는 자료를 만듭니다. devs 는 평균에서 떨어진 정도.
+function dataFrom(devs, lowestMean = 6) {
+  const mean = lowestMean + Math.max(0, -Math.min(...devs)) + rand(8);
+  const values = shuffled(devs.map((d) => mean + d));
+  return { mean, values, list: values.join(', ') };
+}
+// 편차 제곱의 평균(분산)이 정수가 되는 편차 묶음
+const VAR_SETS = [[-2, -1, 0, 1, 2], [-4, -2, 0, 2, 4], [-3, -1, 0, 1, 3], [-4, -3, 0, 3, 4], [-1, -1, -1, -1, 4], [-5, 0, 0, 0, 5], [-1, -1, 1, 1], [-2, -2, 2, 2], [-3, -1, 1, 3], [-2, 0, 0, 2], [-4, 0, 0, 4]];
+// 분산이 제곱수가 되는 편차 묶음 (표준편차가 정수)
+const SD_SETS = [[-2, -2, 2, 2], [-3, -3, 3, 3], [-1, -1, 1, 1], [-1, -1, -1, -1, 4], [-6, -2, 0, 2, 6], [-4, -4, 4, 4], [-3, -1, 0, 1, 3], [-2, -2, -2, -2, 8], [-5, -5, 5, 5]];
+
+Object.assign(GENERATORS, {
+  // ---------- 数と式 ----------
+
+  // 전개: (x + a)(x + b). params.hard 이면 (ax + b)(cx + d)
+  expand(params) {
+    if (params.hard) {
+      const a = pickOne([2, 3]);
+      const c = pickOne([1, 2, 3]);
+      const b = nonzero(-5, 5);
+      const d = nonzero(-5, 5);
+      return item({ expr: product(a, b, c, d).s }, poly(a * c, a * d + b * c, b * d),
+        [poly(a * c, a * d - b * c, b * d), poly(a * c, a * d + b * c, -b * d), poly(a * c, b * d, a * d + b * c)],
+        [poly(a + c, a * d + b * c, b * d), poly(a * c, a * d + b * c + 1, b * d)]);
+    }
+    const a = nonzero(-9, 9);
+    const b = nonzero(-9, 9);
+    return item({ expr: product(1, a, 1, b).s }, poly(1, a + b, a * b),
+      [poly(1, a + b, -a * b), poly(1, a * b, a + b), poly(1, a - b, a * b)],
+      [poly(1, -(a + b), a * b), poly(1, a + b, a * b + 1), poly(1, a + b + 1, a * b)]);
+  },
+
+  // 인수분해: x² + px + q. params.hard 이면 x² 의 계수가 1 이 아닌 경우
+  factor(params) {
+    if (params.hard) {
+      const a = pickOne([2, 3, 5]);
+      const b = pickOne(range(-5, 5).filter((n) => n !== 0 && gcd(a, n) === 1));
+      const d = nonzero(-5, 5);
+      return item({ expr: polyStr(a, a * d + b, b * d) }, product(a, b, 1, d),
+        [product(a, -b, 1, -d), product(a, d, 1, b), product(a, b, 1, -d)],
+        [product(a, -b, 1, d), product(1, b, a, d), product(a, b + 1, 1, d)]);
+    }
+    let a = nonzero(-9, 9);
+    let b = nonzero(-9, 9);
+    if (a > b) [a, b] = [b, a];
+    return item({ expr: polyStr(1, a + b, a * b) }, product(1, a, 1, b),
+      [product(1, -b, 1, -a), product(1, -a, 1, b), product(1, a, 1, -b)],
+      [product(1, a + 1, 1, b - 1), product(1, a - 1, 1, b + 1), product(1, a, 1, b + 1)]);
+  },
+
+  // 제곱근 정리: √n = k√m
+  surdSimplify() {
+    const k = pickOne([2, 3, 4, 5, 6]);
+    const m = pickOne([2, 3, 5, 6, 7]);
+    const answer = surd(k, m);
+    return item({ n: k * k * m }, answer, [surd(k * k, m), surd(m, k), surd(k + 1, m)], [surd(k - 1, m), times(answer, 2)]);
+  },
+
+  // 분모의 유리화: c/√m
+  rationalize() {
+    const m = pickOne([2, 3, 5, 6, 7]);
+    const c = pickOne(range(1, 12));
+    const answer = surd(c, m, m);
+    return item({ c, m }, answer, [surd(c, m, 1), surd(c, 1, m), surd(c * m, m, 1)], [times(answer, 2), over(answer, 2), surd(c + 1, m, m)]);
+  },
+
+  // 일차부등식: ax + b < c. a 가 음수이면 부등호의 방향이 바뀝니다.
+  inequality() {
+    const a = pickOne([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6]);
+    const k = nonzero(-6, 6);
+    const b = nonzero(-9, 9);
+    const op = pickOne(OPS);
+    const answerOp = a > 0 ? op : flipOp(op);
+    return item({ lhs: polyStr(0, a, b), op, c: numStr(a * k + b) }, half(answerOp, k),
+      [half(flipOp(answerOp), k), half(answerOp, -k), half(flipOp(answerOp), -k)],
+      [half(answerOp, k + 1), half(answerOp, k - 1)]);
+  },
+
+  // 집합의 원소의 개수: n(A∪B) = n(A) + n(B) − n(A∩B)
+  sets() {
+    const p = 10 + rand(21);
+    const q = 10 + rand(21);
+    const r = 2 + rand(Math.min(p, q) - 3);
+    return item({ p, q, r }, int(p + q - r), [int(p + q), int(p + q + r), int(p + q - 2 * r)], [int(Math.abs(p - q) + r), int(p + q - r + 1)]);
+  },
+
+  // ---------- 二次関数 ----------
+
+  // 꼭짓점: y = a(x − p)² + q
+  vertex() {
+    const a = pickOne([1, 2, 3, -1, -2]);
+    const p = nonzero(-6, 6);
+    const q = nonzero(-6, 6);
+    return item({ f: vertexForm(a, p, q) }, point(p, q), [point(-p, q), point(p, -q), point(q, p)], [point(-p, -q), point(p + 1, q), point(p, q + 1)]);
+  },
+
+  // 완전제곱식으로 고쳐 꼭짓점 구하기: y = ax² + bx + c
+  complete() {
+    const a = pickOne([1, 1, 2, -1]);
+    const p = nonzero(-5, 5);
+    const q = nonzero(-5, 5);
+    const c0 = a * p * p + q;
+    return item({ f: `y = ${polyStr(a, -2 * a * p, c0)}` }, point(p, q),
+      [point(-p, q), point(p, c0), point(p, -q)],
+      [point(-p, c0), point(2 * p, q), point(p + 1, q)]);
+  },
+
+  // 정해진 범위에서의 최솟값·최댓값: y = (x − p)² + q (s ≦ x ≦ t). params.ask 는 'min' 또는 'max'
+  maxmin(params) {
+    const p = pickOne(range(-3, 3));
+    const q = pickOne(range(-5, 5));
+    const f = (x) => (x - p) ** 2 + q;
+    let s;
+    let t;
+    if (params.ask === 'min' && Math.random() < 0.7) {
+      s = p - (1 + rand(3)); // 꼭짓점이 범위 안
+      t = p + (1 + rand(3));
+    } else {
+      // 양 끝의 함숫값이 달라지도록 범위를 잡습니다. (꼭짓점이 범위 밖일 수도 있습니다)
+      s = p - 2 + rand(5);
+      t = s + 2 + rand(3);
+      if (Math.abs(s - p) === Math.abs(t - p)) t += 1;
+    }
+    const inside = s <= p && p <= t;
+    const low = inside ? q : Math.min(f(s), f(t));
+    const high = Math.max(f(s), f(t));
+    const answer = int(params.ask === 'min' ? low : high);
+    const other = int(params.ask === 'min' ? high : low);
+    return item({ f: vertexForm(1, p, q), s: numStr(s), t: numStr(t) }, answer,
+      [other, int(q), int(Math.min(f(s), f(t))), int(p)],
+      [int(answer.v + 1), int(answer.v - 1), int(f(s) + f(t))]);
+  },
+
+  // 이차방정식 풀기 (정수 해)
+  quadeq() {
+    const a = nonzero(-9, 9);
+    const b = pickOne(range(-9, 9).filter((n) => n !== 0 && n !== a));
+    return item({ f: `${polyStr(1, -(a + b), a * b)} = 0` }, roots(a, b),
+      [roots(-a, -b), roots(a, -b), roots(-a, b)],
+      [roots(a, b + 1), roots(a - 1, b), roots(a + 1, b + 1)]);
+  },
+
+  // 판별식의 값: D = b² − 4ac
+  discriminant() {
+    const a = pickOne([1, 2, 3, -1]);
+    const b = pickOne(range(-8, 8));
+    const c = nonzero(-6, 6);
+    const D = b * b - 4 * a * c;
+    return item({ f: `${polyStr(a, b, c)} = 0`, a, b, c }, int(D),
+      [int(b * b + 4 * a * c), int(b * b - a * c), int(b - 4 * a * c)],
+      [int(4 * a * c - b * b), int(D + 4), int(D - 1)]);
+  },
+
+  // 이차부등식 (정수 해 두 개)
+  quadineq() {
+    const a = nonzero(-8, 8);
+    const b = pickOne(range(-8, 8).filter((n) => n !== 0 && n !== a));
+    const op = pickOne(['<', '>']);
+    const inside = op === '<';
+    return item({ f: polyStr(1, -(a + b), a * b), op }, interval(a, b, inside),
+      [interval(a, b, !inside), interval(-a, -b, inside), interval(-a, -b, !inside)],
+      [interval(a, b + 1, inside), interval(a - 1, b, inside), interval(a + 1, b + 2, !inside)]);
+  },
+
+  // ---------- データの分析 ----------
+
+  // 평균
+  mean() {
+    let devs;
+    do {
+      devs = [nonzero(-5, 5), nonzero(-5, 5), pickOne(range(-5, 5)), pickOne(range(-5, 5))];
+      devs.push(-devs.reduce((sum, d) => sum + d, 0));
+    } while (Math.abs(devs[4]) > 7);
+    const { mean, values, list } = dataFrom(devs);
+    const sorted = [...values].sort((x, y) => x - y);
+    return item({ list }, int(mean), [int(sorted[2]), int(mean + 1), int(mean - 1)], [int(mean + 2), int(sorted[4] - sorted[0]), int(mean - 2)]);
+  },
+
+  // 중앙값 (자료는 크기 순서가 아닙니다)
+  median() {
+    const count = pickOne([5, 6]);
+    const values = [];
+    while (values.length < count) {
+      const v = 1 + rand(20);
+      if (!values.includes(v)) values.push(v);
+    }
+    const sorted = [...values].sort((x, y) => x - y);
+    const answer = dec(count === 5 ? sorted[2] : (sorted[2] + sorted[3]) / 2);
+    const naive = dec(count === 5 ? values[2] : (values[2] + values[3]) / 2); // 정렬하지 않고 가운데를 고른 실수
+    const mean = dec(Math.round((values.reduce((sum, v) => sum + v, 0) / count) * 10) / 10);
+    return item({ list: values.join(', ') }, answer, [naive, mean, dec(sorted[count === 5 ? 1 : 2])],
+      [dec(sorted[3]), dec(answer.v + 1), dec(answer.v - 1), dec(answer.v + 2)]);
+  },
+
+  // 사분위범위 (자료 7개, 크기 순서)
+  iqr() {
+    const values = [2 + rand(5)];
+    while (values.length < 7) values.push(values[values.length - 1] + 1 + rand(4));
+    const [, q1, , med, , q3] = values;
+    return item({ list: values.join(', ') }, int(q3 - q1),
+      [int(values[6] - values[0]), int(q3 - med), int(med - q1), int(q3)],
+      [int(q3 - q1 + 1), int(q3 - q1 - 1), int(q1)]);
+  },
+
+  // 분산 (편차 제곱의 평균)
+  variance() {
+    const devs = pickOne(VAR_SETS);
+    const { values, list } = dataFrom(devs);
+    const sq = devs.reduce((sum, d) => sum + d * d, 0);
+    const n = devs.length;
+    const sorted = [...values].sort((x, y) => x - y);
+    return item({ list }, int(sq / n),
+      [int(sq), dec(Math.round((sq / (n - 1)) * 10) / 10), int(sorted[n - 1] - sorted[0])],
+      [int(sq / n + 1), int(sq / n + 2), dec(sq / n / 2)]);
+  },
+
+  // 표준편차 (분산의 양의 제곱근)
+  sd() {
+    const devs = pickOne(SD_SETS);
+    const { list } = dataFrom(devs);
+    const sq = devs.reduce((sum, d) => sum + d * d, 0);
+    const variance = sq / devs.length;
+    const answer = int(Math.sqrt(variance));
+    return item({ list }, answer, [int(variance), int(sq), int(answer.v + 1)], [int(answer.v + 2), dec(answer.v / 2), int(answer.v * 3)]);
+  },
+});

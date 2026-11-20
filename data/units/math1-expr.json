@@ -1,0 +1,205 @@
+{
+  "id": "math1-expr",
+  "name": {
+    "ja": "数と式",
+    "ko": "수와 식",
+    "en": "Numbers and expressions"
+  },
+  "types": {
+    "expand": {
+      "ja": "式の展開",
+      "ko": "식의 전개",
+      "en": "Expanding"
+    },
+    "factor": {
+      "ja": "因数分解",
+      "ko": "인수분해",
+      "en": "Factoring"
+    },
+    "surd": {
+      "ja": "根号を含む式",
+      "ko": "제곱근 계산",
+      "en": "Square roots"
+    },
+    "inequality": {
+      "ja": "一次不等式",
+      "ko": "일차부등식",
+      "en": "Linear inequalities"
+    },
+    "sets": {
+      "ja": "集合の要素の個数",
+      "ko": "집합의 원소의 개수",
+      "en": "Counting set elements"
+    }
+  },
+  "groups": [
+    {
+      "name": {
+        "ja": "式",
+        "ko": "식",
+        "en": "Expressions"
+      },
+      "types": [
+        "expand",
+        "factor"
+      ]
+    },
+    {
+      "name": {
+        "ja": "実数",
+        "ko": "실수",
+        "en": "Real numbers"
+      },
+      "types": [
+        "surd"
+      ]
+    },
+    {
+      "name": {
+        "ja": "不等式と集合",
+        "ko": "부등식과 집합",
+        "en": "Inequalities and sets"
+      },
+      "types": [
+        "inequality",
+        "sets"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "expand",
+      "level": 1,
+      "type": "expand",
+      "gen": "expand",
+      "text": {
+        "ja": "{expr} を展開すると?",
+        "ko": "{expr}을(를) 전개하면?",
+        "en": "Expand {expr}."
+      },
+      "explain": {
+        "ja": "(x + a)(x + b) = x² + (a + b)x + ab より {answer}",
+        "ko": "(x + a)(x + b) = x² + (a + b)x + ab이므로 {answer}",
+        "en": "(x + a)(x + b) = x² + (a + b)x + ab, so the answer is {answer}"
+      }
+    },
+    {
+      "id": "expand-hard",
+      "level": 2,
+      "type": "expand",
+      "gen": "expand",
+      "params": {
+        "hard": true
+      },
+      "text": {
+        "ja": "{expr} を展開すると?",
+        "ko": "{expr}을(를) 전개하면?",
+        "en": "Expand {expr}."
+      },
+      "explain": {
+        "ja": "(ax + b)(cx + d) = acx² + (ad + bc)x + bd より {answer}",
+        "ko": "(ax + b)(cx + d) = acx² + (ad + bc)x + bd이므로 {answer}",
+        "en": "(ax + b)(cx + d) = acx² + (ad + bc)x + bd, so the answer is {answer}"
+      }
+    },
+    {
+      "id": "factor",
+      "level": 2,
+      "type": "factor",
+      "gen": "factor",
+      "text": {
+        "ja": "{expr} を因数分解すると?",
+        "ko": "{expr}을(를) 인수분해하면?",
+        "en": "Factor {expr}."
+      },
+      "explain": {
+        "ja": "足して x の係数、かけて定数項になる2数を探すと {answer}",
+        "ko": "더해서 x의 계수, 곱해서 상수항이 되는 두 수를 찾으면 {answer}",
+        "en": "Find two numbers that add to the x coefficient and multiply to the constant: {answer}"
+      }
+    },
+    {
+      "id": "factor-hard",
+      "level": 3,
+      "type": "factor",
+      "gen": "factor",
+      "params": {
+        "hard": true
+      },
+      "text": {
+        "ja": "{expr} を因数分解すると?",
+        "ko": "{expr}을(를) 인수분해하면?",
+        "en": "Factor {expr}."
+      },
+      "explain": {
+        "ja": "たすき掛けを使うと {answer}",
+        "ko": "대각선으로 곱해 맞추는 방법을 쓰면 {answer}",
+        "en": "Using the cross method gives {answer}"
+      }
+    },
+    {
+      "id": "surd-simplify",
+      "level": 1,
+      "type": "surd",
+      "gen": "surdSimplify",
+      "text": {
+        "ja": "√{n} を簡単にすると?",
+        "ko": "√{n}을(를) 간단히 하면?",
+        "en": "Simplify √{n}."
+      },
+      "explain": {
+        "ja": "根号の中の平方数を外に出すと √{n} = {answer}",
+        "ko": "근호 안의 제곱수를 밖으로 꺼내면 √{n} = {answer}",
+        "en": "Take the square factor out of the root: √{n} = {answer}"
+      }
+    },
+    {
+      "id": "rationalize",
+      "level": 2,
+      "type": "surd",
+      "gen": "rationalize",
+      "text": {
+        "ja": "{c}/√{m} の分母を有理化すると?",
+        "ko": "{c}/√{m}의 분모를 유리화하면?",
+        "en": "Rationalize the denominator of {c}/√{m}."
+      },
+      "explain": {
+        "ja": "分母と分子に √{m} をかけると {answer}",
+        "ko": "분모와 분자에 √{m}을 곱하면 {answer}",
+        "en": "Multiply top and bottom by √{m}: {answer}"
+      }
+    },
+    {
+      "id": "inequality",
+      "level": 2,
+      "type": "inequality",
+      "gen": "inequality",
+      "text": {
+        "ja": "不等式 {lhs} {op} {c} を解くと?",
+        "ko": "부등식 {lhs} {op} {c}의 해는?",
+        "en": "Solve {lhs} {op} {c}."
+      },
+      "explain": {
+        "ja": "負の数で割ると不等号の向きが変わることに注意して {answer}",
+        "ko": "음수로 나누면 부등호의 방향이 바뀌는 것에 주의하면 {answer}",
+        "en": "Remember the sign flips when you divide by a negative number: {answer}"
+      }
+    },
+    {
+      "id": "sets",
+      "level": 2,
+      "type": "sets",
+      "gen": "sets",
+      "text": {
+        "ja": "n(A) = {p}、n(B) = {q}、n(A∩B) = {r} のとき、n(A∪B) は?",
+        "ko": "n(A) = {p}, n(B) = {q}, n(A∩B) = {r}일 때, n(A∪B)는?",
+        "en": "If n(A) = {p}, n(B) = {q} and n(A∩B) = {r}, what is n(A∪B)?"
+      },
+      "explain": {
+        "ja": "n(A∪B) = n(A) + n(B) − n(A∩B) = {answer}",
+        "ko": "n(A∪B) = n(A) + n(B) − n(A∩B) = {answer}",
+        "en": "n(A∪B) = n(A) + n(B) − n(A∩B) = {answer}"
+      }
+    }
+  ]
+}

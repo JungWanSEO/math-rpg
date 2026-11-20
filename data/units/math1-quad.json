@@ -1,0 +1,186 @@
+{
+  "id": "math1-quad",
+  "name": {
+    "ja": "二次関数",
+    "ko": "이차함수",
+    "en": "Quadratic functions"
+  },
+  "types": {
+    "vertex": {
+      "ja": "グラフの頂点",
+      "ko": "그래프의 꼭짓점",
+      "en": "Vertex of the graph"
+    },
+    "complete": {
+      "ja": "平方完成",
+      "ko": "완전제곱식으로 고치기",
+      "en": "Completing the square"
+    },
+    "maxmin": {
+      "ja": "最大・最小",
+      "ko": "최대·최소",
+      "en": "Maximum and minimum"
+    },
+    "quadeq": {
+      "ja": "二次方程式",
+      "ko": "이차방정식",
+      "en": "Quadratic equations"
+    },
+    "discriminant": {
+      "ja": "判別式",
+      "ko": "판별식",
+      "en": "Discriminant"
+    },
+    "quadineq": {
+      "ja": "二次不等式",
+      "ko": "이차부등식",
+      "en": "Quadratic inequalities"
+    }
+  },
+  "groups": [
+    {
+      "name": {
+        "ja": "二次関数とグラフ",
+        "ko": "이차함수와 그래프",
+        "en": "Functions and graphs"
+      },
+      "types": [
+        "vertex",
+        "complete",
+        "maxmin"
+      ]
+    },
+    {
+      "name": {
+        "ja": "二次方程式と二次不等式",
+        "ko": "이차방정식과 이차부등식",
+        "en": "Equations and inequalities"
+      },
+      "types": [
+        "quadeq",
+        "discriminant",
+        "quadineq"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "vertex",
+      "level": 1,
+      "type": "vertex",
+      "gen": "vertex",
+      "text": {
+        "ja": "{f} のグラフの頂点は?",
+        "ko": "{f}의 그래프의 꼭짓점은?",
+        "en": "What is the vertex of the graph of {f}?"
+      },
+      "explain": {
+        "ja": "y = a(x − p)² + q の頂点は (p, q) なので {answer}",
+        "ko": "y = a(x − p)² + q의 꼭짓점은 (p, q)이므로 {answer}",
+        "en": "The vertex of y = a(x − p)² + q is (p, q), so {answer}"
+      }
+    },
+    {
+      "id": "complete",
+      "level": 2,
+      "type": "complete",
+      "gen": "complete",
+      "text": {
+        "ja": "{f} のグラフの頂点は?",
+        "ko": "{f}의 그래프의 꼭짓점은?",
+        "en": "What is the vertex of the graph of {f}?"
+      },
+      "explain": {
+        "ja": "平方完成して y = a(x − p)² + q の形にすると頂点は {answer}",
+        "ko": "완전제곱식으로 고쳐 y = a(x − p)² + q 꼴로 만들면 꼭짓점은 {answer}",
+        "en": "Complete the square to get y = a(x − p)² + q; the vertex is {answer}"
+      }
+    },
+    {
+      "id": "min-on-range",
+      "level": 2,
+      "type": "maxmin",
+      "gen": "maxmin",
+      "params": {
+        "ask": "min"
+      },
+      "text": {
+        "ja": "関数 {f} ({s} ≦ x ≦ {t}) の最小値は?",
+        "ko": "함수 {f} ({s} ≦ x ≦ {t})의 최솟값은?",
+        "en": "What is the minimum of {f} for {s} ≦ x ≦ {t}?"
+      },
+      "explain": {
+        "ja": "頂点が範囲に入っているかを確かめる。最小値は {answer}",
+        "ko": "꼭짓점이 범위 안에 있는지 먼저 확인합니다. 최솟값은 {answer}",
+        "en": "Check whether the vertex is inside the range. The minimum is {answer}"
+      }
+    },
+    {
+      "id": "max-on-range",
+      "level": 3,
+      "type": "maxmin",
+      "gen": "maxmin",
+      "params": {
+        "ask": "max"
+      },
+      "text": {
+        "ja": "関数 {f} ({s} ≦ x ≦ {t}) の最大値は?",
+        "ko": "함수 {f} ({s} ≦ x ≦ {t})의 최댓값은?",
+        "en": "What is the maximum of {f} for {s} ≦ x ≦ {t}?"
+      },
+      "explain": {
+        "ja": "下に凸のグラフでは、軸から遠い方の端で最大になる。最大値は {answer}",
+        "ko": "아래로 볼록한 그래프는 축에서 먼 쪽 끝에서 최대가 됩니다. 최댓값은 {answer}",
+        "en": "For an upward-opening graph the maximum is at the end farther from the axis: {answer}"
+      }
+    },
+    {
+      "id": "quadeq",
+      "level": 1,
+      "type": "quadeq",
+      "gen": "quadeq",
+      "text": {
+        "ja": "{f} を解くと?",
+        "ko": "{f}의 해는?",
+        "en": "Solve {f}."
+      },
+      "explain": {
+        "ja": "左辺を因数分解して解くと {answer}",
+        "ko": "좌변을 인수분해해서 풀면 {answer}",
+        "en": "Factor the left side: {answer}"
+      }
+    },
+    {
+      "id": "discriminant",
+      "level": 2,
+      "type": "discriminant",
+      "gen": "discriminant",
+      "text": {
+        "ja": "{f} の判別式 D の値は?",
+        "ko": "{f}의 판별식 D의 값은?",
+        "en": "What is the discriminant D of {f}?"
+      },
+      "explain": {
+        "ja": "D = b² − 4ac = ({b})² − 4 × ({a}) × ({c}) = {answer}",
+        "ko": "D = b² − 4ac = ({b})² − 4 × ({a}) × ({c}) = {answer}",
+        "en": "D = b² − 4ac = ({b})² − 4 × ({a}) × ({c}) = {answer}"
+      }
+    },
+    {
+      "id": "quadineq",
+      "level": 3,
+      "type": "quadineq",
+      "gen": "quadineq",
+      "text": {
+        "ja": "不等式 {f} {op} 0 を解くと?",
+        "ko": "부등식 {f} {op} 0의 해는?",
+        "en": "Solve {f} {op} 0."
+      },
+      "explain": {
+        "ja": "左辺を因数分解し、グラフが x 軸より下か上かを考えると {answer}",
+        "ko": "좌변을 인수분해하고, 그래프가 x축보다 아래인지 위인지 생각하면 {answer}",
+        "en": "Factor the left side and think about where the graph is below or above the x-axis: {answer}"
+      }
+    }
+  ]
+}
