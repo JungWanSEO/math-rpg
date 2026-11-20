@@ -23,16 +23,23 @@ const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
 async function boot() {
   const data = load();
   if (!CONFIG.langs.includes(data.lang)) data.lang = CONFIG.defaultLang;
-  await loadLang(data.lang);
-  applyStatic();
-
-  const [, monsters] = await Promise.all([
-    loadAll(),
+  // 글, 문제, 몬스터를 한꺼번에 받습니다. 받는 동안 처음 화면에 진행 막대가 보입니다.
+  let steps = 0;
+  const step = () => {
+    steps += 1;
+    const bar = $('loadingBar');
+    if (bar) bar.style.width = `${Math.min(100, Math.round((steps / 10) * 100))}%`;
+  };
+  const [, , monsters] = await Promise.all([
+    loadLang(data.lang).then(step),
+    loadAll(step),
     fetch('./data/monsters.json').then((res) => {
       if (!res.ok) throw new Error(`data/monsters.json ${res.status}`);
+      step();
       return res.json();
     }),
   ]);
+  applyStatic();
 
   // 예전 기록 맞추기: 유형 이름에 단원이 붙기 전의 기록을 새 이름으로 옮깁니다.
   for (const key of Object.keys(data.codex)) {
@@ -360,14 +367,51 @@ async function boot() {
   renderSound();
   watchFit();
   goTitle();
+  document.body.classList.add('ready'); // 불러오기 끝: 진행 막대를 치우고 버튼을 보여 줍니다.
+  clearTimeout(window.sttSlow);
+  watchUpdate();
+}
+
+// 새 버전 알림과 오프라인 실행 (sw.js). 새 버전이 준비되면 처음 화면 위에 알림 줄이 나옵니다.
+function watchUpdate() {
+  // 처음 화면 아래에 지금 버전을 작게 적습니다. (sw.js 의 VERSION 한 곳에서 읽습니다)
+  fetch('./sw.js').then((res) => res.text()).then((text) => {
+    const found = text.match(/VERSION = '([^']+)'/);
+    if (found) $('versionText').textContent = `v${found[1]}`;
+  }).catch(() => {});
+  if (!('serviceWorker' in navigator) || !window.isSecureContext) return;
+  navigator.serviceWorker.register('./sw.js').then((reg) => {
+    const offer = (worker) => {
+      if (!worker || !navigator.serviceWorker.controller) return; // 첫 설치는 알릴 것이 없습니다.
+      $('updateBar').hidden = false;
+      $('updateBtn').onclick = () => worker.postMessage('skip');
+    };
+    if (reg.waiting) offer(reg.waiting);
+    reg.addEventListener('updatefound', () => {
+      const worker = reg.installing;
+      if (worker) worker.addEventListener('statechange', () => { if (worker.state === 'installed') offer(worker); });
+    });
+  }).catch(() => {});
+  // 새 버전으로 바뀌면 화면을 다시 엽니다. (처음 설치될 때는 다시 열 필요가 없습니다)
+  const hadWorker = Boolean(navigator.serviceWorker.controller);
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (reloading || !hadWorker) return;
+    reloading = true;
+    window.location.reload();
+  });
 }
 
 boot().catch((err) => {
-  // 파일을 더블클릭해서 열면(file://) 데이터 파일을 읽지 못합니다. README 의 실행 방법을 보세요.
-  const status = document.getElementById('runStatus');
-  if (status) {
-    status.hidden = false;
-    status.textContent = `Load error: ${err.message}`;
+  // 불러오지 못했을 때: 이유와 "다시 시도" 버튼을 보여 줍니다.
+  // (파일을 더블클릭해서 열면(file://) 데이터 파일을 읽지 못합니다. README 의 실행 방법을 보세요.)
+  clearTimeout(window.sttSlow);
+  const box = document.getElementById('loading');
+  if (box) {
+    box.classList.add('failed');
+    document.getElementById('loadingText').textContent = (window.sttText || {}).fail || 'Could not load.';
+    document.getElementById('loadingDetail').textContent = err.message;
+    document.getElementById('loadingRetry').hidden = false;
   }
   console.error(err);
 });
