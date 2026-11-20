@@ -6,6 +6,7 @@ import { t, pick } from './i18n.js';
 import { next, questionText, explainText, typeLabel } from './questions.js';
 import { showFigure } from './figures.js';
 import { $ } from './ui.js';
+import { play } from './sound.js';
 
 export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   const B = {
@@ -142,7 +143,10 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   function planIntent() {
     B.turn += 1;
     B.intent = B.turn % CONFIG.foeAttack.bigEvery === 0 ? 'big' : 'normal';
-    if (B.intent === 'big') stage.foeSpecial(); // 고유 동작으로 강한 공격을 예고
+    if (B.intent === 'big') {
+      stage.foeSpecial(); // 고유 동작으로 강한 공격을 예고
+      play('warn');
+    }
   }
 
   function backToChoose() {
@@ -165,6 +169,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
       B.phase = 'busy';
       const dmg = CONFIG.damage.ult;
       say('msg.ult', { d: dmg });
+      play('ult');
       render();
       stage.heroUlt(`-${dmg}`, live(() => afterHit(dmg)));
       return;
@@ -202,6 +207,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     B.picked = i;
     const ok = i === B.cur.correct;
     record(B.cur.type, ok);
+    play(ok ? 'right' : 'wrong');
     tutorial.emit('answered');
 
     if (B.cur.action === 'defend') {
@@ -239,6 +245,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   }
 
   function afterHit(dmg) {
+    play('hit');
     B.foeHp -= dmg;
     render();
     if (B.foeHp <= 0) {
@@ -268,6 +275,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     const dmg = Math.ceil(intentDamage() * mult);
     stage.foeAttack(dmg > 0 ? `-${dmg}` : t('msg.blocked'), mult < 1, live(() => {
       const run = getRun();
+      play(dmg > 0 ? 'hurt' : 'block');
       run.hp -= dmg;
       if (B.safe && run.hp < 1) run.hp = 1;
       if (run.hp <= 0) {
@@ -292,6 +300,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   }
 
   function finish(result) {
+    play(result === 'win' ? 'win' : 'lose');
     B.phase = 'busy';
     const done = B.onEnd;
     B.onEnd = null;

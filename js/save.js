@@ -10,6 +10,7 @@ function blank() {
     codex: {},                 // 유형별 기록: { 유형: { right, wrong, streak } }
     seen: {},                  // 만난 몬스터: { 몬스터 id: true }
     tut: 'start',              // 튜토리얼 진행 단계 ('done' 이면 끝)
+    sound: true,               // 효과음 켜기
     run: null,                 // 진행 중인 지도 한 장 (js/run.js)
   };
 }

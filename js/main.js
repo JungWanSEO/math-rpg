@@ -15,6 +15,7 @@ import { createTutorial } from './tutorial.js';
 import { createTitle } from './title.js';
 import { createScope } from './scope.js';
 import { $, show } from './ui.js';
+import { play, setSound } from './sound.js';
 
 const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
 
@@ -43,6 +44,29 @@ async function boot() {
   if (!data.run || !Array.isArray(data.run.nodes)) data.run = newRun(allTypeKeys());
   if (!Array.isArray(data.run.scope) || !data.run.scope.some(hasType)) data.run.scope = allTypeKeys();
   setScope(data.run.scope);
+
+  // 효과음 켜고 끄기 (처음 화면과 메뉴에 같은 버튼이 있습니다)
+  setSound(data.sound !== false);
+  function renderSound() {
+    document.querySelectorAll('.sound-toggle').forEach((btn) => {
+      btn.textContent = t(data.sound !== false ? 'ui.soundOn' : 'ui.soundOff');
+      btn.setAttribute('aria-pressed', String(data.sound !== false));
+    });
+  }
+  document.querySelectorAll('.sound-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      data.sound = data.sound === false;
+      setSound(data.sound);
+      store(data);
+      renderSound();
+      play('right');
+    });
+  });
+  // 버튼을 누를 때의 짧은 소리 (답 버튼은 정답·오답 소리가 따로 납니다)
+  document.addEventListener('click', (event) => {
+    const btn = event.target.closest && event.target.closest('button');
+    if (btn && !btn.closest('#answers, #evAnswers') && !btn.classList.contains('sound-toggle')) play('tap');
+  });
 
   const getRun = () => data.run;
   const persist = () => store(data);
@@ -264,6 +288,7 @@ async function boot() {
       tutorial.emit('won');
       go('screenEvent');
       if (kind === 'boss') {
+        play('clear');
         data.clears += 1;
         data.run = newRun(run.scope);
         persist();
@@ -311,9 +336,11 @@ async function boot() {
     if (screen === 'screenEvent') events.refresh();
     if (screen === 'screenCodex') codex.render();
     if (!$('menu').hidden) $('menuText').textContent = t($('menu').dataset.key);
+    renderSound();
     onChange();
   });
 
+  renderSound();
   goTitle();
 }
 

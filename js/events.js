@@ -6,6 +6,7 @@ import { next, nextByType, questionText, explainText, typeLabel } from './questi
 import { UPGRADES, SHOP, rollUpgrades } from './run.js';
 import { showFigure } from './figures.js';
 import { $, twoLineButton } from './ui.js';
+import { play } from './sound.js';
 
 export function createEvents({ getRun, data, record, onChange }) {
   let draw = null; // 지금 화면을 다시 그리는 함수 (언어를 바꿀 때 씁니다)
@@ -75,6 +76,7 @@ export function createEvents({ getRun, data, record, onChange }) {
         state.picked = i;
         const ok = i === state.q.correct;
         record(state.q.type, ok);
+        play(ok ? 'right' : 'wrong');
         state.result = onResult(ok, state.q);
         redraw();
       });

@@ -26,7 +26,9 @@
     "scopeCount": "유형 {n} / {total}",
     "attackBigSub": "맞혀도 피해 받음",
     "menu": "메뉴",
-    "next": "확인했어요, 다음"
+    "next": "확인했어요, 다음",
+    "soundOn": "소리: 켜짐",
+    "soundOff": "소리: 꺼짐"
   },
   "msg": {
     "choose": "행동을 고르세요.",
