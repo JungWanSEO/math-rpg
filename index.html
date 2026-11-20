@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1a3a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Solve the Tower">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
 <title>Solve the Tower</title>
 <link rel="stylesheet" href="./css/style.css">
 </head>
@@ -60,9 +68,13 @@
         <button type="button" id="scopeSame" data-i18n="scope.same"></button>
       </div>
       <div class="scope-list" id="scopeList"></div>
-      <p class="scope-summary" id="scopeSummary" aria-live="polite"></p>
-      <button type="button" class="primary" id="scopeStart" data-i18n="scope.start"></button>
-      <button type="button" class="hint" id="scopeBack" data-i18n="scope.back"></button>
+      <div class="scope-foot">
+        <p class="scope-summary" id="scopeSummary" aria-live="polite"></p>
+        <div class="scope-foot-row">
+          <button type="button" class="hint" id="scopeBack" data-i18n="scope.back"></button>
+          <button type="button" class="primary" id="scopeStart" data-i18n="scope.start"></button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -114,14 +126,16 @@
       <button type="button" class="ult" id="ultBtn" data-action="ult" disabled></button>
 
       <div class="question" id="question" hidden>
-        <span class="meta" id="qMeta"></span>
+        <div class="q-head">
+          <span class="meta" id="qMeta"></span>
+          <button type="button" class="hint" id="hintBtn" hidden></button>
+        </div>
         <div class="figure" id="qFigure" hidden></div>
         <p id="qText"></p>
         <span class="q-cap" id="qCap" hidden></span>
         <span class="q-note" id="qNote" hidden></span>
       </div>
       <div class="answers" id="answers" hidden></div>
-      <button type="button" class="hint" id="hintBtn" hidden></button>
       <button type="button" class="primary" id="nextBtn" data-i18n="ui.next" hidden></button>
 
       <p class="notice" id="notice" aria-live="polite"></p>
@@ -191,6 +205,9 @@
       <button type="button" class="hint" id="menuQuit" data-i18n="menu.quit"></button>
     </div>
   </div>
+
+  <!-- 스마트폰을 가로로 눕혔을 때 -->
+  <div class="rotate" id="rotate" aria-hidden="true"><p data-i18n="ui.rotate"></p></div>
 
 </main>
 <script type="module" src="./js/main.js"></script>

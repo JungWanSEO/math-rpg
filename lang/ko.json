@@ -17,7 +17,7 @@
     "intentBig": "강한 공격이 옵니다! 방어로만 막을 수 있음 (피해 {d})",
     "level": "{n}단계 · {type}",
     "defendWait": "연속 사용 불가",
-    "hint": "힌트 쓰기 (남은 {n}개)",
+    "hint": "힌트 ({n})",
     "status": "체력 {hp}/{max} · {gold}G · 힌트 {hints}",
     "elite": "강적 {name}",
     "boss": "보스 {name}",
@@ -30,7 +30,8 @@
     "soundOn": "소리: 켜짐",
     "soundOff": "소리: 꺼짐",
     "figNote": "그림은 실제 길이·각도와 다르게 그려져 있습니다.",
-    "cond": "조건: {text}"
+    "cond": "조건: {text}",
+    "rotate": "화면을 세로로 돌려 주세요."
   },
   "msg": {
     "choose": "행동을 고르세요.",

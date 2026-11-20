@@ -16,6 +16,7 @@ export function fillQuestion(els, q) {
   els.note.textContent = note ? t('ui.cond', { text: note }) : '';
   // 보기가 길면 두 칸 대신 한 줄에 하나씩 놓습니다.
   const longest = Math.max(...q.options.map((text) => optionText(text).length));
-  els.answers.classList.toggle('long', longest > 9);
+  const roomy = window.innerWidth >= 350 ? 14 : 11; // 두 칸으로 놓아도 한 줄에 들어가는 글자 수
+  els.answers.classList.toggle('long', longest > roomy);
   els.answers.classList.toggle('wordy', longest > 16);
 }

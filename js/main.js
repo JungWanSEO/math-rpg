@@ -16,6 +16,7 @@ import { createTitle } from './title.js';
 import { createScope } from './scope.js';
 import { $, show } from './ui.js';
 import { play, setSound } from './sound.js';
+import { fitBattle, watchFit } from './fit.js';
 
 const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
 
@@ -131,7 +132,9 @@ async function boot() {
     // 메뉴 버튼: 게임 중인 화면(지도, 전투, 사건)에서 보입니다.
     $('menuBtn').hidden = menu || name === 'screenCodex';
     if (!menu) armBack();
+    if (name !== 'screenBattle') document.body.classList.remove('is-answering');
     onChange();
+    fitBattle();
   }
 
   // ---- 메뉴 (일시 정지) ----
@@ -355,6 +358,7 @@ async function boot() {
   });
 
   renderSound();
+  watchFit();
   goTitle();
 }
 
