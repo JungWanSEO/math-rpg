@@ -23,7 +23,8 @@
       },
       "units": [
         "matha-count",
-        "matha-geom"
+        "matha-geom",
+        "matha-int"
       ]
     }
   ]

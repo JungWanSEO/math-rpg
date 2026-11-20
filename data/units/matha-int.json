@@ -1,0 +1,212 @@
+{
+  "id": "matha-int",
+  "name": {
+    "ja": "数学と人間の活動(整数)",
+    "ko": "수학과 인간의 활동 (정수)",
+    "en": "Integers"
+  },
+  "types": {
+    "gcdlcm": {
+      "ja": "最大公約数・最小公倍数",
+      "ko": "최대공약수·최소공배수",
+      "en": "GCD and LCM"
+    },
+    "euclid": {
+      "ja": "ユークリッドの互除法",
+      "ko": "유클리드 호제법",
+      "en": "Euclidean algorithm"
+    },
+    "remainder": {
+      "ja": "余りの計算",
+      "ko": "나머지의 계산",
+      "en": "Remainders"
+    },
+    "dioph": {
+      "ja": "一次不定方程式",
+      "ko": "일차부정방정식",
+      "en": "Linear Diophantine equations"
+    },
+    "nbase": {
+      "ja": "n 進法",
+      "ko": "n진법",
+      "en": "Number bases"
+    }
+  },
+  "groups": [
+    {
+      "name": {
+        "ja": "約数と倍数",
+        "ko": "약수와 배수",
+        "en": "Divisors and multiples"
+      },
+      "types": [
+        "gcdlcm",
+        "euclid",
+        "remainder"
+      ]
+    },
+    {
+      "name": {
+        "ja": "整数の応用",
+        "ko": "정수의 응용",
+        "en": "Applications"
+      },
+      "types": [
+        "dioph",
+        "nbase"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "gcd",
+      "level": 1,
+      "type": "gcdlcm",
+      "gen": "gcdlcm",
+      "params": {
+        "ask": "gcd"
+      },
+      "text": {
+        "ja": "{a} と {b} の最大公約数は?",
+        "ko": "{a}와 {b}의 최대공약수는?",
+        "en": "What is the greatest common divisor of {a} and {b}?"
+      },
+      "explain": {
+        "ja": "両方を割り切る最大の数は {answer}",
+        "ko": "둘을 모두 나누어떨어지게 하는 가장 큰 수는 {answer}",
+        "en": "The largest number dividing both is {answer}"
+      }
+    },
+    {
+      "id": "lcm",
+      "level": 1,
+      "type": "gcdlcm",
+      "gen": "gcdlcm",
+      "params": {
+        "ask": "lcm"
+      },
+      "text": {
+        "ja": "{a} と {b} の最小公倍数は?",
+        "ko": "{a}와 {b}의 최소공배수는?",
+        "en": "What is the least common multiple of {a} and {b}?"
+      },
+      "explain": {
+        "ja": "2数の積 ÷ 最大公約数 = {answer}",
+        "ko": "두 수의 곱 ÷ 최대공약수 = {answer}",
+        "en": "Product ÷ GCD = {answer}"
+      }
+    },
+    {
+      "id": "euclid",
+      "level": 2,
+      "type": "euclid",
+      "gen": "gcdlcm",
+      "params": {
+        "ask": "gcd",
+        "big": true
+      },
+      "text": {
+        "ja": "互除法を使って、{a} と {b} の最大公約数を求めると?",
+        "ko": "호제법을 써서 {a}와 {b}의 최대공약수를 구하면?",
+        "en": "Use the Euclidean algorithm to find the GCD of {a} and {b}."
+      },
+      "explain": {
+        "ja": "大きい方を小さい方で割った余りで、割り切れるまで割り続けると {answer}",
+        "ko": "큰 수를 작은 수로 나눈 나머지로, 나누어떨어질 때까지 계속 나누면 {answer}",
+        "en": "Keep dividing by the remainder until it divides evenly: {answer}"
+      }
+    },
+    {
+      "id": "rem-sum",
+      "level": 2,
+      "type": "remainder",
+      "gen": "remainder",
+      "params": {
+        "ask": "sum"
+      },
+      "text": {
+        "ja": "{m} で割ると {r1} 余る整数 a と、{r2} 余る整数 b がある。a + b を {m} で割った余りは?",
+        "ko": "{m}으로 나누면 {r1}이 남는 정수 a와 {r2}가 남는 정수 b가 있다. a + b를 {m}으로 나눈 나머지는?",
+        "en": "Integers a and b leave remainders {r1} and {r2} when divided by {m}. What is the remainder of a + b divided by {m}?"
+      },
+      "explain": {
+        "ja": "余りどうしを足して、{m} で割った余りを求めると {answer}",
+        "ko": "나머지끼리 더한 뒤 {m}으로 나눈 나머지를 구하면 {answer}",
+        "en": "Add the remainders, then take the remainder on division by {m}: {answer}"
+      }
+    },
+    {
+      "id": "rem-prod",
+      "level": 2,
+      "type": "remainder",
+      "gen": "remainder",
+      "params": {
+        "ask": "prod"
+      },
+      "text": {
+        "ja": "{m} で割ると {r1} 余る整数 a と、{r2} 余る整数 b がある。ab を {m} で割った余りは?",
+        "ko": "{m}으로 나누면 {r1}이 남는 정수 a와 {r2}가 남는 정수 b가 있다. ab를 {m}으로 나눈 나머지는?",
+        "en": "Integers a and b leave remainders {r1} and {r2} when divided by {m}. What is the remainder of ab divided by {m}?"
+      },
+      "explain": {
+        "ja": "余りどうしをかけて、{m} で割った余りを求めると {answer}",
+        "ko": "나머지끼리 곱한 뒤 {m}으로 나눈 나머지를 구하면 {answer}",
+        "en": "Multiply the remainders, then take the remainder on division by {m}: {answer}"
+      }
+    },
+    {
+      "id": "dioph",
+      "level": 3,
+      "type": "dioph",
+      "gen": "dioph",
+      "text": {
+        "ja": "方程式 {eq} を満たす整数の組 (x, y) は?",
+        "ko": "방정식 {eq}을 만족하는 정수의 순서쌍 (x, y)는?",
+        "en": "Which integer pair (x, y) satisfies {eq}?"
+      },
+      "explain": {
+        "ja": "代入して左辺が 1 になる組を探すと {answer}",
+        "ko": "대입해서 좌변이 1이 되는 순서쌍을 찾으면 {answer}",
+        "en": "Substitute and look for the pair that makes the left side 1: {answer}"
+      }
+    },
+    {
+      "id": "base-to10",
+      "level": 1,
+      "type": "nbase",
+      "gen": "nbase",
+      "params": {
+        "dir": "to10"
+      },
+      "text": {
+        "ja": "{base} 進法で表された数 {num} を 10 進法で表すと?",
+        "ko": "{base}진법으로 나타낸 수 {num}을 10진법으로 나타내면?",
+        "en": "The number {num} is written in base {base}. What is it in base 10?"
+      },
+      "explain": {
+        "ja": "各位の数に {base} の累乗をかけて足すと {answer}",
+        "ko": "각 자리의 수에 {base}의 거듭제곱을 곱해 더하면 {answer}",
+        "en": "Multiply each digit by the matching power of {base} and add: {answer}"
+      }
+    },
+    {
+      "id": "base-from10",
+      "level": 2,
+      "type": "nbase",
+      "gen": "nbase",
+      "params": {
+        "dir": "from10"
+      },
+      "text": {
+        "ja": "10 進法の {n} を {base} 進法で表すと?",
+        "ko": "10진법의 수 {n}을 {base}진법으로 나타내면?",
+        "en": "Write the base-10 number {n} in base {base}."
+      },
+      "explain": {
+        "ja": "{base} で割り続けて、余りを下から順に並べると {answer}",
+        "ko": "{base}로 계속 나누어 나머지를 아래에서부터 차례로 늘어놓으면 {answer}",
+        "en": "Keep dividing by {base} and read the remainders from the bottom: {answer}"
+      }
+    }
+  ]
+}

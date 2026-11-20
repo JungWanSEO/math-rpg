@@ -545,11 +545,94 @@ export function createStage(canvas) {
     eye(6, -38, 4, true, '#1c2740', 1.9);
     line(-5, -28, 5, -28, '#1c2740', 1.5);
   }
+  // 법칙 저울 (중간 보스, 数学A 場合の数): 고유 동작은 "+" 와 "×" 접시가 반대로 기울기 (합의 법칙 ↔ 곱의 법칙)
+  function drawScales(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const from = f.flag ? -0.22 : 0.22;
+    const tilt = from + (-from - from) * ease(sp);
+    rrect(-6, -30, 12, 70, 4, '#8a6537');
+    rrect(-26, 38, 52, 10, 4, '#6b4a2b');
+    circ(0, -40, 17, '#d9b57c');
+    eye(-6, -42, 3.5, true, '#1c2740', 0.7);
+    eye(6, -42, 3.5, true, '#1c2740', 0.7);
+    line(-5, -32, 5, -32, '#1c2740', 1.5);
+    ctx.save();
+    ctx.translate(0, -18);
+    ctx.rotate(tilt);
+    line(-52, 0, 52, 0, '#c9a36b', 5);
+    ctx.restore();
+    for (const dir of [-1, 1]) {
+      const x = dir * 52 * Math.cos(tilt);
+      const y = -18 + dir * 52 * Math.sin(tilt);
+      line(x, y, x - 14, y + 26, '#c9a36b', 1.5);
+      line(x, y, x + 14, y + 26, '#c9a36b', 1.5);
+      ell(x, y + 28, 18, 6, '#ffc857');
+      circ(x, y + 14, 10, dir < 0 ? '#5a8cf0' : '#e5484d');
+      glyph(dir < 0 ? '+' : '×', x, y + 14, 15, '#ffffff');
+    }
+  }
+  // 원의 문지기 (보스, 数学A 図形の性質): 고유 동작은 안에 든 삼각형을 돌려 꼭짓점이 원 밖으로 나가게 하기
+  function drawWarden(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const grow = 1 + Math.sin(sp * Math.PI) * 0.35;
+    const turn = (S.idle ? S.t * 0.5 : 0) + ease(sp) * Math.PI * (2 / 3);
+    ctx.strokeStyle = C('#8fb4ff');
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.arc(0, -4, 50, 0, Math.PI * 2);
+    ctx.stroke();
+    circ(0, -4, 44, '#22315e');
+    const pts = [];
+    for (let i = 0; i < 3; i++) pts.push(Math.cos(turn + (i * Math.PI * 2) / 3) * 50 * grow, -4 + Math.sin(turn + (i * Math.PI * 2) / 3) * 50 * grow);
+    ctx.strokeStyle = C('#ffc857');
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(pts[0], pts[1]);
+    ctx.lineTo(pts[2], pts[3]);
+    ctx.lineTo(pts[4], pts[5]);
+    ctx.closePath();
+    ctx.stroke();
+    for (let i = 0; i < 3; i++) circ(pts[i * 2], pts[i * 2 + 1], 4, '#ffc857');
+    circ(0, -4, 17, '#ffffff');
+    if (blinking(0.5)) line(-14, -4, 14, -4, '#1c2740', 3);
+    else circ(2, -3, 8, '#e5484d');
+    rrect(-20, 44, 14, 8, 3, '#5b6a94');
+    rrect(6, 44, 14, 8, 3, '#5b6a94');
+  }
+  // 나머지 생쥐 (数学A 整数): 고유 동작은 치즈에 적힌 몫 q 와 나머지 r 을 바꿔 들기
+  function drawMouse(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const swapped = f.flag !== sp > 0.5;
+    const lift = Math.sin(sp * Math.PI) * 14;
+    ctx.strokeStyle = C('#d08a9a');
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(24, 34);
+    ctx.quadraticCurveTo(58, 44, 50, 14);
+    ctx.stroke();
+    ell(0, 22, 28, 24, '#9aa6c4');
+    circ(-18, -22, 12, '#9aa6c4');
+    circ(18, -22, 12, '#9aa6c4');
+    circ(-18, -22, 6, '#f2b6c4');
+    circ(18, -22, 6, '#f2b6c4');
+    circ(0, -6, 20, '#b7c1dc');
+    eye(-7, -9, 3.5, false, '#1c2740', 1.2);
+    eye(7, -9, 3.5, false, '#1c2740', 1.2);
+    circ(0, 0, 3, '#f2b6c4');
+    line(-4, 3, -16, 1, '#1c2740', 1);
+    line(4, 3, 16, 1, '#1c2740', 1);
+    for (const dir of [-1, 1]) {
+      const y = 22 - lift;
+      poly([dir * 34 - 13, y + 12, dir * 34 + 13, y + 12, dir * 34, y - 12], '#ffc857');
+      glyph((dir < 0) !== swapped ? 'q' : 'r', dir * 34, y + 4, 12, '#6b4a2b');
+    }
+  }
   const FOE_DRAW = {
     twins: drawTwins, bat: drawBat, golem: drawGolem, thief: drawThief, tower: drawTower,
     crab: drawCrab, slime: drawSlime, ghost: drawGhost, bars: drawBars,
     magician: drawMagician, giant: drawGiant, dragon: drawDragon,
     dice: drawDice, compass: drawCompass,
+    scales: drawScales, warden: drawWarden, mouse: drawMouse,
   };
 
   // 대기·공격·피격을 위치와 크기로 바꾼 값

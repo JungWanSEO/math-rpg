@@ -153,6 +153,23 @@
     "skillLevel": 2
   },
   {
+    "id": "mouse",
+    "name": {
+      "ja": "あまりネズミ",
+      "ko": "나머지 생쥐",
+      "en": "Remainder Mouse"
+    },
+    "mistake": {
+      "ja": "割り算で商と余りを取り違える",
+      "ko": "나눗셈에서 몫과 나머지를 바꿔 쓰기",
+      "en": "Mixing up the quotient and the remainder"
+    },
+    "hp": 16,
+    "weak": "matha-int/remainder",
+    "basicLevel": 1,
+    "skillLevel": 2
+  },
+  {
     "id": "thief",
     "midboss": true,
     "name": {
@@ -207,6 +224,24 @@
     "skillLevel": 2
   },
   {
+    "id": "scales",
+    "midboss": true,
+    "name": {
+      "ja": "法則てんびん",
+      "ko": "법칙 저울",
+      "en": "Rule Scales"
+    },
+    "mistake": {
+      "ja": "和の法則と積の法則を取り違える(足すのか、かけるのか)",
+      "ko": "합의 법칙과 곱의 법칙을 바꿔 쓰기 (더할지 곱할지)",
+      "en": "Mixing up the addition rule and the multiplication rule"
+    },
+    "hp": 22,
+    "weak": "matha-count/perm",
+    "basicLevel": 1,
+    "skillLevel": 2
+  },
+  {
     "id": "tower",
     "boss": true,
     "name": {
@@ -239,6 +274,24 @@
     },
     "hp": 28,
     "weak": "math1-quad/discriminant",
+    "basicLevel": 2,
+    "skillLevel": 3
+  },
+  {
+    "id": "warden",
+    "boss": true,
+    "name": {
+      "ja": "円の番人",
+      "ko": "원의 문지기",
+      "en": "Circle Warden"
+    },
+    "mistake": {
+      "ja": "定理が使える条件(円に内接しているか など)を確かめない",
+      "ko": "정리를 쓸 수 있는 조건(원에 내접하는지 등)을 확인하지 않기",
+      "en": "Using a theorem without checking that its conditions hold"
+    },
+    "hp": 28,
+    "weak": "matha-geom/power",
     "basicLevel": 2,
     "skillLevel": 3
   }

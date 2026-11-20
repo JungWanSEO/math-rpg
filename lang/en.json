@@ -239,6 +239,8 @@
     "nec": "necessary but not sufficient",
     "neither": "neither necessary nor sufficient",
     "true": "true",
-    "false": "false"
+    "false": "false",
+    "allreal": "all real numbers",
+    "none": "no solution"
   }
 }

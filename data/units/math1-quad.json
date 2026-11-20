@@ -35,6 +35,16 @@
       "ja": "二次不等式",
       "ko": "이차부등식",
       "en": "Quadratic inequalities"
+    },
+    "graphmove": {
+      "ja": "グラフの平行移動",
+      "ko": "그래프의 평행이동",
+      "en": "Translating graphs"
+    },
+    "determine": {
+      "ja": "二次関数の決定",
+      "ko": "이차함수의 결정",
+      "en": "Finding a quadratic function"
     }
   },
   "groups": [
@@ -47,7 +57,9 @@
       "types": [
         "vertex",
         "complete",
-        "maxmin"
+        "maxmin",
+        "graphmove",
+        "determine"
       ]
     },
     {
@@ -180,6 +192,75 @@
         "ja": "左辺を因数分解し、グラフが x 軸より下か上かを考えると {answer}",
         "ko": "좌변을 인수분해하고, 그래프가 x축보다 아래인지 위인지 생각하면 {answer}",
         "en": "Factor the left side and think about where the graph is below or above the x-axis: {answer}"
+      }
+    },
+    {
+      "id": "shift",
+      "level": 1,
+      "type": "graphmove",
+      "gen": "shift",
+      "text": {
+        "ja": "{f} のグラフを x 軸方向に {p}、y 軸方向に {q} だけ平行移動した放物線の式は?",
+        "ko": "{f}의 그래프를 x축 방향으로 {p}, y축 방향으로 {q}만큼 평행이동한 포물선의 식은?",
+        "en": "The graph of {f} is shifted {p} in the x-direction and {q} in the y-direction. What is the new equation?"
+      },
+      "explain": {
+        "ja": "x を x − p に、y に q を加える。{answer}",
+        "ko": "x를 x − p로 바꾸고, y에 q를 더합니다. {answer}",
+        "en": "Replace x with x − p and add q: {answer}"
+      }
+    },
+    {
+      "id": "determine",
+      "level": 2,
+      "type": "determine",
+      "gen": "determine",
+      "text": {
+        "ja": "頂点が ({p}, {q}) で、点 ({x0}, {y0}) を通る放物線 y = a(x − p)² + q の a の値は?",
+        "ko": "꼭짓점이 ({p}, {q})이고 점 ({x0}, {y0})을 지나는 포물선 y = a(x − p)² + q에서 a의 값은?",
+        "en": "A parabola y = a(x − p)² + q has vertex ({p}, {q}) and passes through ({x0}, {y0}). What is a?"
+      },
+      "explain": {
+        "ja": "通る点の座標を代入して a を求めると {answer}",
+        "ko": "지나는 점의 좌표를 대입해 a를 구하면 {answer}",
+        "en": "Substitute the point to find a: {answer}"
+      }
+    },
+    {
+      "id": "x-count",
+      "level": 2,
+      "type": "discriminant",
+      "gen": "xcount",
+      "text": {
+        "ja": "{f} のグラフと x 軸の共有点の個数は?",
+        "ko": "{f}의 그래프와 x축이 만나는 점의 개수는?",
+        "en": "How many points does the graph of {f} share with the x-axis?"
+      },
+      "explain": {
+        "ja": "判別式 D の符号を調べる。D > 0 なら 2 個、D = 0 なら 1 個、D < 0 なら 0 個。答えは {answer}",
+        "ko": "판별식 D의 부호를 봅니다. D > 0이면 2개, D = 0이면 1개, D < 0이면 0개. 답은 {answer}",
+        "en": "Check the sign of D: two points if D > 0, one if D = 0, none if D < 0. Answer: {answer}"
+      }
+    },
+    {
+      "id": "quad-special",
+      "level": 3,
+      "type": "quadineq",
+      "gen": "quadspecial",
+      "text": {
+        "ja": "不等式 {f} {op} 0 を解くと?",
+        "ko": "부등식 {f} {op} 0의 해는?",
+        "en": "Solve {f} {op} 0."
+      },
+      "note": {
+        "ja": "x は実数とする。",
+        "ko": "x는 실수이다.",
+        "en": "x is a real number."
+      },
+      "explain": {
+        "ja": "左辺を平方完成して、グラフと x 軸の位置関係を考える。{answer}",
+        "ko": "좌변을 완전제곱식으로 고쳐 그래프와 x축의 위치를 생각합니다. {answer}",
+        "en": "Complete the square and compare the graph with the x-axis: {answer}"
       }
     }
   ]
