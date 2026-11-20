@@ -41,7 +41,7 @@ async function boot() {
     const key = tutorial.coach();
     const el = $('coach');
     el.hidden = !key || screen === 'screenCodex';
-    if (key) el.textContent = t(key);
+    if (key) $('coachText').textContent = t(key);
   }
   const tutorial = createTutorial(data, () => {
     persist();
@@ -89,6 +89,12 @@ async function boot() {
     $('codexBtn').hidden = name === 'screenBattle' || name === 'screenCodex';
     onChange();
   }
+
+  // 튜토리얼 건너뛰기: 잠겨 있던 버튼이 바로 풀립니다.
+  $('coachSkip').addEventListener('click', () => {
+    tutorial.skip();
+    if (screen === 'screenBattle') battle.refresh();
+  });
 
   // 도감 열고 닫기: 닫으면 보던 화면으로 돌아갑니다.
   let beforeCodex = 'screenMap';

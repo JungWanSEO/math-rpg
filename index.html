@@ -26,7 +26,10 @@
     </label>
   </header>
   <div class="statusbar" id="runStatus"></div>
-  <p class="coach" id="coach" aria-live="polite" hidden></p>
+  <div class="coach" id="coach" hidden>
+    <span id="coachText" aria-live="polite"></span>
+    <button type="button" id="coachSkip" data-i18n="tut.skip"></button>
+  </div>
 
   <!-- 갈림길 지도 -->
   <section class="screen" id="screenMap">

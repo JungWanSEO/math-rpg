@@ -146,7 +146,8 @@
     "free": "Now fight freely. Three correct answers in a row charge your ultimate.",
     "ult": "The gauge is full. Tap the Ultimate button.",
     "reward": "When you win, choose one upgrade. It lasts until the map ends.",
-    "map": "Choose the next space from the ones connected by a line."
+    "map": "Choose the next space from the ones connected by a line.",
+    "skip": "Skip"
   },
   "mystery": {
     "spring": {
