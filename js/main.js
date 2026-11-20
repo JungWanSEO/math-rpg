@@ -1,10 +1,10 @@
 // 시작점이자 진행 담당.
-// 지도 → (칸을 고름) → 전투 / ? / 상점 / 휴식 / 보물 → 지도 → … → 보스 → 새 지도
-// 전투에서 쓰러지면 게임 오버이고, 새 지도로 처음부터 다시 시작합니다.
+// 처음 화면 → 범위 고르기 → 지도 → (칸을 고름) → 전투 / ? / 상점 / 휴식 / 보물 → 지도 → … → 보스
+// 전투에서 쓰러지면 게임 오버이고, 범위를 다시 골라 새 지도로 처음부터 시작합니다.
 import { CONFIG } from './config.js';
-import { loadLang, applyStatic, t, pick } from './i18n.js';
+import { loadLang, applyStatic, t } from './i18n.js';
 import { load, store } from './save.js';
-import { loadUnit } from './questions.js';
+import { loadAll, setScope, allTypeKeys, hasType, subjectNames } from './questions.js';
 import { newRun } from './run.js';
 import { createStage } from './stage.js';
 import { createBattle } from './battle.js';
@@ -13,6 +13,7 @@ import { createEvents } from './events.js';
 import { createCodex } from './codex.js';
 import { createTutorial } from './tutorial.js';
 import { createTitle } from './title.js';
+import { createScope } from './scope.js';
 import { $, show } from './ui.js';
 
 const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
@@ -23,16 +24,26 @@ async function boot() {
   await loadLang(data.lang);
   applyStatic();
 
-  const [unit, monsters] = await Promise.all([
-    loadUnit(CONFIG.unit),
+  const [, monsters] = await Promise.all([
+    loadAll(),
     fetch('./data/monsters.json').then((res) => {
       if (!res.ok) throw new Error(`data/monsters.json ${res.status}`);
       return res.json();
     }),
   ]);
 
-  // 저장된 지도가 없거나 예전 형식이면 새로 만듭니다.
-  if (!data.run || !Array.isArray(data.run.nodes) || data.run.unit !== CONFIG.unit) data.run = newRun(CONFIG.unit);
+  // 예전 기록 맞추기: 유형 이름에 단원이 붙기 전의 기록을 새 이름으로 옮깁니다.
+  for (const key of Object.keys(data.codex)) {
+    if (!key.includes('/')) {
+      data.codex[`math1-trig/${key}`] = data.codex[key];
+      delete data.codex[key];
+    }
+  }
+  // 저장된 지도가 없거나 예전 형식이면 새로 만듭니다. 범위가 없던 지도는 전체 범위로 봅니다.
+  if (!data.run || !Array.isArray(data.run.nodes)) data.run = newRun(allTypeKeys());
+  if (!Array.isArray(data.run.scope) || !data.run.scope.some(hasType)) data.run.scope = allTypeKeys();
+  setScope(data.run.scope);
+
   const getRun = () => data.run;
   const persist = () => store(data);
   let screen = 'screenTitle';
@@ -41,7 +52,7 @@ async function boot() {
   function updateCoach() {
     const key = tutorial.coach();
     const el = $('coach');
-    el.hidden = !key || screen === 'screenCodex' || screen === 'screenTitle';
+    el.hidden = !key || screen === 'screenCodex' || screen === 'screenTitle' || screen === 'screenScope';
     if (key) $('coachText').textContent = t(key);
   }
   const tutorial = createTutorial(data, () => {
@@ -49,7 +60,7 @@ async function boot() {
     updateCoach();
   });
 
-  // 유형별 정답 기록 (도감과 복습에 씁니다)
+  // 유형별 정답 기록 (도감, 범위 고르기, 복습에 씁니다)
   function record(type, ok) {
     const entry = data.codex[type] || { right: 0, wrong: 0, streak: 0 };
     if (ok) {
@@ -66,8 +77,8 @@ async function boot() {
   // 위쪽 상태 줄
   function onChange() {
     const run = getRun();
-    $('subjectName').textContent = pick(unit.subject);
-    $('unitName').textContent = pick(unit.area);
+    $('subjectName').textContent = subjectNames(run.scope).join(' · ');
+    $('unitName').textContent = t('ui.scopeCount', { n: run.scope.length, total: allTypeKeys().length });
     $('runStatus').textContent = t('ui.status', {
       hp: Math.max(0, run.hp),
       max: run.maxHp,
@@ -78,17 +89,19 @@ async function boot() {
   }
 
   const stage = createStage($('stage'));
-  const battle = createBattle({ stage, unit, getRun, record, tutorial, onChange });
-  const events = createEvents({ getRun, data, unit, record, onChange });
+  const battle = createBattle({ stage, getRun, record, tutorial, onChange });
+  const events = createEvents({ getRun, data, record, onChange });
   const map = createMap({ getRun, onPick });
-  const codex = createCodex({ data, unit, monsters });
+  const codex = createCodex({ data, monsters });
 
   function go(name) {
     screen = name;
     show(name);
+    const menu = name === 'screenTitle' || name === 'screenScope';
     // 도감은 지도와 이벤트 화면에서만 엽니다. (전투 중에는 숨김)
-    $('codexBtn').hidden = name === 'screenBattle' || name === 'screenCodex' || name === 'screenTitle';
-    $('runStatus').hidden = name === 'screenTitle';
+    $('codexBtn').hidden = name === 'screenBattle' || name === 'screenCodex' || menu;
+    $('runStatus').hidden = menu;
+    $('unitBox').hidden = menu;
     onChange();
   }
 
@@ -128,13 +141,25 @@ async function boot() {
     goMap();
   }
 
-  function startOver() {
-    data.run = newRun(CONFIG.unit);
-    goMap();
+  // 범위 고르기: 고른 유형으로 새 지도를 만들어 출발합니다.
+  const scope = createScope({
+    data,
+    onStart(keys) {
+      data.lastScope = keys;
+      data.run = newRun(keys);
+      setScope(keys);
+      goMap();
+    },
+    onBack: () => goTitle(),
+  });
+  function goScope() {
+    persist();
+    go('screenScope');
+    scope.open();
   }
 
   // 처음 화면: 이어서 하기 / 처음부터 시작 / 도감
-  const title = createTitle({ getRun, unit, onContinue: goMap, onNew: startOver, onCodex: openCodex });
+  const title = createTitle({ getRun, onContinue: goMap, onNew: goScope, onCodex: openCodex });
   function goTitle() {
     persist();
     title.reset();
@@ -154,28 +179,37 @@ async function boot() {
     return pool[Math.floor(Math.random() * pool.length)];
   }
 
+  // 적의 약점 유형: 몬스터의 원래 약점이 이번 범위에 있으면 그것, 없으면 범위 안에서 하나 고릅니다.
+  function chooseWeak(monster) {
+    const run = getRun();
+    if (run.scope.includes(monster.weak)) return monster.weak;
+    return run.scope[Math.floor(Math.random() * run.scope.length)];
+  }
+
   // kind 를 따로 주면 그 종류로 싸웁니다. (? 칸의 기습은 보통 전투)
   function fight(node, kind = node.type) {
     const run = getRun();
     // 닫았다가 다시 열어도 같은 적이 나오도록 칸에 적어 둡니다.
     if (!node.monster) node.monster = chooseMonster(kind).id;
     const monster = monsters.find((m) => m.id === node.monster) || monsters[0];
+    if (!node.weak || !run.scope.includes(node.weak)) node.weak = chooseWeak(monster);
     run.lastFoe = monster.id;
     data.seen[monster.id] = true;
     persist();
 
     tutorial.emit('fight');
     go('screenBattle');
-    battle.start({ monster, kind, safe: tutorial.active() }, (result) => {
+    battle.start({ monster, kind, weak: node.weak, safe: tutorial.active() }, (result) => {
       if (result === 'lose') {
         // 게임 오버: 지도 한 장의 진행은 사라지고, 도감 기록은 남습니다.
         data.deaths = (data.deaths || 0) + 1;
+        data.run = newRun(run.scope);
         persist();
         go('screenEvent');
-        events.gameover({ floor: node.floor + 1, total: run.floors }, startOver);
+        events.gameover({ floor: node.floor + 1, total: run.floors }, goScope);
         return;
       }
-      const gold = CONFIG.gold[kind];
+      const gold = Math.round(CONFIG.gold[kind] * (run.goldMul || 1));
       data.wins += 1;
       run.gold += gold;
       run.hp = Math.min(run.maxHp, run.hp + CONFIG.player.healOnWin);
@@ -183,8 +217,9 @@ async function boot() {
       go('screenEvent');
       if (kind === 'boss') {
         data.clears += 1;
+        data.run = newRun(run.scope);
         persist();
-        events.clear(gold, startOver);
+        events.clear(gold, goScope);
       } else {
         persist();
         events.reward(gold, () => {
@@ -222,6 +257,7 @@ async function boot() {
     await loadLang(data.lang);
     applyStatic();
     if (screen === 'screenTitle') title.render();
+    if (screen === 'screenScope') scope.render();
     if (screen === 'screenMap') map.render();
     if (screen === 'screenBattle') battle.refresh();
     if (screen === 'screenEvent') events.refresh();
@@ -235,6 +271,9 @@ async function boot() {
 boot().catch((err) => {
   // 파일을 더블클릭해서 열면(file://) 데이터 파일을 읽지 못합니다. README 의 실행 방법을 보세요.
   const status = document.getElementById('runStatus');
-  if (status) status.textContent = `Load error: ${err.message}`;
+  if (status) {
+    status.hidden = false;
+    status.textContent = `Load error: ${err.message}`;
+  }
   console.error(err);
 });

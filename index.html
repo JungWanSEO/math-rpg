@@ -11,7 +11,7 @@
 <main id="app">
 
   <header class="top">
-    <div class="unit">
+    <div class="unit" id="unitBox">
       <span id="subjectName"></span>
       <strong id="unitName"></strong>
     </div>
@@ -42,6 +42,23 @@
         <button type="button" id="titleCodex"><b data-i18n="ui.codex"></b><small data-i18n="title.codexSub"></small></button>
       </div>
       <p class="title-note" data-i18n="title.note"></p>
+    </div>
+  </section>
+
+  <!-- 범위 고르기 -->
+  <section class="screen" id="screenScope" hidden>
+    <div class="event">
+      <h2 data-i18n="scope.title"></h2>
+      <p data-i18n="scope.text"></p>
+      <div class="quick">
+        <button type="button" id="scopeAll" data-i18n="scope.all"></button>
+        <button type="button" id="scopeWeak" data-i18n="scope.weak"></button>
+        <button type="button" id="scopeSame" data-i18n="scope.same"></button>
+      </div>
+      <div class="scope-list" id="scopeList"></div>
+      <p class="scope-summary" id="scopeSummary" aria-live="polite"></p>
+      <button type="button" class="primary" id="scopeStart" data-i18n="scope.start"></button>
+      <button type="button" class="hint" id="scopeBack" data-i18n="scope.back"></button>
     </div>
   </section>
 

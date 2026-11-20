@@ -100,9 +100,12 @@ export function makeMap() {
   return nodes;
 }
 
-export function newRun(unitId) {
+// scope: 이번 판에 나올 문제 유형의 목록 ("단원/유형")
+export function newRun(scope) {
+  const { bonusPerType, bonusMax } = CONFIG.scope;
   return {
-    unit: unitId,
+    scope: [...scope],
+    goldMul: 1 + Math.min(bonusMax, bonusPerType * Math.max(0, scope.length - 1)), // 범위가 넓을수록 골드를 더 받습니다
     nodes: makeMap(),
     floors: 2 * CONFIG.map.half + 2,
     at: null,        // 마지막으로 끝낸 칸 (아직 출발 전이면 null)

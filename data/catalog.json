@@ -1,0 +1,9 @@
+{
+  "subjects": [
+    {
+      "id": "math1",
+      "name": { "ja": "数学I", "ko": "수학I", "en": "Math I" },
+      "units": ["math1-trig"]
+    }
+  ]
+}

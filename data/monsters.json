@@ -12,7 +12,7 @@
       "en": "Mixing up sin and cos"
     },
     "hp": 14,
-    "weak": "ratio",
+    "weak": "math1-trig/ratio",
     "basicLevel": 1,
     "skillLevel": 2
   },
@@ -29,7 +29,7 @@
       "en": "Getting the sign wrong"
     },
     "hp": 16,
-    "weak": "value",
+    "weak": "math1-trig/value",
     "basicLevel": 1,
     "skillLevel": 2
   },
@@ -46,7 +46,7 @@
       "en": "Leaving an answer unreduced"
     },
     "hp": 20,
-    "weak": "height",
+    "weak": "math1-trig/height",
     "basicLevel": 1,
     "skillLevel": 2
   },
@@ -64,7 +64,7 @@
       "en": "Dropping or mixing up units"
     },
     "hp": 22,
-    "weak": "length",
+    "weak": "math1-trig/length",
     "basicLevel": 1,
     "skillLevel": 2
   },
@@ -82,7 +82,7 @@
       "en": "Solving without drawing the figure"
     },
     "hp": 28,
-    "weak": "twopoint",
+    "weak": "math1-trig/twopoint",
     "basicLevel": 2,
     "skillLevel": 3
   }

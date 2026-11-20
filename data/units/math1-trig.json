@@ -42,6 +42,24 @@
       "en": "Two observation points"
     }
   },
+  "groups": [
+    {
+      "name": {
+        "ja": "三角比",
+        "ko": "삼각비",
+        "en": "Trigonometric ratios"
+      },
+      "types": ["value", "ratio", "length"]
+    },
+    {
+      "name": {
+        "ja": "三角比と図形",
+        "ko": "삼각비와 도형",
+        "en": "Trigonometry and figures"
+      },
+      "types": ["height", "twopoint"]
+    }
+  ],
   "templates": [
     {
       "id": "exact-value",

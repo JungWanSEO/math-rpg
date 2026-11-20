@@ -3,13 +3,14 @@
 // 체력, 힌트, 강화는 "지도 한 장"의 상태(run)에서 가져옵니다.
 import { CONFIG } from './config.js';
 import { t, pick } from './i18n.js';
-import { next, questionText, explainText } from './questions.js';
+import { next, questionText, explainText, typeLabel } from './questions.js';
 import { showFigure } from './figures.js';
 import { $ } from './ui.js';
 
-export function createBattle({ stage, unit, getRun, record, tutorial, onChange }) {
+export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   const B = {
     foe: null,
+    weak: null,      // 이번 전투에서 적의 약점 유형
     kind: 'battle',  // 'battle' 전투 | 'elite' 강적 | 'midboss' 중간 보스 | 'boss' 보스
     safe: false,     // 튜토리얼 전투: 피해가 줄고 쓰러지지 않습니다.
     foeHp: 0,
@@ -25,7 +26,7 @@ export function createBattle({ stage, unit, getRun, record, tutorial, onChange }
     onEnd: null,
   };
 
-  const typeName = (type) => pick(unit.types[type]);
+  const typeName = typeLabel;
 
   // 적이 이번 턴에 주는 피해
   function intentDamage() {
@@ -85,7 +86,7 @@ export function createBattle({ stage, unit, getRun, record, tutorial, onChange }
     if (B.kind === 'midboss') name = t('ui.midboss', { name });
     if (B.kind === 'boss') name = t('ui.boss', { name });
     $('foeName').textContent = name;
-    $('foeWeak').textContent = t('ui.weak', { type: typeName(B.foe.weak) });
+    $('foeWeak').textContent = t('ui.weak', { type: typeName(B.weak) });
     $('foeHpBar').style.width = `${Math.max(0, (B.foeHp / B.foeMax) * 100)}%`;
     $('foeHpText').textContent = `${Math.max(0, B.foeHp)} / ${B.foeMax}`;
     $('foeIntent').textContent = t(B.intent === 'big' ? 'ui.intentBig' : 'ui.intentNormal', { d: intentDamage() });
@@ -206,7 +207,7 @@ export function createBattle({ stage, unit, getRun, record, tutorial, onChange }
     }
 
     if (ok) {
-      const weak = B.cur.type === B.foe.weak;
+      const weak = B.cur.type === B.weak;
       const base = B.cur.action === 'skill'
         ? CONFIG.damage.skill + run.up.skill
         : CONFIG.damage.basic + run.up.basic;
@@ -278,8 +279,9 @@ export function createBattle({ stage, unit, getRun, record, tutorial, onChange }
   }
 
   // 전투 시작. monster 는 monsters.json 의 항목입니다.
-  function start({ monster, kind, safe }, onEnd) {
+  function start({ monster, kind, weak, safe }, onEnd) {
     B.foe = monster;
+    B.weak = weak;
     B.kind = kind;
     B.safe = Boolean(safe);
     B.foeMax = Math.round(monster.hp * (kind === 'elite' ? CONFIG.elite.hpMul : 1));

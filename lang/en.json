@@ -22,7 +22,8 @@
     "elite": "Elite {name}",
     "boss": "Boss {name}",
     "codex": "Codex",
-    "midboss": "Mid-boss {name}"
+    "midboss": "Mid-boss {name}",
+    "scopeCount": "Types {n} / {total}"
   },
   "msg": {
     "choose": "Choose an action.",
@@ -84,10 +85,10 @@
     "treasureFail": "The lock held, but you picked up {gold}G from the floor. {explain}",
     "clearTitle": "Unit cleared",
     "clearText": "You defeated the boss. You have cleared this unit {n} time(s).",
-    "newRun": "Start a new map",
+    "newRun": "Choose range",
     "overTitle": "Game over",
-    "overText": "You fell on floor {n} of {total}. Your gold and upgrades are gone, but your codex record stays. You start again on a new map.",
-    "restart": "Start over"
+    "overText": "You fell on floor {n} of {total}. Your gold and upgrades are gone, but your codex record stays. Pick your range again and start on a new map.",
+    "restart": "Choose range"
   },
   "up": {
     "maxhp": {
@@ -189,13 +190,26 @@
   },
   "title": {
     "continue": "Continue",
-    "continueSub": "Floor {n} of {total} · HP {hp}/{max}",
+    "continueSub": "Floor {n} of {total} · HP {hp}/{max} · {types} types",
     "start": "Start",
-    "startSub": "Set out on a new map.",
+    "startSub": "Pick your range and set out on a new map.",
     "restart": "Start over",
-    "restartSub": "Abandon the current map and begin a new one.",
+    "restartSub": "Abandon the current map and pick your range again.",
     "confirm": "Tap again to discard the map in progress.",
     "codexSub": "Monsters you met and your record by type",
-    "note": "Progress is saved on this device automatically. Your codex record stays even if you start over."
+    "note": "Progress is saved on this device automatically. Your codex record stays even if you start over.",
+    "sub": "{subjects} · {n} types"
+  },
+  "scope": {
+    "title": "Choose your range",
+    "text": "Pick the question types for this run. Focus on the ones you find hard, or choose widely so you never know what is coming.",
+    "all": "All",
+    "weak": "Not mastered",
+    "same": "Same as last time",
+    "record": "Accuracy {rate}% · {status}",
+    "summary": "{n} types selected · gold +{bonus}%",
+    "empty": "Pick at least one type.",
+    "start": "Set out with this range",
+    "back": "Back to title"
   }
 }
