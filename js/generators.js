@@ -84,7 +84,7 @@ function triple() {
 const INT_TRIANGLES = [
   [7, 3, 8, 60], [7, 5, 8, 60], [13, 7, 15, 60], [13, 8, 15, 60], [14, 6, 16, 60], [19, 16, 21, 60],
   [7, 3, 5, 120], [13, 7, 8, 120], [19, 5, 16, 120], [14, 6, 10, 120],
-  [5, 3, 4, 90], [13, 5, 12, 90],
+  [5, 3, 4, 90], [13, 5, 12, 90], [17, 8, 15, 90], [25, 7, 24, 90],
 ];
 
 // 사인 법칙: b = a × sin B ÷ sin A 가 깔끔하게 떨어지는 각의 짝 [A, B, n, r, d] (b = a·n√r/d)
@@ -197,7 +197,12 @@ export const GENERATORS = {
 
   // 코사인 법칙: 세 변으로 각 구하기
   cosangle() {
-    const [a, b, c, A] = pickOne(INT_TRIANGLES);
+    // 닮은 삼각형(1~3배)과 b, c 를 바꾼 것까지 내어 같은 문제가 되풀이되지 않게 합니다.
+    const k = 1 + rand(3);
+    let [a, b, c] = pickOne(INT_TRIANGLES);
+    const A = INT_TRIANGLES.find((row) => row[0] === a && row[1] === b && row[2] === c)[3];
+    if (Math.random() < 0.5) [b, c] = [c, b];
+    [a, b, c] = [a * k, b * k, c * k];
     const deg = (x) => ({ s: `${x}°`, v: x });
     const rest = [30, 45, 60, 90, 120, 135, 150].filter((x) => x !== A);
     // 60° 와 120° 를 헷갈리는 것이 가장 흔한 실수라서 먼저 넣습니다.
@@ -507,5 +512,264 @@ Object.assign(GENERATORS, {
     const variance = sq / devs.length;
     const answer = int(Math.sqrt(variance));
     return item({ list }, answer, [int(variance), int(sq), int(answer.v + 1)], [int(answer.v + 2), dec(answer.v / 2), int(answer.v * 3)]);
+  },
+});
+
+// =====================================================================
+// 数学I 의 빈 곳 (명제, 공간도형, 상관) 과 数学A (경우의 수·확률, 도형의 성질)
+// =====================================================================
+
+const fact = (n) => (n <= 1 ? 1 : n * fact(n - 1));
+const nPr = (n, r) => fact(n) / fact(n - r);
+const nCr = (n, r) => nPr(n, r) / fact(r);
+const degree = (x) => ({ s: `${numStr(x)}°`, v: x });
+const NOT = { '>': '≦', '≦': '>', '<': '≧', '≧': '<', '=': '≠', '≠': '=' };
+// 보기마다 번호를 값으로 주어, 글이 다르면 다른 보기로 봅니다.
+const labelled = (texts) => texts.map((s, i) => ({ s, v: i + 1 }));
+
+Object.assign(GENERATORS, {
+  // ---------- 数と式: 命題 ----------
+
+  // 명제 "p ⟹ q" 의 역·이·대우. params.ask 는 'converse' | 'inverse' | 'contra'
+  proposition(params) {
+    const forms = [
+      () => { const a = pickOne(range(2, 9)); const b = a - 1 - rand(3); return [`x > ${a}`, `x > ${numStr(b)}`]; },
+      () => { const a = pickOne(range(-5, 3)); const b = a + 1 + rand(3); return [`x < ${numStr(a)}`, `x < ${numStr(b)}`]; },
+      () => { const a = pickOne(range(2, 6)); return [`x = ${a}`, `x² = ${a * a}`]; },
+      () => { const a = pickOne(range(1, 6)); const b = a + 1 + rand(3); return [`x ≧ ${b}`, `x > ${a}`]; },
+      () => { const a = pickOne(range(2, 7)); return [`x = ${a}`, `x > ${a - 1 - rand(2)}`]; },
+    ];
+    const [P, Q] = pickOne(forms)();
+    const neg = (text) => {
+      const m = text.match(/^(\S+) (\S+) (.+)$/);
+      return `${m[1]} ${NOT[m[2]]} ${m[3]}`;
+    };
+    const imp = (from, to) => `${from} ⟹ ${to}`;
+    const all = {
+      converse: imp(Q, P),
+      inverse: imp(neg(P), neg(Q)),
+      contra: imp(neg(Q), neg(P)),
+      mixed: imp(neg(P), Q),
+      mixed2: imp(P, neg(Q)),
+    };
+    const order = [params.ask, ...['contra', 'converse', 'inverse', 'mixed', 'mixed2'].filter((k) => k !== params.ask)];
+    const [answer, ...rest] = labelled(order.map((k) => all[k]));
+    return item({ stmt: imp(P, Q) }, answer, rest);
+  },
+
+  // ---------- 図形と計量: 空間図形 ----------
+
+  // 직육면체의 대각선: √(a² + b² + c²)
+  cuboid() {
+    let a;
+    let b;
+    let c;
+    do {
+      [a, b, c] = [pickOne(range(1, 8)), pickOne(range(1, 8)), pickOne(range(1, 8))];
+    } while (a === b && b === c);
+    const sq = a * a + b * b + c * c;
+    return item({ a, b, c }, surd(1, sq), [surd(1, a * a + b * b), surd(a + b + c), surd(sq), surd(1, a + b + c)],
+      [surd(1, sq + 1), surd(1, b * b + c * c), surd(2, sq)]);
+  },
+
+  // 두 지점에서 올려본 각으로 탑의 높이 구하기 (∠AHB = 90°)
+  // AH = h/tan α, BH = h/tan β 이고 AB² = AH² + BH² 이므로 h = AB ÷ √(1/tan²α + 1/tan²β)
+  spaceheight() {
+    const COT2x3 = { 30: 9, 45: 3, 60: 1 }; // (1/tan²) × 3
+    const al = pickOne([30, 45, 60]);
+    const be = pickOne([30, 45, 60]);
+    const p = COT2x3[al] + COT2x3[be];
+    const d = pickOne(range(2, 12)) * pickOne([1, 2, 5]);
+    const answer = surd(d, 3 * p, p);
+    return item({ al, be, d }, answer,
+      [surd(d, 1, 2), surd(d, 3, 2), surd(d, 2, 2), surd(d), surd(d, 3, 3)],
+      [times(answer, 2), over(answer, 2), surd(d, 6, 2)], 'm');
+  },
+
+  // ---------- データの分析: 相関 ----------
+
+  // 공분산: 편차의 곱의 평균
+  covariance() {
+    const SETS = [[-2, -1, 1, 2], [-3, -1, 1, 3], [-1, -1, 1, 1], [-2, 0, 0, 2], [-2, -1, 0, 1, 2], [-4, -2, 0, 2, 4], [-1, 0, 0, 0, 1], [-3, -1, 0, 1, 3]];
+    let dx;
+    let dy;
+    let sum;
+    do {
+      dx = pickOne(SETS);
+      dy = shuffled(pickOne(SETS.filter((set) => set.length === dx.length)));
+      sum = dx.reduce((acc, d, i) => acc + d * dy[i], 0);
+    } while (sum % dx.length !== 0 || sum === 0);
+    const n = dx.length;
+    const mx = 3 + Math.max(...dx.map((d) => -d)) + rand(5);
+    const my = 3 + Math.max(...dy.map((d) => -d)) + rand(5);
+    const order = shuffled(range(0, n - 1));
+    const pairs = order.map((i) => `(${mx + dx[i]}, ${my + dy[i]})`).join(', ');
+    const cov = sum / n;
+    return item({ pairs, mx, my }, int(cov), [int(sum), int(-cov), dec(Math.round((sum / (n - 1)) * 10) / 10)],
+      [int(cov + 1), int(cov - 1), int(cov * 2), int(mx * my)]);
+  },
+
+  // 상관계수 r = s_xy ÷ (s_x × s_y)
+  correlation() {
+    let sx;
+    let sy;
+    let r;
+    let sxy;
+    do {
+      sx = pickOne(range(2, 8));
+      sy = pickOne(range(2, 8));
+      r = pickOne([0.5, -0.5, 0.8, -0.8, 0.6, -0.6, 0.25, -0.25, 0.75, -0.75, 0.9, -0.9, 0.4, -0.4, 0.2, -0.2]);
+      sxy = Math.round(r * sx * sy * 100) / 100;
+    } while (Math.round(sxy * 10) !== sxy * 10);
+    const two = (v) => ({ s: numStr(Math.round(v * 100) / 100), v: Math.round(v * 100) / 100 });
+    return item({ sx, sy, sxy: numStr(sxy) }, two(r), [two(-r), two(sxy / (sx + sy)), two(sxy / sx), two(sxy / sy)],
+      [two(r / 2), two(r > 0 ? r - 0.1 : r + 0.1), two(1 - Math.abs(r))]);
+  },
+
+  // ---------- 数学A: 場合の数と確率 ----------
+
+  // 순열 nPr
+  perm() {
+    const n = pickOne(range(4, 10));
+    const r = pickOne([2, 3, 4].filter((k) => k < n));
+    return item({ n, r }, int(nPr(n, r)), [int(nCr(n, r)), int(n ** r), int(n * r)], [int(fact(r)), int(nPr(n, r) + n), int(nPr(n, r) / 2)]);
+  },
+
+  // 조합 nCr
+  comb() {
+    const n = pickOne(range(5, 12));
+    const r = pickOne([2, 3, 4]);
+    return item({ n, r }, int(nCr(n, r)), [int(nPr(n, r)), int(n * r), int(n ** r)], [int(nCr(n, r) + n), int(nCr(n, r + 1)), int(nCr(n, r) * 2)]);
+  },
+
+  // 원순열 (n − 1)!
+  circular() {
+    const n = pickOne(range(4, 7));
+    return item({ n }, int(fact(n - 1)), [int(fact(n)), int(fact(n) / 2), int(fact(n - 2))], [int(n * n), int(fact(n - 1) * 2), int(n)]);
+  },
+
+  // 같은 것이 있는 순열 (p + q)! ÷ (p! q!)
+  samearrange() {
+    const p = pickOne(range(2, 5));
+    const q = pickOne(range(1, 4));
+    const answer = fact(p + q) / (fact(p) * fact(q));
+    return item({ p, q }, int(answer), [int(fact(p + q)), int(fact(p) * fact(q)), int(fact(p + q) / fact(p))],
+      [int(answer + 1), int(answer * 2), int(p * q), int(answer + p + q)]);
+  },
+
+  // 주사위 두 개의 눈의 합
+  dicesum() {
+    const sumTo = pickOne(range(3, 11));
+    const ways = 6 - Math.abs(7 - sumTo);
+    return item({ s: sumTo }, frac(ways, 36), [frac(1, 11), frac(ways, 12), frac(ways + 1, 36), frac(sumTo, 36)],
+      [frac(ways - 1, 36), frac(1, 6), frac(1, 36), frac(ways, 18)]);
+  },
+
+  // 여사건: 동전을 n 번 던져 적어도 한 번 앞면
+  complement() {
+    const n = pickOne(range(2, 6));
+    const all = 2 ** n;
+    return item({ n }, frac(all - 1, all), [frac(1, all), frac(n, all), frac(1, 2), frac(n, 2 * n + 1)],
+      [frac(all - 2, all), frac(all - n, all), frac(1, n)]);
+  },
+
+  // 조건부 확률: 되돌려 놓지 않고 두 번 꺼낼 때, 첫 번째가 빨강일 때 두 번째도 빨강
+  conditional() {
+    const r = pickOne(range(2, 6));
+    const w = pickOne(range(2, 6));
+    const all = r + w;
+    return item({ r, w }, frac(r - 1, all - 1), [frac(r, all), frac(r * (r - 1), all * (all - 1)), frac(r - 1, all), frac(r, all - 1)],
+      [frac(w, all - 1), frac(1, 2), frac(r - 1, all + 1)]);
+  },
+
+  // 기댓값: 제비 10개 중 a점이 p개, b점이 q개, 나머지는 0점
+  expectation() {
+    const a = pickOne([50, 100, 200]);
+    const b = pickOne([10, 20, 30, 40].filter((v) => v < a));
+    const p = pickOne([1, 2]);
+    const q = pickOne([2, 3, 4]);
+    const e = (a * p + b * q) / 10;
+    return item({ a, b, p, q, rest: 10 - p - q }, int(e), [int(a * p + b * q), int((a + b) / 2), int((a + b) / 10), int((a * p + b * q) / (p + q))],
+      [int(e + 5), int(e * 2), int(e + 10), int(e / 2)]);
+  },
+
+  // ---------- 数学A: 図形の性質 ----------
+
+  // 각의 이등분선: BD : DC = AB : AC
+  // 삼각형이 실제로 만들어지고(BC < AB + AC) BD 가 정수가 되도록 숫자를 고릅니다.
+  bisector() {
+    let c;
+    let b;
+    let a;
+    let unit;
+    do {
+      const f = pickOne([2, 3, 4]);
+      const c1 = pickOne(range(1, 5));
+      const b1 = pickOne(range(1, 5).filter((n) => n !== c1 && gcd(n, c1) === 1));
+      unit = pickOne(range(1, f - 1));
+      [c, b, a] = [f * c1, f * b1, unit * (c1 + b1)];
+      unit *= c1; // BD
+    } while (a <= Math.abs(b - c) || a >= b + c);
+    const bd = unit;
+    return item({ c, b, a }, int(bd), [int(a - bd), frac(a, 2), frac(a * c, b), frac(a * b, c)], [int(bd + 1), int(a), frac(bd, 2)]);
+  },
+
+  // 무게중심: 중선을 2 : 1 로 나눕니다
+  centroid() {
+    const m = 3 * pickOne(range(2, 12));
+    return item({ m }, int((2 * m) / 3), [int(m / 3), frac(m, 2), int(2 * m)], [int(m), int(m - 3), int((2 * m) / 3 + 1)]);
+  },
+
+  // 내심: ∠BIC = 90° + A/2
+  incenter() {
+    const A = 2 * pickOne(range(15, 60));
+    return item({ A }, degree(90 + A / 2), [degree(180 - A), degree(2 * A), degree(90 - A / 2), degree(90 + A)],
+      [degree(A / 2), degree(180 - A / 2), degree(A + 10)]);
+  },
+
+  // 외심: ∠BOC = 2A (A 는 예각)
+  circumcenter() {
+    const A = pickOne(range(25, 85));
+    return item({ A }, degree(2 * A), [degree(180 - A), degree(90 + A / 2 === Math.floor(90 + A / 2) ? 90 + A / 2 : 90 + (A + 1) / 2), degree(A), degree(180 - 2 * A)],
+      [degree(A + 90), degree(2 * A + 10), degree(360 - 2 * A)]);
+  },
+
+  // 원주각과 중심각. params.ask 는 'inscribed' (중심각 → 원주각) 또는 'central'
+  inscribed(params) {
+    const half = pickOne(range(15, 85));
+    const full = 2 * half;
+    if (params.ask === 'central') {
+      return item({ x: half }, degree(full), [degree(half), degree(180 - half), degree(90 + half)], [degree(full + 10), degree(360 - full), degree(half / 2 === Math.floor(half / 2) ? half / 2 : half + 5)]);
+    }
+    return item({ x: full }, degree(half), [degree(full), degree(180 - full), degree(2 * full)], [degree(half + 10), degree(90 - half), degree(180 - half)]);
+  },
+
+  // 원에 내접하는 사각형: 마주 보는 각의 합은 180°
+  cyclic() {
+    const A = pickOne(range(50, 130).filter((x) => x !== 90));
+    return item({ A }, degree(180 - A), [degree(A), degree(360 - A), degree(90 - A > 0 ? 90 - A : A - 90)], [degree(180 - A + 10), degree(2 * A), degree(180 - A - 10)]);
+  },
+
+  // 방멱 정리: PA × PB = PC × PD
+  power() {
+    let a;
+    let b;
+    let c;
+    do {
+      a = pickOne(range(2, 9));
+      b = pickOne(range(a + 1, 16));
+      c = pickOne(range(2, 12));
+    } while ((a * b) % c !== 0 || c === a || c === b || (a * b) / c <= c);
+    const d = (a * b) / c;
+    return item({ a, b, c }, int(d), [int(a + b - c), frac(b * c, a), frac(a * c, b), int(a * b)], [int(d + 1), int(d - 1), int(b - a + c)]);
+  },
+
+  // 방멱 정리 (접선): PT² = PA × PB
+  tangent() {
+    const t = pickOne(range(4, 12));
+    const pairs = range(1, t - 1).filter((a) => (t * t) % a === 0); // 1 은 언제나 들어 있습니다.
+    const a = pickOne(pairs);
+    const b = (t * t) / a;
+    return item({ a, b }, int(t), [int(a * b), frac(a + b, 2), int(b - a)], [int(t + 1), int(t - 1), surd(1, a + b), int(2 * t)]);
   },
 });

@@ -30,6 +30,11 @@
       "ja": "集合の要素の個数",
       "ko": "집합의 원소의 개수",
       "en": "Counting set elements"
+    },
+    "proposition": {
+      "ja": "命題(逆・裏・対偶)",
+      "ko": "명제 (역·이·대우)",
+      "en": "Propositions (converse, inverse, contrapositive)"
     }
   },
   "groups": [
@@ -56,13 +61,14 @@
     },
     {
       "name": {
-        "ja": "不等式と集合",
-        "ko": "부등식과 집합",
-        "en": "Inequalities and sets"
+        "ja": "不等式・集合と命題",
+        "ko": "부등식·집합과 명제",
+        "en": "Inequalities, sets and logic"
       },
       "types": [
         "inequality",
-        "sets"
+        "sets",
+        "proposition"
       ]
     }
   ],
@@ -199,6 +205,63 @@
         "ja": "n(A∪B) = n(A) + n(B) − n(A∩B) = {answer}",
         "ko": "n(A∪B) = n(A) + n(B) − n(A∩B) = {answer}",
         "en": "n(A∪B) = n(A) + n(B) − n(A∩B) = {answer}"
+      }
+    },
+    {
+      "id": "prop-converse",
+      "level": 1,
+      "type": "proposition",
+      "gen": "proposition",
+      "params": {
+        "ask": "converse"
+      },
+      "text": {
+        "ja": "命題「{stmt}」の逆は?",
+        "ko": "명제 「{stmt}」의 역은?",
+        "en": "What is the converse of \"{stmt}\"?"
+      },
+      "explain": {
+        "ja": "逆は仮定と結論を入れかえたもの。{answer}",
+        "ko": "역은 가정과 결론을 서로 바꾼 것입니다. {answer}",
+        "en": "The converse swaps the hypothesis and the conclusion: {answer}"
+      }
+    },
+    {
+      "id": "prop-inverse",
+      "level": 2,
+      "type": "proposition",
+      "gen": "proposition",
+      "params": {
+        "ask": "inverse"
+      },
+      "text": {
+        "ja": "命題「{stmt}」の裏は?",
+        "ko": "명제 「{stmt}」의 이는?",
+        "en": "What is the inverse of \"{stmt}\"?"
+      },
+      "explain": {
+        "ja": "裏は仮定と結論をそれぞれ否定したもの。{answer}",
+        "ko": "이는 가정과 결론을 각각 부정한 것입니다. {answer}",
+        "en": "The inverse negates both the hypothesis and the conclusion: {answer}"
+      }
+    },
+    {
+      "id": "prop-contra",
+      "level": 2,
+      "type": "proposition",
+      "gen": "proposition",
+      "params": {
+        "ask": "contra"
+      },
+      "text": {
+        "ja": "命題「{stmt}」の対偶は?",
+        "ko": "명제 「{stmt}」의 대우는?",
+        "en": "What is the contrapositive of \"{stmt}\"?"
+      },
+      "explain": {
+        "ja": "対偶は仮定と結論を入れかえて、それぞれ否定したもの。{answer}",
+        "ko": "대우는 가정과 결론을 서로 바꾸고 각각 부정한 것입니다. {answer}",
+        "en": "The contrapositive swaps and negates both parts: {answer}"
       }
     }
   ]

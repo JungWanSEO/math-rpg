@@ -13,6 +13,18 @@
         "math1-quad",
         "math1-data"
       ]
+    },
+    {
+      "id": "matha",
+      "name": {
+        "ja": "数学A",
+        "ko": "수학A",
+        "en": "Math A"
+      },
+      "units": [
+        "matha-count",
+        "matha-geom"
+      ]
     }
   ]
 }

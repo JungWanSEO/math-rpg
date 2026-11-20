@@ -1,0 +1,196 @@
+{
+  "id": "matha-count",
+  "name": {
+    "ja": "場合の数と確率",
+    "ko": "경우의 수와 확률",
+    "en": "Counting and probability"
+  },
+  "types": {
+    "perm": {
+      "ja": "順列",
+      "ko": "순열",
+      "en": "Permutations"
+    },
+    "comb": {
+      "ja": "組合せ",
+      "ko": "조합",
+      "en": "Combinations"
+    },
+    "arrange": {
+      "ja": "円順列・同じものを含む順列",
+      "ko": "원순열·같은 것이 있는 순열",
+      "en": "Circular and repeated arrangements"
+    },
+    "prob": {
+      "ja": "確率",
+      "ko": "확률",
+      "en": "Probability"
+    },
+    "conditional": {
+      "ja": "条件付き確率",
+      "ko": "조건부 확률",
+      "en": "Conditional probability"
+    },
+    "expect": {
+      "ja": "期待値",
+      "ko": "기댓값",
+      "en": "Expected value"
+    }
+  },
+  "groups": [
+    {
+      "name": {
+        "ja": "場合の数",
+        "ko": "경우의 수",
+        "en": "Counting"
+      },
+      "types": [
+        "perm",
+        "comb",
+        "arrange"
+      ]
+    },
+    {
+      "name": {
+        "ja": "確率",
+        "ko": "확률",
+        "en": "Probability"
+      },
+      "types": [
+        "prob",
+        "conditional",
+        "expect"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "perm",
+      "level": 1,
+      "type": "perm",
+      "gen": "perm",
+      "text": {
+        "ja": "{n} 人の中から {r} 人を選んで1列に並べる方法は何通り?",
+        "ko": "{n}명 중에서 {r}명을 뽑아 한 줄로 세우는 방법은 몇 가지?",
+        "en": "In how many ways can {r} people chosen from {n} be lined up in a row?"
+      },
+      "explain": {
+        "ja": "順番を区別するので順列。{n} から {r} 個の数を順にかけて {answer}",
+        "ko": "순서를 구별하므로 순열입니다. {n}부터 차례로 {r}개의 수를 곱하면 {answer}",
+        "en": "Order matters, so it is a permutation. Multiply {r} numbers counting down from {n}: {answer}"
+      }
+    },
+    {
+      "id": "comb",
+      "level": 1,
+      "type": "comb",
+      "gen": "comb",
+      "text": {
+        "ja": "{n} 人の中から {r} 人を選ぶ方法は何通り?",
+        "ko": "{n}명 중에서 {r}명을 뽑는 방법은 몇 가지?",
+        "en": "In how many ways can {r} people be chosen from {n}?"
+      },
+      "explain": {
+        "ja": "順番を区別しないので組合せ。順列を {r}! で割って {answer}",
+        "ko": "순서를 구별하지 않으므로 조합입니다. 순열을 {r}!로 나누면 {answer}",
+        "en": "Order does not matter, so it is a combination. Divide the permutation count by {r}!: {answer}"
+      }
+    },
+    {
+      "id": "circular",
+      "level": 2,
+      "type": "arrange",
+      "gen": "circular",
+      "text": {
+        "ja": "{n} 人が円形のテーブルに座る方法は何通り?",
+        "ko": "{n}명이 원탁에 둘러앉는 방법은 몇 가지?",
+        "en": "In how many ways can {n} people sit around a round table?"
+      },
+      "explain": {
+        "ja": "円順列は (n − 1)! 通り。{answer}",
+        "ko": "원순열은 (n − 1)!가지입니다. {answer}",
+        "en": "A circular arrangement has (n − 1)! ways: {answer}"
+      }
+    },
+    {
+      "id": "same-arrange",
+      "level": 2,
+      "type": "arrange",
+      "gen": "samearrange",
+      "text": {
+        "ja": "a が {p} 個、b が {q} 個ある。これらすべてを1列に並べる方法は何通り?",
+        "ko": "a가 {p}개, b가 {q}개 있다. 이것을 모두 한 줄로 늘어놓는 방법은 몇 가지?",
+        "en": "There are {p} a's and {q} b's. In how many ways can all of them be arranged in a row?"
+      },
+      "explain": {
+        "ja": "同じものを含む順列。全体の階乗を {p}! と {q}! で割って {answer}",
+        "ko": "같은 것이 있는 순열입니다. 전체의 계승을 {p}!와 {q}!로 나누면 {answer}",
+        "en": "Divide the factorial of the total by {p}! and {q}!: {answer}"
+      }
+    },
+    {
+      "id": "dice-sum",
+      "level": 2,
+      "type": "prob",
+      "gen": "dicesum",
+      "text": {
+        "ja": "2個のさいころを同時に投げるとき、目の和が {s} になる確率は?",
+        "ko": "주사위 두 개를 동시에 던질 때, 눈의 합이 {s}가 될 확률은?",
+        "en": "Two dice are rolled. What is the probability that the sum is {s}?"
+      },
+      "explain": {
+        "ja": "全部で 36 通り。和が {s} になる場合を数えて {answer}",
+        "ko": "전체는 36가지입니다. 합이 {s}가 되는 경우를 세면 {answer}",
+        "en": "There are 36 outcomes. Count those with sum {s}: {answer}"
+      }
+    },
+    {
+      "id": "complement",
+      "level": 2,
+      "type": "prob",
+      "gen": "complement",
+      "text": {
+        "ja": "硬貨を {n} 回投げるとき、少なくとも1回表が出る確率は?",
+        "ko": "동전을 {n}번 던질 때, 적어도 한 번 앞면이 나올 확률은?",
+        "en": "A coin is tossed {n} times. What is the probability of at least one head?"
+      },
+      "explain": {
+        "ja": "余事象(すべて裏)の確率を 1 から引いて {answer}",
+        "ko": "여사건(모두 뒷면)의 확률을 1에서 빼면 {answer}",
+        "en": "Subtract the probability of the complement (all tails) from 1: {answer}"
+      }
+    },
+    {
+      "id": "conditional",
+      "level": 3,
+      "type": "conditional",
+      "gen": "conditional",
+      "text": {
+        "ja": "赤玉 {r} 個、白玉 {w} 個が入った袋から、玉を1個ずつ続けて2個取り出す(もとに戻さない)。1個目が赤玉であったとき、2個目も赤玉である確率は?",
+        "ko": "빨간 공 {r}개, 흰 공 {w}개가 든 주머니에서 공을 한 개씩 차례로 두 개 꺼낸다(되돌려 놓지 않음). 첫 번째가 빨간 공이었을 때, 두 번째도 빨간 공일 확률은?",
+        "en": "A bag holds {r} red and {w} white balls. Two balls are drawn one after another without replacement. Given that the first is red, what is the probability that the second is also red?"
+      },
+      "explain": {
+        "ja": "1個目が赤なら、残りは赤が1個減っている。{answer}",
+        "ko": "첫 번째가 빨간 공이면 남은 공 중 빨간 공이 하나 줄어 있습니다. {answer}",
+        "en": "After a red ball is drawn, one fewer red ball remains: {answer}"
+      }
+    },
+    {
+      "id": "expectation",
+      "level": 3,
+      "type": "expect",
+      "gen": "expectation",
+      "text": {
+        "ja": "10本のくじの中に、{a} 点のくじが {p} 本、{b} 点のくじが {q} 本あり、残りは 0 点である。1本引くときの得点の期待値は?",
+        "ko": "제비 10개 중에 {a}점짜리가 {p}개, {b}점짜리가 {q}개 있고 나머지는 0점이다. 한 개를 뽑을 때 점수의 기댓값은?",
+        "en": "Of 10 tickets, {p} are worth {a} points, {q} are worth {b} points and the rest are worth 0. What is the expected score of one draw?"
+      },
+      "explain": {
+        "ja": "(得点 × 確率) をすべて足して {answer}",
+        "ko": "(점수 × 확률)을 모두 더하면 {answer}",
+        "en": "Add up (score × probability) for every ticket: {answer}"
+      }
+    }
+  ]
+}

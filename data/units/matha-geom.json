@@ -1,0 +1,206 @@
+{
+  "id": "matha-geom",
+  "name": {
+    "ja": "図形の性質",
+    "ko": "도형의 성질",
+    "en": "Properties of figures"
+  },
+  "types": {
+    "bisector": {
+      "ja": "角の二等分線と比",
+      "ko": "각의 이등분선과 비",
+      "en": "Angle bisector ratio"
+    },
+    "centers": {
+      "ja": "三角形の重心・内心・外心",
+      "ko": "삼각형의 무게중심·내심·외심",
+      "en": "Centroid, incenter, circumcenter"
+    },
+    "circle": {
+      "ja": "円周角・円に内接する四角形",
+      "ko": "원주각·원에 내접하는 사각형",
+      "en": "Inscribed angles and cyclic quadrilaterals"
+    },
+    "power": {
+      "ja": "方べきの定理",
+      "ko": "방멱 정리",
+      "en": "Power of a point"
+    }
+  },
+  "groups": [
+    {
+      "name": {
+        "ja": "三角形の性質",
+        "ko": "삼각형의 성질",
+        "en": "Triangles"
+      },
+      "types": [
+        "bisector",
+        "centers"
+      ]
+    },
+    {
+      "name": {
+        "ja": "円の性質",
+        "ko": "원의 성질",
+        "en": "Circles"
+      },
+      "types": [
+        "circle",
+        "power"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "bisector",
+      "level": 2,
+      "type": "bisector",
+      "gen": "bisector",
+      "text": {
+        "ja": "△ABC で AB = {c}、AC = {b}、BC = {a}。∠A の二等分線と辺 BC の交点を D とするとき、BD の長さは?",
+        "ko": "△ABC에서 AB = {c}, AC = {b}, BC = {a}이다. ∠A의 이등분선과 변 BC의 교점을 D라 할 때, BD의 길이는?",
+        "en": "In △ABC, AB = {c}, AC = {b} and BC = {a}. The bisector of ∠A meets BC at D. How long is BD?"
+      },
+      "explain": {
+        "ja": "BD : DC = AB : AC = {c} : {b} より BD = {answer}",
+        "ko": "BD : DC = AB : AC = {c} : {b}이므로 BD = {answer}",
+        "en": "BD : DC = AB : AC = {c} : {b}, so BD = {answer}"
+      }
+    },
+    {
+      "id": "centroid",
+      "level": 1,
+      "type": "centers",
+      "gen": "centroid",
+      "text": {
+        "ja": "△ABC の辺 BC の中点を M、重心を G とする。AM = {m} のとき、AG の長さは?",
+        "ko": "△ABC에서 변 BC의 중점을 M, 무게중심을 G라 한다. AM = {m}일 때, AG의 길이는?",
+        "en": "In △ABC, M is the midpoint of BC and G is the centroid. If AM = {m}, how long is AG?"
+      },
+      "explain": {
+        "ja": "重心は中線を 2 : 1 に分けるので AG = {answer}",
+        "ko": "무게중심은 중선을 2 : 1로 나누므로 AG = {answer}",
+        "en": "The centroid divides a median 2 : 1, so AG = {answer}"
+      }
+    },
+    {
+      "id": "circumcenter",
+      "level": 1,
+      "type": "centers",
+      "gen": "circumcenter",
+      "text": {
+        "ja": "鋭角三角形 ABC の外心を O とする。∠A = {A}° のとき、∠BOC は?",
+        "ko": "예각삼각형 ABC의 외심을 O라 한다. ∠A = {A}°일 때, ∠BOC는?",
+        "en": "O is the circumcenter of acute triangle ABC. If ∠A = {A}°, what is ∠BOC?"
+      },
+      "explain": {
+        "ja": "中心角は円周角の 2 倍なので ∠BOC = {answer}",
+        "ko": "중심각은 원주각의 2배이므로 ∠BOC = {answer}",
+        "en": "A central angle is twice the inscribed angle, so ∠BOC = {answer}"
+      }
+    },
+    {
+      "id": "incenter",
+      "level": 2,
+      "type": "centers",
+      "gen": "incenter",
+      "text": {
+        "ja": "△ABC の内心を I とする。∠A = {A}° のとき、∠BIC は?",
+        "ko": "△ABC의 내심을 I라 한다. ∠A = {A}°일 때, ∠BIC는?",
+        "en": "I is the incenter of △ABC. If ∠A = {A}°, what is ∠BIC?"
+      },
+      "explain": {
+        "ja": "∠BIC = 90° + ∠A ÷ 2 = {answer}",
+        "ko": "∠BIC = 90° + ∠A ÷ 2 = {answer}",
+        "en": "∠BIC = 90° + ∠A ÷ 2 = {answer}"
+      }
+    },
+    {
+      "id": "inscribed",
+      "level": 1,
+      "type": "circle",
+      "gen": "inscribed",
+      "params": {
+        "ask": "inscribed"
+      },
+      "text": {
+        "ja": "弧 AB に対する中心角が {x}° のとき、同じ弧に対する円周角は?",
+        "ko": "호 AB에 대한 중심각이 {x}°일 때, 같은 호에 대한 원주각은?",
+        "en": "The central angle on arc AB is {x}°. What is the inscribed angle on the same arc?"
+      },
+      "explain": {
+        "ja": "円周角は中心角の半分なので {answer}",
+        "ko": "원주각은 중심각의 절반이므로 {answer}",
+        "en": "An inscribed angle is half the central angle: {answer}"
+      }
+    },
+    {
+      "id": "central",
+      "level": 1,
+      "type": "circle",
+      "gen": "inscribed",
+      "params": {
+        "ask": "central"
+      },
+      "text": {
+        "ja": "弧 AB に対する円周角が {x}° のとき、同じ弧に対する中心角は?",
+        "ko": "호 AB에 대한 원주각이 {x}°일 때, 같은 호에 대한 중심각은?",
+        "en": "The inscribed angle on arc AB is {x}°. What is the central angle on the same arc?"
+      },
+      "explain": {
+        "ja": "中心角は円周角の 2 倍なので {answer}",
+        "ko": "중심각은 원주각의 2배이므로 {answer}",
+        "en": "A central angle is twice the inscribed angle: {answer}"
+      }
+    },
+    {
+      "id": "cyclic",
+      "level": 1,
+      "type": "circle",
+      "gen": "cyclic",
+      "text": {
+        "ja": "四角形 ABCD が円に内接している。∠A = {A}° のとき、∠C は?",
+        "ko": "사각형 ABCD가 원에 내접한다. ∠A = {A}°일 때, ∠C는?",
+        "en": "Quadrilateral ABCD is inscribed in a circle. If ∠A = {A}°, what is ∠C?"
+      },
+      "explain": {
+        "ja": "円に内接する四角形の対角の和は 180° なので {answer}",
+        "ko": "원에 내접하는 사각형은 마주 보는 각의 합이 180°이므로 {answer}",
+        "en": "Opposite angles of a cyclic quadrilateral add to 180°: {answer}"
+      }
+    },
+    {
+      "id": "power",
+      "level": 2,
+      "type": "power",
+      "gen": "power",
+      "text": {
+        "ja": "円の2つの弦 AB, CD が点 P で交わっている。PA = {a}、PB = {b}、PC = {c} のとき、PD の長さは?",
+        "ko": "원의 두 현 AB, CD가 점 P에서 만난다. PA = {a}, PB = {b}, PC = {c}일 때, PD의 길이는?",
+        "en": "Chords AB and CD of a circle meet at P. If PA = {a}, PB = {b} and PC = {c}, how long is PD?"
+      },
+      "explain": {
+        "ja": "方べきの定理 PA × PB = PC × PD より PD = {answer}",
+        "ko": "방멱 정리 PA × PB = PC × PD에서 PD = {answer}",
+        "en": "By the power of a point, PA × PB = PC × PD, so PD = {answer}"
+      }
+    },
+    {
+      "id": "tangent",
+      "level": 3,
+      "type": "power",
+      "gen": "tangent",
+      "text": {
+        "ja": "円の外部の点 P から引いた直線が円と2点 A, B で交わり、P から引いた接線の接点を T とする。PA = {a}、PB = {b} のとき、PT の長さは?",
+        "ko": "원 밖의 점 P에서 그은 직선이 원과 두 점 A, B에서 만나고, P에서 그은 접선의 접점을 T라 한다. PA = {a}, PB = {b}일 때, PT의 길이는?",
+        "en": "A line through an outside point P meets a circle at A and B, and a tangent from P touches the circle at T. If PA = {a} and PB = {b}, how long is PT?"
+      },
+      "explain": {
+        "ja": "方べきの定理 PT² = PA × PB より PT = {answer}",
+        "ko": "방멱 정리 PT² = PA × PB에서 PT = {answer}",
+        "en": "By the power of a point, PT² = PA × PB, so PT = {answer}"
+      }
+    }
+  ]
+}

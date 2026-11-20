@@ -65,6 +65,11 @@
       "ja": "三角形の面積",
       "ko": "삼각형의 넓이",
       "en": "Area of a triangle"
+    },
+    "space": {
+      "ja": "空間図形への応用",
+      "ko": "공간도형 응용",
+      "en": "Solid figures"
     }
   },
   "groups": [
@@ -94,6 +99,16 @@
         "sinerule",
         "cosrule",
         "area"
+      ]
+    },
+    {
+      "name": {
+        "ja": "空間図形",
+        "ko": "공간도형",
+        "en": "Solid figures"
+      },
+      "types": [
+        "space"
       ]
     }
   ],
@@ -615,6 +630,38 @@
         "ja": "S = (1/2) bc sin A = (1/2) × {b} × {c} × sin {A}° = {answer}",
         "ko": "S = (1/2) bc sin A = (1/2) × {b} × {c} × sin {A}° = {answer}",
         "en": "S = (1/2) bc sin A = (1/2) × {b} × {c} × sin {A}° = {answer}"
+      }
+    },
+    {
+      "id": "cuboid-diagonal",
+      "level": 2,
+      "type": "space",
+      "gen": "cuboid",
+      "text": {
+        "ja": "直方体 ABCD-EFGH で AB = {a}、AD = {b}、AE = {c} のとき、対角線 AG の長さは?",
+        "ko": "직육면체 ABCD-EFGH에서 AB = {a}, AD = {b}, AE = {c}일 때, 대각선 AG의 길이는?",
+        "en": "In cuboid ABCD-EFGH, AB = {a}, AD = {b} and AE = {c}. How long is the diagonal AG?"
+      },
+      "explain": {
+        "ja": "AG = √(AB² + AD² + AE²) = {answer}",
+        "ko": "AG = √(AB² + AD² + AE²) = {answer}",
+        "en": "AG = √(AB² + AD² + AE²) = {answer}"
+      }
+    },
+    {
+      "id": "space-height",
+      "level": 3,
+      "type": "space",
+      "gen": "spaceheight",
+      "text": {
+        "ja": "塔 PH は地面に垂直に立っている。地面上の2地点 A, B から先端 P を見上げた角がそれぞれ {al}°, {be}° で、∠AHB = 90°、AB = {d} m のとき、塔の高さ PH は?",
+        "ko": "탑 PH가 지면에 수직으로 서 있다. 지면 위의 두 지점 A, B에서 꼭대기 P를 올려본 각이 각각 {al}°, {be}°이고, ∠AHB = 90°, AB = {d} m일 때, 탑의 높이 PH는?",
+        "en": "Tower PH stands vertically on the ground. From ground points A and B the angles of elevation to the top P are {al}° and {be}°. If ∠AHB = 90° and AB = {d} m, how tall is PH?"
+      },
+      "explain": {
+        "ja": "PH = h とすると AH = h ÷ tan {al}°、BH = h ÷ tan {be}°。AB² = AH² + BH² より h = {answer}",
+        "ko": "PH = h라 하면 AH = h ÷ tan {al}°, BH = h ÷ tan {be}°입니다. AB² = AH² + BH²에서 h = {answer}",
+        "en": "Let PH = h. Then AH = h ÷ tan {al}° and BH = h ÷ tan {be}°. From AB² = AH² + BH², h = {answer}"
       }
     }
   ]

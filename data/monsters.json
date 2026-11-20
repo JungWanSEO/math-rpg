@@ -119,6 +119,40 @@
     "skillLevel": 2
   },
   {
+    "id": "dice",
+    "name": {
+      "ja": "ダブりサイコロ",
+      "ko": "중복 주사위",
+      "en": "Double-count Dice"
+    },
+    "mistake": {
+      "ja": "同じ場合を2回数えてしまう(順番を区別するかどうかの取り違え)",
+      "ko": "같은 경우를 두 번 세기 (순서를 구별하는지 헷갈리기)",
+      "en": "Counting the same case twice (mixing up whether order matters)"
+    },
+    "hp": 16,
+    "weak": "matha-count/comb",
+    "basicLevel": 1,
+    "skillLevel": 2
+  },
+  {
+    "id": "compass",
+    "name": {
+      "ja": "補助線コンパス",
+      "ko": "보조선 컴퍼스",
+      "en": "Auxiliary Compass"
+    },
+    "mistake": {
+      "ja": "補助線を引かずに解こうとする",
+      "ko": "보조선을 긋지 않고 풀려는 것",
+      "en": "Trying to solve without drawing an auxiliary line"
+    },
+    "hp": 18,
+    "weak": "matha-geom/circle",
+    "basicLevel": 1,
+    "skillLevel": 2
+  },
+  {
     "id": "thief",
     "midboss": true,
     "name": {

@@ -504,10 +504,52 @@ export function createStage(canvas) {
     glyph(negative ? 'D<0' : 'D>0', 0, 20, 14, '#1f6f5c');
     ctx.restore();
   }
+  // 중복 주사위 (数学A 場合の数): 고유 동작은 똑같은 주사위가 하나 더 나타났다 사라지기 (같은 경우를 두 번 세기)
+  function drawDice(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const split = f.flag ? 1 - ease(sp) : ease(sp);
+    const die = (x, y, alpha) => {
+      const before = ctx.globalAlpha;
+      ctx.globalAlpha = before * alpha;
+      rrect(x - 24, y - 24, 48, 48, 9, '#ffffff');
+      for (const [px, py] of [[-12, -12], [12, -12], [0, 0], [-12, 12], [12, 12]]) circ(x + px, y + py, 4, '#e5484d');
+      ctx.globalAlpha = before;
+    };
+    if (split > 0.02) die(24 * split, 2 - 18 * split, 0.55);
+    const x = -24 * split;
+    die(x, 10, 1);
+    rrect(x - 13, 5, 26, 10, 5, '#ffffff');
+    eye(x - 7, 10, 3, false, '#1c2740', 0.5);
+    eye(x + 7, 10, 3, false, '#1c2740', 0.5);
+    line(x - 14, 34, x - 18, 46, '#c9d4ff', 4);
+    line(x + 14, 34, x + 18, 46, '#c9d4ff', 4);
+  }
+  // 보조선 컴퍼스 (数学A 図形の性質): 고유 동작은 다리를 벌려 보조선(점선)을 긋기
+  function drawCompass(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const drawn = f.flag ? 1 - ease(sp) : ease(sp);
+    const spread = 16 + Math.sin(sp * Math.PI) * 8;
+    if (drawn > 0.02) {
+      ctx.save();
+      ctx.setLineDash([5, 5]);
+      line(-52, 44, -52 + 104 * drawn, 44 - 70 * drawn, '#ffc857', 2.5);
+      ctx.restore();
+    }
+    line(0, -36, -spread, 44, '#9fb3d9', 7);
+    line(0, -36, spread, 44, '#9fb3d9', 7);
+    poly([-spread - 3, 40, -spread, 52, -spread + 3, 40], '#ffc857');
+    poly([spread - 3, 40, spread, 52, spread + 3, 40], '#1c2740');
+    circ(0, -36, 15, '#5a8cf0');
+    rrect(-4, -62, 8, 16, 3, '#9fb3d9');
+    eye(-6, -38, 4, true, '#1c2740', 1.9);
+    eye(6, -38, 4, true, '#1c2740', 1.9);
+    line(-5, -28, 5, -28, '#1c2740', 1.5);
+  }
   const FOE_DRAW = {
     twins: drawTwins, bat: drawBat, golem: drawGolem, thief: drawThief, tower: drawTower,
     crab: drawCrab, slime: drawSlime, ghost: drawGhost, bars: drawBars,
     magician: drawMagician, giant: drawGiant, dragon: drawDragon,
+    dice: drawDice, compass: drawCompass,
   };
 
   // 대기·공격·피격을 위치와 크기로 바꾼 값
