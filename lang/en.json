@@ -31,7 +31,9 @@
     "soundOff": "Sound: off",
     "figNote": "The figure is not drawn to scale.",
     "cond": "Given: {text}",
-    "rotate": "Please turn your phone upright."
+    "rotate": "Please turn your phone upright.",
+    "update": "A new version is ready.",
+    "updateBtn": "Reload"
   },
   "msg": {
     "choose": "Choose an action.",

@@ -757,8 +757,11 @@ export function createStage(canvas) {
     if (!last) last = ts;
     const dt = Math.min(0.033, (ts - last) / 1000);
     last = ts;
-    update(dt);
-    draw();
+    // 전투 화면이 아닐 때는 아무것도 하지 않습니다. (배터리와 다른 화면의 속도를 위해)
+    if (!canvas.closest('[hidden]')) {
+      update(dt);
+      if (canvas.clientHeight !== 0 || !canvas.isConnected) draw(); // 높이 0 으로 접혀 있으면 그리기만 건너뜁니다.
+    }
     requestAnimationFrame(loop);
   }
   draw();

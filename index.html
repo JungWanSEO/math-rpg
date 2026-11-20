@@ -14,9 +14,36 @@
 <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
 <title>Solve the Tower</title>
 <link rel="stylesheet" href="./css/style.css">
+<!-- 코드 파일을 차례로 기다리지 않고 한꺼번에 받게 합니다. js 파일을 추가하면 여기에도 한 줄 추가합니다. -->
+<link rel="modulepreload" href="./js/battle.js">
+<link rel="modulepreload" href="./js/codex.js">
+<link rel="modulepreload" href="./js/config.js">
+<link rel="modulepreload" href="./js/events.js">
+<link rel="modulepreload" href="./js/figures.js">
+<link rel="modulepreload" href="./js/fit.js">
+<link rel="modulepreload" href="./js/generators.js">
+<link rel="modulepreload" href="./js/i18n.js">
+<link rel="modulepreload" href="./js/main.js">
+<link rel="modulepreload" href="./js/map.js">
+<link rel="modulepreload" href="./js/questions.js">
+<link rel="modulepreload" href="./js/qview.js">
+<link rel="modulepreload" href="./js/run.js">
+<link rel="modulepreload" href="./js/save.js">
+<link rel="modulepreload" href="./js/scope.js">
+<link rel="modulepreload" href="./js/sound.js">
+<link rel="modulepreload" href="./js/stage.js">
+<link rel="modulepreload" href="./js/title.js">
+<link rel="modulepreload" href="./js/tutorial.js">
+<link rel="modulepreload" href="./js/ui.js">
 </head>
 <body>
 <main id="app">
+
+  <!-- 새 버전이 준비됐을 때 -->
+  <div class="update-bar" id="updateBar" hidden>
+    <span data-i18n="ui.update"></span>
+    <button type="button" id="updateBtn" data-i18n="ui.updateBtn"></button>
+  </div>
 
   <header class="top" id="topBar">
     <div class="unit" id="unitBox">
@@ -37,6 +64,30 @@
     <div class="title">
       <h1>SOLVE THE TOWER</h1>
       <p id="titleUnit"></p>
+      <!-- 불러오는 동안 보이는 진행 막대. 다 불러오면 사라집니다. -->
+      <div class="loading" id="loading" role="status" aria-live="polite">
+        <div class="loading-track"><div class="loading-bar" id="loadingBar"></div></div>
+        <p id="loadingText">Loading…</p>
+        <p class="loading-detail" id="loadingDetail"></p>
+        <button type="button" class="primary" id="loadingRetry" hidden onclick="location.reload()">↻</button>
+      </div>
+      <script>
+        // 코드가 다 오기 전에도 바로 보이도록, 여기서 저장된 언어로 안내 글을 넣습니다.
+        (function () {
+          var T = {
+            ja: { load: '読み込み中…', slow: '通信に時間がかかっています。もう少しお待ちください。', fail: '読み込めませんでした。通信を確かめて、もう一度お試しください。', retry: 'もう一度' },
+            ko: { load: '불러오는 중…', slow: '통신이 느립니다. 조금만 더 기다려 주세요.', fail: '불러오지 못했습니다. 통신 상태를 확인하고 다시 시도해 주세요.', retry: '다시 시도' },
+            en: { load: 'Loading…', slow: 'This is taking a while. Please wait a little longer.', fail: 'Could not load. Check your connection and try again.', retry: 'Try again' }
+          };
+          var lang = 'ja';
+          try { lang = (JSON.parse(localStorage.getItem('mathrpg_save_v1') || '{}').lang) || 'ja'; } catch (e) {}
+          var t = T[lang] || T.ja;
+          window.sttText = t;
+          document.getElementById('loadingText').textContent = t.load;
+          document.getElementById('loadingRetry').textContent = t.retry;
+          window.sttSlow = setTimeout(function () { document.getElementById('loadingText').textContent = t.slow; }, 6000);
+        })();
+      </script>
       <div class="options">
         <button type="button" id="titleContinue" hidden><b></b><small></small></button>
         <button type="button" id="titleNew"><b></b><small></small></button>
@@ -54,6 +105,7 @@
         </label>
       </div>
       <p class="title-note" data-i18n="title.note"></p>
+      <p class="title-note version" id="versionText"></p>
     </div>
   </section>
 

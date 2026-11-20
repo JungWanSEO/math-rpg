@@ -26,28 +26,33 @@ async function getJson(path) {
 }
 
 // 목록(data/catalog.json)에 적힌 모든 단원을 불러옵니다.
-export async function loadAll() {
+export async function loadAll(onStep = () => {}) {
   catalog = await getJson('./data/catalog.json');
-  for (const subject of catalog.subjects) {
-    for (const id of subject.units) {
-      const unit = await getJson(`./data/units/${id}.json`);
-      unit.subject = subject;
-      units.push(unit);
-      for (const [name, names] of Object.entries(unit.types)) {
-        const key = `${unit.id}/${name}`;
-        types.set(key, { key, unit, names });
-      }
-      for (const tpl of unit.templates) {
-        templates.push({
-          id: `${unit.id}/${tpl.id}`,
-          level: tpl.level,
-          type: `${unit.id}/${tpl.type}`,
-          tpl,
-          gen: tpl.gen ? GENERATORS[tpl.gen] : null,
-        });
-      }
+  onStep();
+  // 단원 파일은 하나씩 기다리지 않고 한꺼번에 받습니다. (통신이 느릴 때 차이가 큽니다)
+  const wanted = catalog.subjects.flatMap((subject) => subject.units.map((id) => ({ subject, id })));
+  const loaded = await Promise.all(wanted.map(({ id }) => getJson(`./data/units/${id}.json`).then((unit) => {
+    onStep();
+    return unit;
+  })));
+  // 받은 순서와 상관없이 목록에 적힌 순서대로 정리합니다.
+  loaded.forEach((unit, n) => {
+    unit.subject = wanted[n].subject;
+    units.push(unit);
+    for (const [name, names] of Object.entries(unit.types)) {
+      const key = `${unit.id}/${name}`;
+      types.set(key, { key, unit, names });
     }
-  }
+    for (const tpl of unit.templates) {
+      templates.push({
+        id: `${unit.id}/${tpl.id}`,
+        level: tpl.level,
+        type: `${unit.id}/${tpl.type}`,
+        tpl,
+        gen: tpl.gen ? GENERATORS[tpl.gen] : null,
+      });
+    }
+  });
   return { catalog, units };
 }
 
