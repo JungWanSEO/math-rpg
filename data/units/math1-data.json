@@ -30,6 +30,11 @@
       "ja": "標準偏差",
       "ko": "표준편차",
       "en": "Standard deviation"
+    },
+    "correlation": {
+      "ja": "共分散と相関係数",
+      "ko": "공분산과 상관계수",
+      "en": "Covariance and correlation"
     }
   },
   "groups": [
@@ -54,6 +59,16 @@
         "iqr",
         "variance",
         "sd"
+      ]
+    },
+    {
+      "name": {
+        "ja": "データの相関",
+        "ko": "자료의 상관",
+        "en": "Correlation"
+      },
+      "types": [
+        "correlation"
       ]
     }
   ],
@@ -136,6 +151,38 @@
         "ja": "分散の正の平方根なので {answer}",
         "ko": "분산의 양의 제곱근이므로 {answer}",
         "en": "It is the positive square root of the variance: {answer}"
+      }
+    },
+    {
+      "id": "correlation",
+      "level": 2,
+      "type": "correlation",
+      "gen": "correlation",
+      "text": {
+        "ja": "x, y の標準偏差がそれぞれ {sx}, {sy}、共分散が {sxy} のとき、相関係数は?",
+        "ko": "x, y의 표준편차가 각각 {sx}, {sy}이고 공분산이 {sxy}일 때, 상관계수는?",
+        "en": "The standard deviations of x and y are {sx} and {sy}, and their covariance is {sxy}. What is the correlation coefficient?"
+      },
+      "explain": {
+        "ja": "相関係数 = 共分散 ÷ (x の標準偏差 × y の標準偏差) = {answer}",
+        "ko": "상관계수 = 공분산 ÷ (x의 표준편차 × y의 표준편차) = {answer}",
+        "en": "Correlation = covariance ÷ (SD of x × SD of y) = {answer}"
+      }
+    },
+    {
+      "id": "covariance",
+      "level": 3,
+      "type": "correlation",
+      "gen": "covariance",
+      "text": {
+        "ja": "データ (x, y): {pairs} の共分散は? (x の平均は {mx}、y の平均は {my})",
+        "ko": "자료 (x, y): {pairs}의 공분산은? (x의 평균은 {mx}, y의 평균은 {my})",
+        "en": "Find the covariance of the data (x, y): {pairs}. (The mean of x is {mx} and the mean of y is {my}.)"
+      },
+      "explain": {
+        "ja": "x の偏差 × y の偏差 の平均を求めると {answer}",
+        "ko": "(x의 편차) × (y의 편차)의 평균을 구하면 {answer}",
+        "en": "Take the mean of (deviation of x) × (deviation of y): {answer}"
       }
     }
   ]
