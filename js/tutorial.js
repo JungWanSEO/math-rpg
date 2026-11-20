@@ -59,6 +59,12 @@ export function createTutorial(data, onStep) {
     setUltReady(ready) {
       ultReady = ready;
     },
+    // 건너뛰기: 안내를 끝내고 다시 보여주지 않습니다.
+    skip() {
+      if (data.tut === 'done') return;
+      data.tut = 'done';
+      onStep();
+    },
     emit(event) {
       if (data.tut === 'done') return;
       let to = (NEXT[data.tut] || {})[event];

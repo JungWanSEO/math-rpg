@@ -300,13 +300,27 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 /* tutorial coach line */
 .coach {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   margin: 0;
-  padding: 10px 16px;
+  padding: 8px 16px;
   font-size: 14px;
   line-height: 1.5;
   font-weight: 600;
   color: var(--ground);
   background: var(--amber);
+}
+.coach button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--ground);
+  border-color: var(--ground);
 }
 
 /* question figure */
