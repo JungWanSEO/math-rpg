@@ -26,6 +26,8 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     picked: -1,
     notice: { key: 'msg.choose', vars: null },
     onEnd: null,
+    shownHp: null,   // 화면에 마지막으로 보여 준 체력 (줄어들면 연출을 냅니다)
+    shownFoeHp: null,
   };
 
   const typeName = typeLabel;
@@ -51,6 +53,14 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   function say(key, vars) {
     B.notice = { key, vars: vars || null };
     $('notice').textContent = t(key, B.notice.vars);
+  }
+
+  // 짧은 연출용 클래스를 붙였다가 뗍니다. (연출은 css/style.css 의 hurt, flash)
+  function pulse(el, name) {
+    el.classList.remove(name);
+    void el.offsetWidth; // 같은 연출을 연달아 다시 시작하기 위한 줄
+    el.classList.add(name);
+    setTimeout(() => el.classList.remove(name), 500);
   }
 
   // ---- 화면 갱신 ----
@@ -105,6 +115,13 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     // 강한 공격 턴에는 공격 버튼에도 "맞혀도 피해를 받는다"는 것을 적어 둡니다.
     $('basicSub').textContent = t(B.intent === 'big' ? 'ui.attackBigSub' : 'ui.basicSub');
     $('skillSub').textContent = t(B.intent === 'big' ? 'ui.attackBigSub' : 'ui.skillSub');
+    // 체력이 줄어든 순간: 체력 줄이 흔들리며 번쩍이고, 화면 가장자리가 붉어집니다.
+    if (B.shownHp !== null && run.hp < B.shownHp) pulse($('meBox'), 'hurt');
+    if (B.shownHp !== null && run.hp < B.shownHp) pulse($('screenBattle'), 'flash');
+    if (B.shownFoeHp !== null && B.foeHp < B.shownFoeHp) pulse($('foeBar'), 'hurt');
+    B.shownHp = run.hp;
+    B.shownFoeHp = B.foeHp;
+    $('meBox').classList.toggle('low', run.hp / run.maxHp <= 0.3);
     $('hpBar').style.width = `${Math.max(0, (run.hp / run.maxHp) * 100)}%`;
     $('hpText').textContent = `${Math.max(0, run.hp)} / ${run.maxHp}`;
     $('comboText').textContent = t('ui.combo', { n: B.combo });
@@ -320,6 +337,8 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     B.combo = 0;
     B.lastAction = null;
     B.onEnd = onEnd;
+    B.shownHp = null;
+    B.shownFoeHp = null;
     stage.heroUp();
     stage.setFoe(monster.id);
     say('msg.choose');

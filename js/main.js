@@ -114,7 +114,7 @@ async function boot() {
 
   const stage = createStage($('stage'));
   const battle = createBattle({ stage, getRun, record, tutorial, onChange });
-  const events = createEvents({ getRun, data, record, onChange });
+  const events = createEvents({ getRun, data, record, onChange, persist });
   const map = createMap({ getRun, onPick });
   const codex = createCodex({ data, monsters });
 
@@ -126,6 +126,7 @@ async function boot() {
     // 도감은 지도와 이벤트 화면에서만 엽니다. (전투 중에는 숨김)
     $('codexBtn').hidden = name === 'screenBattle' || name === 'screenCodex' || menu;
     $('runStatus').hidden = menu;
+    $('topBar').hidden = menu; // 처음 화면과 범위 화면에는 위쪽 바가 없습니다.
     $('unitBox').hidden = menu;
     // 메뉴 버튼: 게임 중인 화면(지도, 전투, 사건)에서 보입니다.
     $('menuBtn').hidden = menu || name === 'screenCodex';
@@ -242,14 +243,18 @@ async function boot() {
 
   function chooseMonster(kind) {
     const run = getRun();
-    if (kind === 'boss') return monsters.find((m) => m.boss);
-    if (kind === 'midboss') return monsters.find((m) => m.midboss);
-    const normal = monsters.filter((m) => !m.boss && !m.midboss);
-    if (tutorial.active()) return normal[0];
     // 이번 범위에 들어 있는 단원의 몬스터가 먼저 나옵니다. 하나도 없으면 전체에서 고릅니다.
     const units = new Set(run.scope.map((key) => key.split('/')[0]));
-    const fitting = normal.filter((m) => units.has(m.weak.split('/')[0]));
-    const base = fitting.length ? fitting : normal;
+    const fit = (list) => {
+      const fitting = list.filter((m) => units.has(m.weak.split('/')[0]));
+      return fitting.length ? fitting : list;
+    };
+    const any = (list) => list[Math.floor(Math.random() * list.length)];
+    if (kind === 'boss') return any(fit(monsters.filter((m) => m.boss)));
+    if (kind === 'midboss') return any(fit(monsters.filter((m) => m.midboss)));
+    const normal = monsters.filter((m) => !m.boss && !m.midboss);
+    if (tutorial.active()) return normal[0];
+    const base = fit(normal);
     const fresh = base.filter((m) => m.id !== run.lastFoe);
     const pool = fresh.length ? fresh : base;
     return pool[Math.floor(Math.random() * pool.length)];
@@ -319,29 +324,34 @@ async function boot() {
     go('screenEvent');
     if (node.type === 'event') {
       // ? 칸: 좋은 일, 나쁜 일, 선택, 기습 중 하나
-      events.mystery(() => complete(node), () => fight(node, 'battle'));
+      events.mystery(node, () => complete(node), () => fight(node, 'battle'));
     } else {
       events[node.type](() => complete(node)); // shop, rest, treasure
     }
   }
 
-  // 언어 바꾸기
-  const select = $('langSelect');
-  select.value = data.lang;
-  select.addEventListener('change', async () => {
-    data.lang = select.value;
-    persist();
-    await loadLang(data.lang);
-    applyStatic();
-    if (screen === 'screenTitle') title.render();
-    if (screen === 'screenScope') scope.render();
-    if (screen === 'screenMap') map.render();
-    if (screen === 'screenBattle') battle.refresh();
-    if (screen === 'screenEvent') events.refresh();
-    if (screen === 'screenCodex') codex.render();
-    if (!$('menu').hidden) $('menuText').textContent = t($('menu').dataset.key);
-    renderSound();
-    onChange();
+  // 언어 바꾸기 (처음 화면과 메뉴에 같은 선택 상자가 있습니다)
+  const selects = [...document.querySelectorAll('.lang-select')];
+  selects.forEach((select) => {
+    select.value = data.lang;
+    select.addEventListener('change', async () => {
+      data.lang = select.value;
+      selects.forEach((other) => {
+        other.value = data.lang;
+      });
+      persist();
+      await loadLang(data.lang);
+      applyStatic();
+      if (screen === 'screenTitle') title.render();
+      if (screen === 'screenScope') scope.render();
+      if (screen === 'screenMap') map.render();
+      if (screen === 'screenBattle') battle.refresh();
+      if (screen === 'screenEvent') events.refresh();
+      if (screen === 'screenCodex') codex.render();
+      if (!$('menu').hidden) $('menuText').textContent = t($('menu').dataset.key);
+      renderSound();
+      onChange();
+    });
   });
 
   renderSound();

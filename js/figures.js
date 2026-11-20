@@ -33,7 +33,7 @@ function label(x, y, text, anchor = 'middle') {
 }
 
 const frame = (inner) =>
-  `<svg viewBox="0 0 300 152" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+  `<svg viewBox="0 0 326 152" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 
 const DRAW = {
   // θ 는 왼쪽 아래, 직각은 오른쪽 아래

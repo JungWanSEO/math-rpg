@@ -137,6 +137,42 @@
     "skillLevel": 2
   },
   {
+    "id": "magician",
+    "midboss": true,
+    "name": {
+      "ja": "移項マジシャン",
+      "ko": "이항 마술사",
+      "en": "Transposer"
+    },
+    "mistake": {
+      "ja": "移項するときに符号を変え忘れる",
+      "ko": "이항할 때 부호를 바꾸지 않기",
+      "en": "Moving a term across the equals sign without changing its sign"
+    },
+    "hp": 22,
+    "weak": "math1-expr/factor",
+    "basicLevel": 1,
+    "skillLevel": 2
+  },
+  {
+    "id": "giant",
+    "midboss": true,
+    "name": {
+      "ja": "外れ値ジャイアント",
+      "ko": "이상값 거인",
+      "en": "Outlier Giant"
+    },
+    "mistake": {
+      "ja": "外れ値に引っぱられた平均値をそのまま信じる",
+      "ko": "이상값 하나에 끌려간 평균을 그대로 믿기",
+      "en": "Trusting a mean that one outlier has dragged away"
+    },
+    "hp": 22,
+    "weak": "math1-data/variance",
+    "basicLevel": 1,
+    "skillLevel": 2
+  },
+  {
     "id": "tower",
     "boss": true,
     "name": {
@@ -151,6 +187,24 @@
     },
     "hp": 28,
     "weak": "math1-trig/twopoint",
+    "basicLevel": 2,
+    "skillLevel": 3
+  },
+  {
+    "id": "dragon",
+    "boss": true,
+    "name": {
+      "ja": "判別式ドラゴン",
+      "ko": "판별식 용",
+      "en": "Discriminant Dragon"
+    },
+    "mistake": {
+      "ja": "解があるかどうか(D の符号)を確かめずに解く",
+      "ko": "해가 있는지(D의 부호)를 확인하지 않고 풀기",
+      "en": "Solving without checking whether solutions exist (the sign of D)"
+    },
+    "hp": 28,
+    "weak": "math1-quad/discriminant",
     "basicLevel": 2,
     "skillLevel": 3
   }
