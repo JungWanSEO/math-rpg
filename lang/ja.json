@@ -26,7 +26,9 @@
     "scopeCount": "タイプ {n} / {total}",
     "attackBigSub": "正解でもダメージ",
     "menu": "メニュー",
-    "next": "確認した、次へ"
+    "next": "確認した、次へ",
+    "soundOn": "サウンド: オン",
+    "soundOff": "サウンド: オフ"
   },
   "msg": {
     "choose": "行動を選んでください。",

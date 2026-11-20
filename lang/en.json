@@ -26,7 +26,9 @@
     "scopeCount": "Types {n} / {total}",
     "attackBigSub": "You take damage anyway",
     "menu": "Menu",
-    "next": "Got it, next"
+    "next": "Got it, next",
+    "soundOn": "Sound: on",
+    "soundOff": "Sound: off"
   },
   "msg": {
     "choose": "Choose an action.",
