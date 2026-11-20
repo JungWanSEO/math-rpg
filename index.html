@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1a3a">
 <title>Solve the Tower</title>
 <link rel="stylesheet" href="./css/style.css">
@@ -16,6 +16,7 @@
       <strong id="unitName"></strong>
     </div>
     <button type="button" class="top-btn" id="codexBtn" data-i18n="ui.codex"></button>
+    <button type="button" class="top-btn" id="menuBtn" data-i18n="ui.menu" hidden></button>
     <label class="lang">
       <span class="sr" data-i18n="ui.language"></span>
       <select id="langSelect">
@@ -67,7 +68,6 @@
     <div class="screen-head">
       <h2 data-i18n="map.title"></h2>
       <span id="mapProgress"></span>
-      <button type="button" class="top-btn small" id="toTitle" data-i18n="map.toTitle"></button>
     </div>
     <p class="map-tip" data-i18n="map.tip"></p>
     <div class="map" id="mapRows"></div>
@@ -117,6 +117,7 @@
       </div>
       <div class="answers" id="answers" hidden></div>
       <button type="button" class="hint" id="hintBtn" hidden></button>
+      <button type="button" class="primary" id="nextBtn" data-i18n="ui.next" hidden></button>
 
       <p class="notice" id="notice" aria-live="polite"></p>
     </div>
@@ -152,6 +153,16 @@
       <button type="button" class="primary" id="codexClose" data-i18n="codex.close"></button>
     </div>
   </section>
+
+  <!-- 메뉴 (일시 정지). 게임 중 어느 화면에서나 엽니다. -->
+  <div class="menu-overlay" id="menu" role="dialog" aria-modal="true" aria-labelledby="menuTitle" hidden>
+    <div class="menu-box">
+      <h2 id="menuTitle" data-i18n="menu.title"></h2>
+      <p id="menuText"></p>
+      <button type="button" class="primary" id="menuResume" data-i18n="menu.resume"></button>
+      <button type="button" class="hint" id="menuQuit" data-i18n="menu.quit"></button>
+    </div>
+  </div>
 
 </main>
 <script type="module" src="./js/main.js"></script>

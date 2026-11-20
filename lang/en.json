@@ -24,7 +24,9 @@
     "codex": "Codex",
     "midboss": "Mid-boss {name}",
     "scopeCount": "Types {n} / {total}",
-    "attackBigSub": "You take damage anyway"
+    "attackBigSub": "You take damage anyway",
+    "menu": "Menu",
+    "next": "Got it, next"
   },
   "msg": {
     "choose": "Choose an action.",
@@ -43,8 +45,7 @@
   "map": {
     "title": "Crossroads map",
     "progress": "Floor {n} of {total}",
-    "tip": "Pick a starting space at the bottom. You can only move along the lines.",
-    "toTitle": "Title"
+    "tip": "Pick a starting space at the bottom. You can only move along the lines."
   },
   "node": {
     "battle": "Battle",
@@ -215,5 +216,13 @@
     "back": "Back to title",
     "unitAll": "Select all",
     "unitNone": "Clear"
+  },
+  "menu": {
+    "title": "Paused",
+    "resume": "Resume",
+    "quit": "Quit to title",
+    "textMap": "Your progress is saved automatically. You can come back with \"Continue\".",
+    "textBattle": "If you leave now, this battle restarts from the beginning. Your HP and hints are saved as they are. There is no time limit, so you can also just leave the screen as it is.",
+    "textEvent": "If you leave now, this space restarts from the beginning. The rest of your progress is saved."
   }
 }

@@ -19,7 +19,8 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     turn: 0,
     intent: 'normal',
     lastAction: null, // 방어는 연속으로 쓸 수 없습니다.
-    phase: 'busy',   // 'choose' 행동 고르기 | 'answer' 답 고르기 | 'busy' 연출 중
+    phase: 'busy',   // 'choose' 행동 고르기 | 'answer' 답 고르기 | 'busy' 연출 중 | 'review' 틀린 문제 확인
+    gen: 0,          // 전투를 새로 시작하거나 그만둘 때마다 올라갑니다. 예전 연출의 뒷일을 막는 데 씁니다.
     cur: null,       // 지금 문제
     picked: -1,
     notice: { key: 'msg.choose', vars: null },
@@ -27,6 +28,14 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   };
 
   const typeName = typeLabel;
+
+  // 연출이 끝난 뒤 할 일을 감쌉니다. 그 사이 전투를 나갔다면 아무것도 하지 않습니다.
+  const live = (fn) => {
+    const gen = B.gen;
+    return (...args) => {
+      if (gen === B.gen) fn(...args);
+    };
+  };
 
   // 적이 이번 턴에 주는 피해
   function intentDamage() {
@@ -52,6 +61,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     $('screenBattle').classList.toggle('answering', Boolean(showing));
     const hint = $('hintBtn');
     hint.hidden = B.phase !== 'answer';
+    $('nextBtn').hidden = B.phase !== 'review';
     if (!showing) return;
 
     const run = getRun();
@@ -156,7 +166,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
       const dmg = CONFIG.damage.ult;
       say('msg.ult', { d: dmg });
       render();
-      stage.heroUlt(`-${dmg}`, () => afterHit(dmg));
+      stage.heroUlt(`-${dmg}`, live(() => afterHit(dmg)));
       return;
     }
 
@@ -219,12 +229,12 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
       B.combo = Math.min(CONFIG.ultNeed, B.combo + 1);
       say(weak ? 'msg.correctWeak' : 'msg.correct', { d: dmg });
       render();
-      stage.heroAttack(`-${dmg}`, weak, () => afterHit(dmg));
+      stage.heroAttack(`-${dmg}`, weak, live(() => afterHit(dmg)));
     } else {
       B.combo = 0;
       say('msg.wrong', { explain: explainText(B.cur.raw) });
       render();
-      stage.heroMiss(t('msg.miss'), () => foeTurn(1));
+      stage.heroMiss(t('msg.miss'), live(() => foeTurn(1)));
     }
   }
 
@@ -245,18 +255,18 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   // 방어에 성공한 뒤의 반격
   function counter() {
     const dmg = CONFIG.damage.counter + getRun().up.counter;
-    stage.heroAttack(`-${dmg}`, false, () => {
+    stage.heroAttack(`-${dmg}`, false, live(() => {
       B.foeHp -= dmg;
       render();
       if (B.foeHp <= 0) win();
       else backToChoose();
-    });
+    }));
   }
 
   // mult: 받는 피해 비율 (1 = 그대로, 0.5 = 방어 실패, 0 = 완벽 방어)
   function foeTurn(mult, then) {
     const dmg = Math.ceil(intentDamage() * mult);
-    stage.foeAttack(dmg > 0 ? `-${dmg}` : t('msg.blocked'), mult < 1, () => {
+    stage.foeAttack(dmg > 0 ? `-${dmg}` : t('msg.blocked'), mult < 1, live(() => {
       const run = getRun();
       run.hp -= dmg;
       if (B.safe && run.hp < 1) run.hp = 1;
@@ -267,14 +277,18 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
         finish('lose');
       } else if (then) {
         then();
+      } else if (B.cur && B.picked >= 0 && B.picked !== B.cur.correct) {
+        // 틀린 문제는 정답과 해설을 읽을 시간을 줍니다. "다음" 을 눌러야 넘어갑니다.
+        B.phase = 'review';
+        render();
       } else {
         backToChoose();
       }
-    });
+    }));
   }
 
   function win() {
-    stage.foeDefeat(() => finish('win'));
+    stage.foeDefeat(live(() => finish('win')));
   }
 
   function finish(result) {
@@ -286,6 +300,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
 
   // 전투 시작. monster 는 monsters.json 의 항목입니다.
   function start({ monster, kind, weak, safe }, onEnd) {
+    B.gen += 1;
     B.foe = monster;
     B.weak = weak;
     B.kind = kind;
@@ -307,9 +322,23 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     btn.addEventListener('click', () => choose(btn.dataset.action));
   });
   $('hintBtn').addEventListener('click', useHint);
+  $('nextBtn').addEventListener('click', () => {
+    if (B.phase === 'review') backToChoose();
+  });
+
+  // 전투 도중에 나갑니다. 남아 있던 연출의 뒷일은 모두 버립니다.
+  function abort() {
+    B.gen += 1;
+    B.phase = 'busy';
+    B.onEnd = null;
+    B.cur = null;
+    B.picked = -1;
+    render();
+  }
 
   return {
     start,
+    abort,
     refresh: render, // 언어를 바꾼 뒤 화면의 글을 다시 씁니다.
   };
 }

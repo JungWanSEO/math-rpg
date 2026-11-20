@@ -97,13 +97,62 @@ async function boot() {
   function go(name) {
     screen = name;
     show(name);
+    window.scrollTo(0, 0); // 긴 화면에서 넘어와도 맨 위부터 보이게
     const menu = name === 'screenTitle' || name === 'screenScope';
     // 도감은 지도와 이벤트 화면에서만 엽니다. (전투 중에는 숨김)
     $('codexBtn').hidden = name === 'screenBattle' || name === 'screenCodex' || menu;
     $('runStatus').hidden = menu;
     $('unitBox').hidden = menu;
+    // 메뉴 버튼: 게임 중인 화면(지도, 전투, 사건)에서 보입니다.
+    $('menuBtn').hidden = menu || name === 'screenCodex';
+    if (!menu) armBack();
     onChange();
   }
+
+  // ---- 메뉴 (일시 정지) ----
+  function openMenu() {
+    if ($('menuBtn').hidden) return;
+    const key = screen === 'screenBattle' ? 'menu.textBattle' : screen === 'screenEvent' ? 'menu.textEvent' : 'menu.textMap';
+    $('menuText').textContent = t(key);
+    $('menu').dataset.key = key;
+    $('menu').hidden = false;
+    $('menuResume').focus();
+  }
+  function closeMenu() {
+    $('menu').hidden = true;
+  }
+  $('menuBtn').addEventListener('click', openMenu);
+  $('menuResume').addEventListener('click', closeMenu);
+  $('menu').addEventListener('click', (event) => {
+    if (event.target === $('menu')) closeMenu(); // 바깥을 누르면 닫힘
+  });
+  $('menuQuit').addEventListener('click', () => {
+    closeMenu();
+    if (screen === 'screenBattle') battle.abort();
+    goTitle();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    if (!$('menu').hidden) closeMenu();
+    else openMenu();
+  });
+
+  // 스마트폰의 "뒤로" 버튼: 게임 중에는 페이지를 떠나지 않고 메뉴를 엽니다.
+  let armed = false;
+  function armBack() {
+    if (armed) return;
+    armed = true;
+    window.history.pushState({ game: true }, '');
+  }
+  window.addEventListener('popstate', () => {
+    armed = false;
+    if (screen === 'screenTitle') return; // 처음 화면에서는 그대로 나갑니다.
+    armBack();
+    if (screen === 'screenScope') goTitle();
+    else if (screen === 'screenCodex') $('codexClose').click();
+    else if (!$('menu').hidden) closeMenu();
+    else openMenu();
+  });
 
   // 튜토리얼 건너뛰기: 잠겨 있던 버튼이 바로 풀립니다.
   $('coachSkip').addEventListener('click', () => {
@@ -166,7 +215,6 @@ async function boot() {
     go('screenTitle');
     title.render();
   }
-  $('toTitle').addEventListener('click', goTitle);
 
   function chooseMonster(kind) {
     const run = getRun();
@@ -262,6 +310,7 @@ async function boot() {
     if (screen === 'screenBattle') battle.refresh();
     if (screen === 'screenEvent') events.refresh();
     if (screen === 'screenCodex') codex.render();
+    if (!$('menu').hidden) $('menuText').textContent = t($('menu').dataset.key);
     onChange();
   });
 
