@@ -199,11 +199,14 @@
     "start": "Start",
     "startSub": "Pick your range and set out on a new map.",
     "restart": "Start over",
-    "restartSub": "Abandon the current map and pick your range again.",
-    "confirm": "Tap again to discard the map in progress.",
+    "restartSub": "Pick the range again and set out on a new map.",
+    "confirm": "Your current map will be lost. (Floor {n} of {total} · HP {hp}/{max} · {gold}G) Your codex records are kept.",
     "codexSub": "Monsters you met and your record by type",
     "note": "Progress is saved on this device automatically. Your codex record stays even if you start over.",
-    "sub": "{subjects} · {n} types"
+    "sub": "{subjects} · {n} types",
+    "confirmTitle": "Start over?",
+    "confirmCancel": "Cancel",
+    "confirmOk": "Erase and start new"
   },
   "scope": {
     "title": "Choose your range",

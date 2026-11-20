@@ -199,11 +199,14 @@
     "start": "시작하기",
     "startSub": "범위를 고르고 새 지도에서 출발합니다.",
     "restart": "처음부터 다시",
-    "restartSub": "진행 중인 지도를 버리고 범위부터 다시 고릅니다.",
-    "confirm": "한 번 더 누르면 진행 중인 지도가 사라집니다.",
+    "restartSub": "범위부터 다시 골라 새 지도에서 출발합니다.",
+    "confirm": "진행 중인 지도가 사라집니다. ({total}층 중 {n}층 · 체력 {hp}/{max} · {gold}G) 도감 기록은 남습니다.",
     "codexSub": "만난 몬스터와 유형별 기록",
     "note": "진행 상황은 이 기기에 자동으로 저장됩니다. 도감 기록은 처음부터 다시 해도 남습니다.",
-    "sub": "{subjects} · 유형 {n}개"
+    "sub": "{subjects} · 유형 {n}개",
+    "confirmTitle": "처음부터 다시 할까요?",
+    "confirmCancel": "취소",
+    "confirmOk": "지우고 새로 시작"
   },
   "scope": {
     "title": "범위 고르기",
