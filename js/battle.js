@@ -226,8 +226,13 @@ export function createBattle({ stage, unit, getRun, record, tutorial, onChange }
   function afterHit(dmg) {
     B.foeHp -= dmg;
     render();
-    if (B.foeHp <= 0) win();
-    else foeTurn(1);
+    if (B.foeHp <= 0) {
+      win();
+    } else if (B.intent === 'big' || CONFIG.foeAttack.hitOnCorrect) {
+      foeTurn(1); // 강한 공격은 방어로만 막을 수 있습니다.
+    } else {
+      backToChoose(); // 공격 문제를 맞히면 적의 보통 공격은 오지 않습니다.
+    }
   }
 
   // 방어에 성공한 뒤의 반격
