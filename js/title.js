@@ -8,7 +8,6 @@ import { $ } from './ui.js';
 export const hasProgress = (run) => run.at !== null || run.pending !== null;
 
 export function createTitle({ getRun, onContinue, onNew, onCodex }) {
-  let confirming = false; // "처음부터 시작"을 한 번 눌러 확인을 기다리는 중
 
   function render() {
     const run = getRun();
@@ -32,32 +31,48 @@ export function createTitle({ getRun, onContinue, onNew, onCodex }) {
 
     const fresh = $('titleNew');
     fresh.querySelector('b').textContent = t(going ? 'title.restart' : 'title.start');
-    fresh.querySelector('small').textContent = confirming ? t('title.confirm') : t(going ? 'title.restartSub' : 'title.startSub');
-    fresh.classList.toggle('danger', confirming);
+    fresh.querySelector('small').textContent = t(going ? 'title.restartSub' : 'title.startSub');
+    if (!$('confirm').hidden) $('confirmText').textContent = confirmText();
     fresh.classList.toggle('primary', !going);
     cont.classList.toggle('primary', going);
   }
 
-  $('titleContinue').addEventListener('click', () => {
-    confirming = false;
-    onContinue();
-  });
+  // 확인 창에 보여 줄 글: 무엇이 사라지는지 적습니다.
+  function confirmText() {
+    const run = getRun();
+    const here = run.at === null ? null : nodeOf(run, run.at);
+    return t('title.confirm', { n: here ? here.floor + 1 : 0, total: run.floors, hp: run.hp, max: run.maxHp, gold: run.gold });
+  }
+  function closeConfirm() {
+    $('confirm').hidden = true;
+  }
+
+  $('titleContinue').addEventListener('click', onContinue);
   $('titleNew').addEventListener('click', () => {
-    // 진행 중인 지도가 있으면 한 번 더 눌러야 지워집니다.
-    if (hasProgress(getRun()) && !confirming) {
-      confirming = true;
-      render();
+    // 진행 중인 지도가 있으면 확인 창을 먼저 띄웁니다.
+    if (hasProgress(getRun())) {
+      $('confirmText').textContent = confirmText();
+      $('confirm').hidden = false;
+      $('confirmCancel').focus();
       return;
     }
-    confirming = false;
     onNew();
+  });
+  $('confirmCancel').addEventListener('click', closeConfirm);
+  $('confirmOk').addEventListener('click', () => {
+    closeConfirm();
+    onNew();
+  });
+  $('confirm').addEventListener('click', (event) => {
+    if (event.target === $('confirm')) closeConfirm(); // 바깥을 누르면 취소
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeConfirm();
   });
   $('titleCodex').addEventListener('click', onCodex);
 
   return {
     render,
-    reset() {
-      confirming = false;
-    },
+    reset: closeConfirm,
   };
 }

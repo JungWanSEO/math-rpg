@@ -390,3 +390,4 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 button, select, .node { touch-action: manipulation; } /* 두 번 눌러 확대되는 것을 막습니다 */
 .top { padding-top: max(8px, env(safe-area-inset-top)); }
 .top { position: sticky; top: 0; z-index: 10; } /* 긴 화면에서도 메뉴 버튼이 항상 보이게 */
+.menu-box .danger { border-color: var(--rose); color: var(--rose); }
