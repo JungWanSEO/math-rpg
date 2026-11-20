@@ -51,6 +51,74 @@
     "skillLevel": 2
   },
   {
+    "id": "slime",
+    "name": {
+      "ja": "かっこスライム",
+      "ko": "괄호 슬라임",
+      "en": "Bracket Slime"
+    },
+    "mistake": {
+      "ja": "(a + b)² を a² + b² と展開してしまう(真ん中の項 2ab を忘れる)",
+      "ko": "(a + b)²을 a² + b²으로 전개하기 (가운데 항 2ab 빠뜨리기)",
+      "en": "Expanding (a + b)² as a² + b² (dropping the middle term 2ab)"
+    },
+    "hp": 14,
+    "weak": "math1-expr/expand",
+    "basicLevel": 1,
+    "skillLevel": 2
+  },
+  {
+    "id": "crab",
+    "name": {
+      "ja": "不等号ガニ",
+      "ko": "부등호 게",
+      "en": "Flip Crab"
+    },
+    "mistake": {
+      "ja": "負の数で割るとき不等号の向きを変え忘れる",
+      "ko": "음수로 나눌 때 부등호 방향을 바꾸지 않기",
+      "en": "Forgetting to flip the inequality when dividing by a negative"
+    },
+    "hp": 16,
+    "weak": "math1-expr/inequality",
+    "basicLevel": 1,
+    "skillLevel": 2
+  },
+  {
+    "id": "ghost",
+    "name": {
+      "ja": "放物線おばけ",
+      "ko": "포물선 유령",
+      "en": "Parabola Ghost"
+    },
+    "mistake": {
+      "ja": "y = a(x − p)² + q の頂点の符号を逆に読む",
+      "ko": "y = a(x − p)² + q에서 꼭짓점의 부호를 반대로 읽기",
+      "en": "Reading the vertex of y = a(x − p)² + q with the wrong sign"
+    },
+    "hp": 18,
+    "weak": "math1-quad/vertex",
+    "basicLevel": 1,
+    "skillLevel": 2
+  },
+  {
+    "id": "bars",
+    "name": {
+      "ja": "ばらばら棒グラフ",
+      "ko": "뒤죽박죽 막대",
+      "en": "Jumble Bars"
+    },
+    "mistake": {
+      "ja": "データを小さい順に並べずに中央値を求める",
+      "ko": "자료를 크기 순서로 늘어놓지 않고 중앙값 구하기",
+      "en": "Finding the median without sorting the data first"
+    },
+    "hp": 16,
+    "weak": "math1-data/median",
+    "basicLevel": 1,
+    "skillLevel": 2
+  },
+  {
     "id": "thief",
     "midboss": true,
     "name": {

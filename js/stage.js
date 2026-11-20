@@ -317,7 +317,122 @@ export function createStage(canvas) {
     ctx.textBaseline = 'middle';
     ctx.fillText('m', 36, 13 - lift);
   }
-  const FOE_DRAW = { twins: drawTwins, bat: drawBat, golem: drawGolem, thief: drawThief, tower: drawTower };
+  // 글자를 캐릭터 위에 씁니다. (부등호, 2ab 같은 표시)
+  function glyph(text, x, y, size, color) {
+    ctx.fillStyle = C(color);
+    ctx.font = `700 ${size}px system-ui, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, x, y);
+  }
+  // 부등호 게 (数と式): 고유 동작은 집게의 부등호 방향 바꾸기
+  function drawCrab(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const flipped = f.flag !== sp > 0.5;
+    const lift = Math.sin(sp * Math.PI) * 12;
+    const wave = S.idle ? Math.sin(S.t * 5) * 2 : 0;
+    for (const dir of [-1, 1]) {
+      line(dir * 18, 22, dir * 34, 36 + wave * dir, '#b3323a', 4);
+      line(dir * 24, 16, dir * 42, 26 - wave * dir, '#b3323a', 4);
+      line(dir * 22, 4, dir * 38, -12 - lift, '#b3323a', 6);
+      circ(dir * 42, -20 - lift, 15, '#ff7d8f');
+      line(dir * 9, -8, dir * 11, -22, '#b3323a', 3);
+    }
+    ell(0, 12, 30, 21, '#e5484d');
+    eye(-11, -24, 5, true, '#1c2740', 1.1);
+    eye(11, -24, 5, true, '#1c2740', 1.1);
+    ctx.strokeStyle = C('#1c2740');
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(-7, 16);
+    ctx.quadraticCurveTo(0, 21, 7, 16);
+    ctx.stroke();
+    glyph(flipped ? '>' : '<', -42, -19 - lift, 20, '#ffffff');
+    glyph(flipped ? '<' : '>', 42, -19 - lift, 20, '#ffffff');
+  }
+  // 괄호 슬라임 (数と式): 고유 동작은 배에 적힌 가운데 항 "2ab" 를 삼켜 버리기
+  function drawSlime(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const hidden = f.flag !== sp > 0.5;
+    const open = Math.sin(sp * Math.PI) * 12;
+    const squish = 1 + Math.sin(sp * Math.PI) * 0.12;
+    glyph('(', -46 - open, 4, 64, '#dfe8ff');
+    glyph(')', 46 + open, 4, 64, '#dfe8ff');
+    ctx.save();
+    ctx.translate(0, 44);
+    ctx.scale(squish, 1 / squish);
+    ctx.translate(0, -44);
+    ell(0, 22, 32, 22, '#37b392');
+    circ(0, 4, 26, '#4fd1ae');
+    eye(-9, -4, 5, true, '#1c2740', 2.1);
+    eye(9, -4, 5, true, '#1c2740', 2.1);
+    if (hidden) {
+      ell(0, 22, 7, 5, '#1c2740'); // 삼킨 뒤의 입
+    } else {
+      rrect(-17, 13, 34, 18, 6, '#eafff8');
+      glyph('2ab', 0, 23, 13, '#1f6f5c');
+    }
+    ctx.restore();
+  }
+  // 포물선 유령 (二次関数): 고유 동작은 축(점선)의 반대쪽으로 넘어가기
+  function drawGhost(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const from = f.flag ? -18 : 18;
+    const x = from + (-from - from) * ease(sp);
+    ctx.save();
+    ctx.setLineDash([5, 5]);
+    line(0, -62, 0, 48, '#8fb4ff', 2);
+    ctx.restore();
+    glyph('−', -44, 44, 16, '#8fb4ff');
+    glyph('+', 44, 44, 16, '#8fb4ff');
+    const sway = S.idle ? Math.sin(S.t * 3) * 3 : 0;
+    ctx.save();
+    ctx.translate(x, 0);
+    ctx.fillStyle = C('#c9d4ff');
+    ctx.beginPath();
+    ctx.moveTo(-30, 40);
+    ctx.quadraticCurveTo(-30, -52, 0, -52);
+    ctx.quadraticCurveTo(30, -52, 30, 40);
+    ctx.quadraticCurveTo(22 + sway, 30, 15, 40);
+    ctx.quadraticCurveTo(7 + sway, 30, 0, 40);
+    ctx.quadraticCurveTo(-8 + sway, 30, -15, 40);
+    ctx.quadraticCurveTo(-23 + sway, 30, -30, 40);
+    ctx.fill();
+    // 몸에 그려진 포물선 무늬
+    ctx.strokeStyle = C('#7a8bd6');
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-16, 2);
+    ctx.quadraticCurveTo(0, 46, 16, 2);
+    ctx.stroke();
+    eye(-10, -24, 6, true, '#3b4a9a', 2.6);
+    eye(10, -24, 6, true, '#3b4a9a', 2.6);
+    circ(0, 24, 3, '#ffc857'); // 꼭짓점
+    ctx.restore();
+  }
+  // 뒤죽박죽 막대 (データの分析): 고유 동작은 크기 순서로 줄 서기 ↔ 다시 흩어지기
+  function drawBars(f) {
+    const sp = f.spec > 0 ? 1 - f.spec : 0;
+    const mixed = [44, 78, 26];
+    const sorted = [26, 44, 78];
+    const from = f.flag ? sorted : mixed;
+    const to = f.flag ? mixed : sorted;
+    const colors = ['#ffb347', '#ff8c5a', '#ffd166'];
+    line(-48, 45, 48, 45, '#8fb4ff', 2);
+    for (let i = 0; i < 3; i++) {
+      const h = from[i] + (to[i] - from[i]) * ease(sp);
+      const x = -30 + i * 30;
+      const bob = S.idle ? Math.sin(S.t * 4 + i * 1.7) * 2 : 0;
+      rrect(x - 12, 44 - h - bob, 24, h + bob, 5, colors[i]);
+      eye(x - 5, 54 - h - bob, 3, true, '#1c2740', 0.4 + i);
+      eye(x + 5, 54 - h - bob, 3, true, '#1c2740', 0.4 + i);
+      line(x - 4, 63 - h - bob, x + 4, 63 - h - bob, '#1c2740', 1.5);
+    }
+  }
+  const FOE_DRAW = {
+    twins: drawTwins, bat: drawBat, golem: drawGolem, thief: drawThief, tower: drawTower,
+    crab: drawCrab, slime: drawSlime, ghost: drawGhost, bars: drawBars,
+  };
 
   // 대기·공격·피격을 위치와 크기로 바꾼 값
   function pose(actor, dirX, dirY, amp, phase) {

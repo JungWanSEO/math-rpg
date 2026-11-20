@@ -246,8 +246,12 @@ async function boot() {
     if (kind === 'midboss') return monsters.find((m) => m.midboss);
     const normal = monsters.filter((m) => !m.boss && !m.midboss);
     if (tutorial.active()) return normal[0];
-    const fresh = normal.filter((m) => m.id !== run.lastFoe);
-    const pool = fresh.length ? fresh : normal;
+    // 이번 범위에 들어 있는 단원의 몬스터가 먼저 나옵니다. 하나도 없으면 전체에서 고릅니다.
+    const units = new Set(run.scope.map((key) => key.split('/')[0]));
+    const fitting = normal.filter((m) => units.has(m.weak.split('/')[0]));
+    const base = fitting.length ? fitting : normal;
+    const fresh = base.filter((m) => m.id !== run.lastFoe);
+    const pool = fresh.length ? fresh : base;
     return pool[Math.floor(Math.random() * pool.length)];
   }
 
