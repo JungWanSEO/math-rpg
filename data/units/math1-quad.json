@@ -45,6 +45,16 @@
       "ja": "二次関数の決定",
       "ko": "이차함수의 결정",
       "en": "Finding a quadratic function"
+    },
+    "function": {
+      "ja": "関数の値と値域",
+      "ko": "함숫값과 치역",
+      "en": "Function values and range"
+    },
+    "application": {
+      "ja": "二次関数・不等式の応用",
+      "ko": "이차함수·부등식의 응용",
+      "en": "Applications"
     }
   },
   "groups": [
@@ -55,6 +65,7 @@
         "en": "Functions and graphs"
       },
       "types": [
+        "function",
         "vertex",
         "complete",
         "maxmin",
@@ -72,6 +83,16 @@
         "quadeq",
         "discriminant",
         "quadineq"
+      ]
+    },
+    {
+      "name": {
+        "ja": "応用",
+        "ko": "응용",
+        "en": "Applications"
+      },
+      "types": [
+        "application"
       ]
     }
   ],
@@ -261,6 +282,171 @@
         "ja": "左辺を平方完成して、グラフと x 軸の位置関係を考える。{answer}",
         "ko": "좌변을 완전제곱식으로 고쳐 그래프와 x축의 위치를 생각합니다. {answer}",
         "en": "Complete the square and compare the graph with the x-axis: {answer}"
+      }
+    },
+    {
+      "id": "f-value",
+      "level": 1,
+      "type": "function",
+      "gen": "fvalue",
+      "text": {
+        "ja": "f(x) = {f} のとき、f({k}) の値は?",
+        "ko": "f(x) = {f}일 때, f({k})의 값은?",
+        "en": "If f(x) = {f}, what is f({k})?"
+      },
+      "explain": {
+        "ja": "x に {k} を代入すると {answer}",
+        "ko": "x에 {k}를 대입하면 {answer}",
+        "en": "Substitute {k} for x: {answer}"
+      }
+    },
+    {
+      "id": "range-linear",
+      "level": 1,
+      "type": "function",
+      "gen": "range1",
+      "text": {
+        "ja": "関数 {f} ({s} ≦ x ≦ {t}) の値域は?",
+        "ko": "함수 {f} ({s} ≦ x ≦ {t})의 치역은?",
+        "en": "What is the range of {f} for {s} ≦ x ≦ {t}?"
+      },
+      "explain": {
+        "ja": "両端の x の値を代入して、小さい方から大きい方まで。{answer}",
+        "ko": "양 끝의 x 값을 대입해 작은 쪽부터 큰 쪽까지입니다. {answer}",
+        "en": "Substitute both ends of x and order the results: {answer}"
+      }
+    },
+    {
+      "id": "reflect",
+      "level": 2,
+      "type": "graphmove",
+      "gen": "reflect",
+      "text": {
+        "ja": "{f} のグラフを {axis} に関して対称移動した放物線の式は?",
+        "ko": "{f}의 그래프를 {axis}에 대하여 대칭이동한 포물선의 식은?",
+        "en": "The graph of {f} is reflected in {axis}. What is the new equation?"
+      },
+      "explain": {
+        "ja": "x 軸なら y を −y に、y 軸なら x を −x に、原点なら両方を変える。{answer}",
+        "ko": "x축이면 y를 −y로, y축이면 x를 −x로, 원점이면 둘 다 바꿉니다. {answer}",
+        "en": "x-axis: replace y with −y. y-axis: replace x with −x. Origin: do both. {answer}"
+      }
+    },
+    {
+      "id": "three-points",
+      "level": 3,
+      "type": "determine",
+      "gen": "threepoints",
+      "text": {
+        "ja": "3点 (0, {y0}), (1, {y1}), (−1, {y2}) を通る放物線の式は?",
+        "ko": "세 점 (0, {y0}), (1, {y1}), (−1, {y2})를 지나는 포물선의 식은?",
+        "en": "Which parabola passes through (0, {y0}), (1, {y1}) and (−1, {y2})?"
+      },
+      "explain": {
+        "ja": "y = ax² + bx + c に3点を代入して a, b, c を求めると {answer}",
+        "ko": "y = ax² + bx + c에 세 점을 대입해 a, b, c를 구하면 {answer}",
+        "en": "Substitute the three points into y = ax² + bx + c: {answer}"
+      }
+    },
+    {
+      "id": "max-const",
+      "level": 3,
+      "type": "maxmin",
+      "gen": "maxminconst",
+      "text": {
+        "ja": "関数 {f} ({s} ≦ x ≦ {t}) の最大値が {M} であるとき、定数 c の値は?",
+        "ko": "함수 {f} ({s} ≦ x ≦ {t})의 최댓값이 {M}일 때, 상수 c의 값은?",
+        "en": "The maximum of {f} for {s} ≦ x ≦ {t} is {M}. What is the constant c?"
+      },
+      "explain": {
+        "ja": "軸から遠い方の端で最大になる。その x を代入して c を求めると {answer}",
+        "ko": "축에서 먼 쪽 끝에서 최대가 됩니다. 그 x를 대입해 c를 구하면 {answer}",
+        "en": "The maximum is at the end farther from the axis. Substitute that x to find c: {answer}"
+      }
+    },
+    {
+      "id": "quad-formula",
+      "level": 2,
+      "type": "quadeq",
+      "gen": "formula",
+      "text": {
+        "ja": "{f} を解くと?",
+        "ko": "{f}의 해는?",
+        "en": "Solve {f}."
+      },
+      "explain": {
+        "ja": "解の公式 x = (−b ± √(b² − 4ac)) ÷ 2a を使うと {answer}",
+        "ko": "근의 공식 x = (−b ± √(b² − 4ac)) ÷ 2a를 쓰면 {answer}",
+        "en": "Use the quadratic formula x = (−b ± √(b² − 4ac)) ÷ 2a: {answer}"
+      }
+    },
+    {
+      "id": "real-cond",
+      "level": 3,
+      "type": "discriminant",
+      "gen": "realcond",
+      "text": {
+        "ja": "2次方程式 {f} が{cond}ような定数 k の値の範囲は?",
+        "ko": "이차방정식 {f}이 {cond} 상수 k의 값의 범위는?",
+        "en": "For which values of k does {f} {cond}?"
+      },
+      "explain": {
+        "ja": "判別式 D の符号の条件から {answer}",
+        "ko": "판별식 D의 부호 조건에서 {answer}",
+        "en": "From the condition on the sign of D: {answer}"
+      }
+    },
+    {
+      "id": "always-positive",
+      "level": 3,
+      "type": "application",
+      "gen": "alwayspos",
+      "text": {
+        "ja": "すべての実数 x に対して {f} > 0 が成り立つような定数 k の値の範囲は?",
+        "ko": "모든 실수 x에 대하여 {f} > 0이 성립하는 상수 k의 값의 범위는?",
+        "en": "For which values of k is {f} > 0 for every real x?"
+      },
+      "explain": {
+        "ja": "グラフが x 軸と共有点をもたなければよいので D < 0。{answer}",
+        "ko": "그래프가 x축과 만나지 않으면 되므로 D < 0입니다. {answer}",
+        "en": "The graph must not meet the x-axis, so D < 0: {answer}"
+      }
+    },
+    {
+      "id": "quad-system",
+      "level": 3,
+      "type": "quadineq",
+      "gen": "quadsystem",
+      "text": {
+        "ja": "連立不等式 {f} < 0、{g} を解くと?",
+        "ko": "연립부등식 {f} < 0, {g}의 해는?",
+        "en": "Solve the system {f} < 0 and {g}."
+      },
+      "explain": {
+        "ja": "2次不等式を解いてから、もう一方との共通範囲を求めると {answer}",
+        "ko": "이차부등식을 푼 뒤 다른 부등식과의 공통 범위를 구하면 {answer}",
+        "en": "Solve the quadratic inequality, then take the overlap: {answer}"
+      }
+    },
+    {
+      "id": "rect-max",
+      "level": 2,
+      "type": "application",
+      "gen": "rectmax",
+      "text": {
+        "ja": "長さ {P} cm のひもで長方形を作るとき、面積の最大値は?",
+        "ko": "길이 {P} cm인 끈으로 직사각형을 만들 때, 넓이의 최댓값은?",
+        "en": "A rectangle is made from a string {P} cm long. What is its largest possible area?"
+      },
+      "note": {
+        "ja": "ひもはすべて使い、太さは考えないものとする。",
+        "ko": "끈은 모두 쓰고, 굵기는 생각하지 않는다.",
+        "en": "All of the string is used; ignore its thickness."
+      },
+      "explain": {
+        "ja": "縦を x とすると面積は x({P} ÷ 2 − x)。平方完成すると最大値は {answer}",
+        "ko": "세로를 x라 하면 넓이는 x({P} ÷ 2 − x)입니다. 완전제곱식으로 고치면 최댓값은 {answer}",
+        "en": "With height x the area is x({P} ÷ 2 − x). Completing the square gives the maximum {answer}"
       }
     }
   ]

@@ -509,3 +509,6 @@ body:not(.ready) .title .options, body:not(.ready) .title .settings, body:not(.r
 /* new version notice */
 .update-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 16px; padding-top: max(8px, env(safe-area-inset-top)); font-size: 13px; font-weight: 600; color: var(--ground); background: var(--teal); }
 .update-bar button { min-height: 40px; padding: 0 14px; font-size: 13px; font-weight: 700; color: var(--ink); background: var(--ground); border-color: var(--ground); }
+
+/* Korean: break lines between words, not inside them */
+html[lang="ko"] .question p, html[lang="ko"] .answers button, html[lang="ko"] .notice, html[lang="ko"] .q-note, html[lang="ko"] .event > p, html[lang="ko"] .menu-box p { word-break: keep-all; overflow-wrap: anywhere; }
