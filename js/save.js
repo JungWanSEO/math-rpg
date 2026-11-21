@@ -1,7 +1,7 @@
 // 진행 기록을 이 기기의 브라우저에 저장합니다. 서버로 보내지 않습니다.
 import { CONFIG } from './config.js';
 
-function blank() {
+export function blank() {
   return {
     v: 1,                      // 저장 형식 버전
     lang: CONFIG.defaultLang,  // 고른 언어
@@ -26,9 +26,50 @@ export function load() {
 }
 
 export function store(data) {
+  if (window.sttWiped) return; // "모두 지우기" 뒤에는 아무것도 다시 저장하지 않습니다.
   try {
     localStorage.setItem(CONFIG.saveKey, JSON.stringify(data));
   } catch (e) {
     // 저장에 실패해도 게임은 계속됩니다.
+  }
+}
+
+// ---- 백업 코드 ----
+// 기록을 글자 코드로 바꿉니다. 모양: STT1-<확인용 숫자>-<내용>
+// 서버 없이 다른 기기나 홈 화면 앱으로 기록을 옮길 때 씁니다.
+const sumOf = (text) => [...text].reduce((sum, ch) => (sum + ch.charCodeAt(0)) % 65536, 0).toString(16);
+
+export function encodeSave(data) {
+  const body = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  return `STT1-${sumOf(body)}-${body}`;
+}
+
+const isNum = (v) => typeof v === 'number' && Number.isFinite(v) && v >= 0;
+
+// 코드를 기록으로 되돌립니다. 잘못된 코드면 null. 알 수 없는 값은 버리고 기본값을 씁니다.
+export function decodeSave(code) {
+  try {
+    const found = String(code).replace(/\s+/g, '').match(/^STT1-([0-9a-f]+)-([A-Za-z0-9+/=]+)$/);
+    if (!found || sumOf(found[2]) !== found[1]) return null;
+    const raw = JSON.parse(decodeURIComponent(escape(atob(found[2]))));
+    if (!raw || raw.v !== 1 || typeof raw.codex !== 'object' || raw.codex === null) return null;
+    const out = blank();
+    if (CONFIG.langs.includes(raw.lang)) out.lang = raw.lang;
+    if (isNum(raw.wins)) out.wins = raw.wins;
+    if (isNum(raw.clears)) out.clears = raw.clears;
+    if (isNum(raw.deaths)) out.deaths = raw.deaths;
+    if (typeof raw.tut === 'string' && raw.tut.length < 20) out.tut = raw.tut;
+    if (typeof raw.sound === 'boolean') out.sound = raw.sound;
+    if (typeof raw.seenChain === 'boolean') out.seenChain = raw.seenChain;
+    for (const [key, entry] of Object.entries(raw.codex)) {
+      if (key.length < 60 && entry && isNum(entry.right) && isNum(entry.wrong)) out.codex[key] = { right: entry.right, wrong: entry.wrong, streak: isNum(entry.streak) ? entry.streak : 0 };
+    }
+    if (raw.seen && typeof raw.seen === 'object') for (const key of Object.keys(raw.seen)) if (key.length < 30) out.seen[key] = true;
+    if (Array.isArray(raw.lastScope)) out.lastScope = raw.lastScope.filter((key) => typeof key === 'string' && key.length < 60);
+    // 진행 중인 지도는 모양이 맞을 때만 가져옵니다. 아니면 새 지도로 시작합니다.
+    if (raw.run && Array.isArray(raw.run.nodes) && isNum(raw.run.hp) && isNum(raw.run.maxHp) && Array.isArray(raw.run.scope)) out.run = raw.run;
+    return out;
+  } catch (e) {
+    return null;
   }
 }
