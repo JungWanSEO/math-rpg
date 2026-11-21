@@ -191,8 +191,11 @@ export function explainText(raw) {
 
 // 보기가 말로 된 문제: 보기에 "@이름" 을 적으면 lang 파일의 opt.<이름> 문구가 지금 언어로 나옵니다.
 export function optionText(text) {
-  const s = String(text);
-  return s.startsWith('@') ? t(`opt.${s.slice(1)}`) : s;
+  // 글 안에 섞여 있는 "@이름" 도 바꿉니다. 예: "x ≦ 1 @or x ≧ 5" → "x ≦ 1 または x ≧ 5"
+  return String(text).replace(/@(\w+)/g, (whole, name) => {
+    const word = t(`opt.${name}`);
+    return word === `opt.${name}` ? whole : word;
+  });
 }
 // 문장 틀에 넣을 값들 ("@이름" 은 지금 언어의 글로 바꿉니다)
 function shown(item) {

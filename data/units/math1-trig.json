@@ -85,6 +85,11 @@
       "ja": "内接円の半径",
       "ko": "내접원의 반지름",
       "en": "Inradius"
+    },
+    "tritype": {
+      "ja": "三角形の形の判定",
+      "ko": "삼각형의 모양 판정",
+      "en": "Classifying triangles"
     }
   },
   "groups": [
@@ -116,7 +121,8 @@
         "sinerule",
         "cosrule",
         "area",
-        "inradius"
+        "inradius",
+        "tritype"
       ]
     },
     {
@@ -769,6 +775,95 @@
         "ja": "S = r(a + b + c) ÷ 2 より r = 2S ÷ (a + b + c) = {answer}",
         "ko": "S = r(a + b + c) ÷ 2에서 r = 2S ÷ (a + b + c) = {answer}",
         "en": "From S = r(a + b + c) ÷ 2, r = 2S ÷ (a + b + c) = {answer}"
+      }
+    },
+    {
+      "id": "tri-type",
+      "level": 2,
+      "type": "tritype",
+      "gen": "tritype",
+      "text": {
+        "ja": "3辺の長さが {a}, {b}, {c} の三角形はどんな三角形?",
+        "ko": "세 변의 길이가 {a}, {b}, {c}인 삼각형은 어떤 삼각형인가?",
+        "en": "What kind of triangle has sides {a}, {b} and {c}?"
+      },
+      "explain": {
+        "ja": "まず最大の辺が他の2辺の和より小さいか確かめ、次に最大の辺の2乗と他の2辺の2乗の和を比べる。{answer}",
+        "ko": "먼저 가장 긴 변이 나머지 두 변의 합보다 작은지 확인하고, 가장 긴 변의 제곱과 나머지 두 변의 제곱의 합을 비교합니다. {answer}",
+        "en": "First check the longest side is shorter than the other two together, then compare its square with the sum of the other two squares: {answer}"
+      }
+    },
+    {
+      "id": "heron",
+      "level": 3,
+      "type": "area",
+      "gen": "heron",
+      "text": {
+        "ja": "3辺の長さが {a}, {b}, {c} の三角形の面積は?",
+        "ko": "세 변의 길이가 {a}, {b}, {c}인 삼각형의 넓이는?",
+        "en": "What is the area of a triangle with sides {a}, {b} and {c}?"
+      },
+      "figure": {
+        "kind": "anytri",
+        "angleA": "",
+        "angleB": "",
+        "angleC": "",
+        "sideA": "{a}",
+        "sideB": "{b}",
+        "sideC": "{c}"
+      },
+      "explain": {
+        "ja": "s = (a + b + c) ÷ 2 として、ヘロンの公式 S = √(s(s − a)(s − b)(s − c)) より {answer}",
+        "ko": "s = (a + b + c) ÷ 2로 놓고 헤론의 공식 S = √(s(s − a)(s − b)(s − c))에서 {answer}",
+        "en": "With s = (a + b + c) ÷ 2, Heron's formula S = √(s(s − a)(s − b)(s − c)) gives {answer}"
+      }
+    },
+    {
+      "id": "tetra-height",
+      "level": 3,
+      "type": "space",
+      "gen": "tetra",
+      "params": {
+        "ask": "height"
+      },
+      "text": {
+        "ja": "1辺の長さが {a} の正四面体の高さ h は?",
+        "ko": "한 모서리의 길이가 {a}인 정사면체의 높이 h는?",
+        "en": "What is the height h of a regular tetrahedron with edge {a}?"
+      },
+      "figure": {
+        "kind": "tetra",
+        "edge": "{a}",
+        "h": "h = ?"
+      },
+      "explain": {
+        "ja": "頂点から底面に下ろした垂線の足は底面の重心。h = (√6 ÷ 3) × {a} = {answer}",
+        "ko": "꼭짓점에서 밑면에 내린 수선의 발은 밑면의 무게중심입니다. h = (√6 ÷ 3) × {a} = {answer}",
+        "en": "The foot of the height is the centroid of the base. h = (√6 ÷ 3) × {a} = {answer}"
+      }
+    },
+    {
+      "id": "tetra-volume",
+      "level": 3,
+      "type": "space",
+      "gen": "tetra",
+      "params": {
+        "ask": "volume"
+      },
+      "text": {
+        "ja": "1辺の長さが {a} の正四面体の体積は?",
+        "ko": "한 모서리의 길이가 {a}인 정사면체의 부피는?",
+        "en": "What is the volume of a regular tetrahedron with edge {a}?"
+      },
+      "figure": {
+        "kind": "tetra",
+        "edge": "{a}",
+        "h": ""
+      },
+      "explain": {
+        "ja": "体積 = 底面積 × 高さ ÷ 3 = (√2 ÷ 12) × {a}³ = {answer}",
+        "ko": "부피 = 밑넓이 × 높이 ÷ 3 = (√2 ÷ 12) × {a}³ = {answer}",
+        "en": "Volume = base area × height ÷ 3 = (√2 ÷ 12) × {a}³ = {answer}"
       }
     }
   ]

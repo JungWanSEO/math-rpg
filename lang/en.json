@@ -243,6 +243,22 @@
     "true": "true",
     "false": "false",
     "allreal": "all real numbers",
-    "none": "no solution"
+    "none": "no solution",
+    "and": "and",
+    "or": "or",
+    "xaxis": "the x-axis",
+    "yaxis": "the y-axis",
+    "origin": "the origin",
+    "real": "have real solutions",
+    "two": "have two different real solutions",
+    "noreal": "have no real solutions",
+    "acute": "acute triangle",
+    "right": "right triangle",
+    "obtuse": "obtuse triangle",
+    "notri": "no such triangle exists",
+    "reject": "Chance is an unlikely explanation; we can judge that it works",
+    "keep": "This could happen by chance; we cannot judge that it works",
+    "surely": "It is proven that it always works",
+    "never": "It is proven that it does not work"
   }
 }

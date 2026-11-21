@@ -424,6 +424,21 @@ Object.assign(DRAW, {
     const B = [x0 + cols * cell, y0];
     return frame(out + dot(A, ASK) + dot(B, ASK) + small([A[0] - 12, A[1] + 6], 'A', 'middle', INK, 14) + small([B[0] + 12, B[1] + 2], 'B', 'middle', INK, 14), y0 + rows * cell + 22);
   },
+  // 정사면체: edge 는 모서리의 길이, h 는 높이의 이름표 (비우면 높이를 그리지 않습니다)
+  tetra(L) {
+    const A = [150, 16];
+    const B = [52, 128];
+    const C = [214, 152];
+    const D = [286, 104];
+    const H = [(B[0] + C[0] + D[0]) / 3, (B[1] + C[1] + D[1]) / 3];
+    return frame(
+      seg(B, D, DIM, 2, '5 5') + shape([A, B, C]) + seg(A, D) + seg(C, D) +
+      (L.h ? seg(A, H, ASK, 2, '6 4') + dot(H) + small([H[0] + 10, H[1] + 14], 'H') + tag([between(A, H, 0.62)[0] - 12, between(A, H, 0.62)[1]], L.h, -1) : '') +
+      vertex(A, 'A', H) + vertex(B, 'B', H) + vertex(C, 'C', H, 15) + vertex(D, 'D', H) +
+      tag(beside(A, B, 12), L.edge, -1),
+      172,
+    );
+  },
   // 히스토그램: freq 는 "2,5,8,4,1", from 은 첫 계급의 시작, step 은 계급의 폭
   histogram(L) {
     const freq = list(L.freq);

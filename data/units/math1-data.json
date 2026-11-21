@@ -50,6 +50,16 @@
       "ja": "変量の変換",
       "ko": "변량의 변환",
       "en": "Transforming data"
+    },
+    "mode": {
+      "ja": "最頻値",
+      "ko": "최빈값",
+      "en": "Mode"
+    },
+    "hypothesis": {
+      "ja": "仮説検定の考え方",
+      "ko": "가설검정의 생각",
+      "en": "The idea of hypothesis testing"
     }
   },
   "groups": [
@@ -62,7 +72,8 @@
       "types": [
         "mean",
         "median",
-        "read"
+        "read",
+        "mode"
       ]
     },
     {
@@ -87,6 +98,16 @@
       },
       "types": [
         "correlation"
+      ]
+    },
+    {
+      "name": {
+        "ja": "仮説検定",
+        "ko": "가설검정",
+        "en": "Hypothesis testing"
+      },
+      "types": [
+        "hypothesis"
       ]
     }
   ],
@@ -420,6 +441,102 @@
         "ja": "分散は x の係数の2乗倍になる。{answer}",
         "ko": "분산은 x의 계수의 제곱 배가 됩니다. {answer}",
         "en": "The variance is multiplied by the square of the coefficient of x: {answer}"
+      }
+    },
+    {
+      "id": "mode",
+      "level": 1,
+      "type": "mode",
+      "gen": "mode",
+      "text": {
+        "ja": "データ {list} の最頻値は?",
+        "ko": "자료 {list}의 최빈값은?",
+        "en": "What is the mode of {list}?"
+      },
+      "explain": {
+        "ja": "最も多く現れる値は {answer}",
+        "ko": "가장 많이 나오는 값은 {answer}",
+        "en": "The value that appears most often is {answer}"
+      }
+    },
+    {
+      "id": "merge-mean",
+      "level": 2,
+      "type": "mean",
+      "gen": "mergemean",
+      "text": {
+        "ja": "{n1} 人の平均点が {m1} 点、別の {n2} 人の平均点が {m2} 点のとき、全員の平均点は?",
+        "ko": "{n1}명의 평균이 {m1}점, 다른 {n2}명의 평균이 {m2}점일 때, 전체의 평균은?",
+        "en": "{n1} people average {m1} points and another {n2} people average {m2} points. What is the overall average?"
+      },
+      "explain": {
+        "ja": "合計点を求めてから全体の人数で割ると {answer}",
+        "ko": "총점을 구한 뒤 전체 인원으로 나누면 {answer}",
+        "en": "Find the total score, then divide by everyone: {answer}"
+      }
+    },
+    {
+      "id": "hist-mean",
+      "level": 2,
+      "type": "read",
+      "gen": "histmean",
+      "text": {
+        "ja": "図のヒストグラムから求めた平均値は?",
+        "ko": "그림의 히스토그램에서 구한 평균은?",
+        "en": "What is the mean found from the histogram?"
+      },
+      "note": {
+        "ja": "各階級は「左端の値以上、右端の値未満」とする。棒の上の数は度数。平均値は階級値を使って求める。",
+        "ko": "각 계급은 '왼쪽 끝 값 이상, 오른쪽 끝 값 미만'이다. 막대 위의 수는 도수. 평균은 계급값을 써서 구한다.",
+        "en": "Each class includes its left end and excludes its right end. The number on each bar is the frequency. Use class marks to find the mean."
+      },
+      "figure": {
+        "kind": "histogram",
+        "freq": "{freq}",
+        "from": "{from}",
+        "step": "{step}"
+      },
+      "explain": {
+        "ja": "(階級値 × 度数) の合計 ÷ 度数の合計 = {answer}",
+        "ko": "(계급값 × 도수)의 합 ÷ 도수의 합 = {answer}",
+        "en": "Sum of (class mark × frequency) ÷ total frequency = {answer}"
+      }
+    },
+    {
+      "id": "variance-formula",
+      "level": 2,
+      "type": "variance",
+      "gen": "var2",
+      "text": {
+        "ja": "データ x の平均値が {m}、x² の平均値が {q} のとき、x の分散は?",
+        "ko": "자료 x의 평균이 {m}, x²의 평균이 {q}일 때, x의 분산은?",
+        "en": "The mean of x is {m} and the mean of x² is {q}. What is the variance of x?"
+      },
+      "explain": {
+        "ja": "分散 = (x² の平均値) − (平均値)² = {answer}",
+        "ko": "분산 = (x²의 평균) − (평균)² = {answer}",
+        "en": "Variance = (mean of x²) − (mean)² = {answer}"
+      }
+    },
+    {
+      "id": "hypothesis",
+      "level": 2,
+      "type": "hypothesis",
+      "gen": "hypothesis",
+      "text": {
+        "ja": "新しい勉強法を 30 人が試し、{k} 人が「成績が上がった」と答えた。「勉強法に効果はなく、上がるか上がらないかは半々」と仮定すると、30 人中 {k} 人以上が上がる確率は {p} である。正しい判断は?",
+        "ko": "새 공부법을 30명이 써 보고 {k}명이 '성적이 올랐다'고 답했다. '공부법에 효과는 없고, 오를지 말지는 반반'이라고 가정하면, 30명 중 {k}명 이상이 오를 확률은 {p}이다. 올바른 판단은?",
+        "en": "Thirty people tried a new study method and {k} said their grades rose. If the method had no effect (a 50-50 chance each), the probability that {k} or more of 30 improve is {p}. Which judgment is correct?"
+      },
+      "note": {
+        "ja": "基準となる確率を 0.05 とする。",
+        "ko": "기준이 되는 확률은 0.05로 한다.",
+        "en": "Use 0.05 as the threshold probability."
+      },
+      "explain": {
+        "ja": "確率 {p} を基準の 0.05 と比べる。0.05 より小さければ「偶然とは考えにくい」と判断する。{answer}",
+        "ko": "확률 {p}를 기준 0.05와 비교합니다. 0.05보다 작으면 '우연이라고 보기 어렵다'고 판단합니다. {answer}",
+        "en": "Compare {p} with the threshold 0.05. If it is smaller, chance is an unlikely explanation: {answer}"
       }
     }
   ]
