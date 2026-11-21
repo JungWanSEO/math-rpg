@@ -7,7 +7,8 @@ import { $ } from './ui.js';
 // 진행 중인 지도가 있는지 (칸을 하나라도 골랐는지)
 export const hasProgress = (run) => run.at !== null || run.pending !== null;
 
-export function createTitle({ getRun, onContinue, onNew, onCodex }) {
+export function createTitle({ getRun, onContinue, onNew, onCodex, tutorialDone = () => false, onTutorial = () => {} }) {
+  let pending = null; // 확인 창에서 "지우고 새로 시작" 을 눌렀을 때 할 일
 
   function render() {
     const run = getRun();
@@ -35,6 +36,7 @@ export function createTitle({ getRun, onContinue, onNew, onCodex }) {
     if (!$('confirm').hidden) $('confirmText').textContent = confirmText();
     fresh.classList.toggle('primary', !going);
     cont.classList.toggle('primary', going);
+    $('titleTutorial').hidden = !tutorialDone(); // 튜토리얼을 끝낸 사람에게만 "다시 보기" 가 보입니다.
   }
 
   // 확인 창에 보여 줄 글: 무엇이 사라지는지 적습니다.
@@ -48,20 +50,24 @@ export function createTitle({ getRun, onContinue, onNew, onCodex }) {
   }
 
   $('titleContinue').addEventListener('click', onContinue);
-  $('titleNew').addEventListener('click', () => {
-    // 진행 중인 지도가 있으면 확인 창을 먼저 띄웁니다.
+  // 새 지도를 시작하는 일(새로 시작, 튜토리얼 다시 보기)은 진행 중인 지도가 있으면 확인 창을 먼저 띄웁니다.
+  function startFresh(action) {
     if (hasProgress(getRun())) {
+      pending = action;
       $('confirmText').textContent = confirmText();
       $('confirm').hidden = false;
       $('confirmCancel').focus();
       return;
     }
-    onNew();
-  });
+    action();
+  }
+  $('titleNew').addEventListener('click', () => startFresh(onNew));
+  $('titleTutorial').addEventListener('click', () => startFresh(onTutorial));
   $('confirmCancel').addEventListener('click', closeConfirm);
   $('confirmOk').addEventListener('click', () => {
     closeConfirm();
-    onNew();
+    (pending || onNew)();
+    pending = null;
   });
   $('confirm').addEventListener('click', (event) => {
     if (event.target === $('confirm')) closeConfirm(); // 바깥을 누르면 취소

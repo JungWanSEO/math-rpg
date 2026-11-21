@@ -459,6 +459,8 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   return {
     start,
     abort,
+    choosing: () => B.phase === 'choose',
+    chainReady: () => B.phase === 'choose' && !B.chainUsed && hasChain(),
     refresh: render, // 언어를 바꾼 뒤 화면의 글을 다시 씁니다.
   };
 }
