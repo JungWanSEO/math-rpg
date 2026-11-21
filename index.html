@@ -17,6 +17,7 @@
 <!-- 코드 파일을 차례로 기다리지 않고 한꺼번에 받게 합니다. js 파일을 추가하면 여기에도 한 줄 추가합니다. -->
 <link rel="modulepreload" href="./js/battle.js">
 <link rel="modulepreload" href="./js/codex.js">
+<link rel="modulepreload" href="./js/art.js">
 <link rel="modulepreload" href="./js/config.js">
 <link rel="modulepreload" href="./js/data.js">
 <link rel="modulepreload" href="./js/events.js">
@@ -64,8 +65,10 @@
   <!-- 처음 화면 -->
   <section class="screen" id="screenTitle">
     <div class="title">
-      <h1>SOLVE THE TOWER</h1>
+      <div class="title-art" id="titleArt"></div>
+      <h1><span>SOLVE THE</span>TOWER</h1>
       <p id="titleUnit"></p>
+      <p class="title-record" id="titleRecord" hidden></p>
       <!-- 불러오는 동안 보이는 진행 막대. 다 불러오면 사라집니다. -->
       <div class="loading" id="loading" role="status" aria-live="polite">
         <div class="loading-track"><div class="loading-bar" id="loadingBar"></div></div>
@@ -93,9 +96,10 @@
       <div class="options">
         <button type="button" id="titleContinue" hidden><b></b><small></small></button>
         <button type="button" id="titleNew"><b></b><small></small></button>
-        <button type="button" id="titleCodex"><b data-i18n="ui.codex"></b><small data-i18n="title.codexSub"></small></button>
-        <button type="button" id="titleTutorial" hidden><b data-i18n="title.tutorial"></b><small data-i18n="title.tutorialSub"></small></button>
-        <button type="button" id="titleData"><b data-i18n="data.title"></b><small data-i18n="title.dataSub"></small></button>
+        <!-- 작은 버튼 줄: 그림과 이름만 보입니다. (설명은 화면 낭독기용으로 남겨 둡니다) -->
+        <button type="button" class="tile" id="titleCodex"><i data-ico="book"></i><b data-i18n="ui.codex"></b><small class="sr" data-i18n="title.codexSub"></small></button>
+        <button type="button" class="tile" id="titleTutorial" hidden><i data-ico="replay"></i><b data-i18n="title.tutorialShort"></b><small class="sr" data-i18n="title.tutorialSub"></small></button>
+        <button type="button" class="tile" id="titleData"><i data-ico="box"></i><b data-i18n="data.title"></b><small class="sr" data-i18n="title.dataSub"></small></button>
       </div>
       <div class="settings">
         <button type="button" class="hint sound-toggle"></button>
@@ -156,17 +160,17 @@
         <span class="chip" id="foeWeak"></span>
       </div>
       <div class="row">
-        <div class="bar" id="foeBar"><div class="fill rose" id="foeHpBar"></div></div>
+        <div class="bar" id="foeBar"><div class="fill ghost" id="foeHpGhost"></div><div class="fill rose" id="foeHpBar"></div></div>
         <span class="num" id="foeHpText"></span>
       </div>
       <canvas id="stage"></canvas>
-      <div class="intent" id="foeIntent"></div>
+      <div class="intent" id="foeIntent"><i id="foeIntentIco"></i><span id="foeIntentText"></span></div>
     </div>
 
     <div class="me" id="meBox">
       <div class="row">
         <span class="label" data-i18n="ui.hp"></span>
-        <div class="bar"><div class="fill teal" id="hpBar"></div></div>
+        <div class="bar"><div class="fill ghost" id="hpGhost"></div><div class="fill teal" id="hpBar"></div></div>
         <span class="num" id="hpText"></span>
       </div>
       <div class="row">
@@ -178,13 +182,13 @@
 
     <div class="panel">
       <div class="actions" id="actions">
-        <button type="button" data-action="basic"><b data-i18n="ui.basic"></b><small id="basicSub"></small></button>
-        <button type="button" data-action="skill"><b data-i18n="ui.skill"></b><small id="skillSub"></small></button>
-        <button type="button" data-action="defend"><b data-i18n="ui.defend"></b><small id="defendSub"></small></button>
+        <button type="button" class="act act-basic" data-action="basic"><span class="act-top"><i data-ico="sword"></i><b data-i18n="ui.basic"></b></span><em id="basicDmg"></em><small id="basicSub"></small></button>
+        <button type="button" class="act act-skill" data-action="skill"><span class="act-top"><i data-ico="spark"></i><b data-i18n="ui.skill"></b></span><em id="skillDmg"></em><small id="skillSub"></small></button>
+        <button type="button" class="act act-defend" data-action="defend"><span class="act-top"><i data-ico="shield"></i><b data-i18n="ui.defend"></b></span><em id="defendDmg"></em><small id="defendSub"></small></button>
       </div>
       <div class="special" id="specialRow">
-        <button type="button" class="chain" id="chainBtn" data-action="chain" disabled><b data-i18n="ui.chain"></b><small id="chainSub"></small></button>
-        <button type="button" class="ult" id="ultBtn" data-action="ult" disabled></button>
+        <button type="button" class="chain" id="chainBtn" data-action="chain" disabled><span class="act-top"><i data-ico="chain"></i><b data-i18n="ui.chain"></b></span><small id="chainSub"></small></button>
+        <button type="button" class="ult" id="ultBtn" data-action="ult" disabled><span class="ult-fill" id="ultFill"></span><span class="act-top"><i data-ico="star"></i><b id="ultText"></b></span><small id="ultSub"></small></button>
       </div>
 
       <div class="question" id="question" hidden>
@@ -213,6 +217,7 @@
   <!-- 상점, 휴식, 보물, 보상, 결과가 함께 쓰는 화면 -->
   <section class="screen" id="screenEvent" hidden>
     <div class="event">
+      <div class="scene" id="evArt" hidden></div>
       <h2 id="evTitle"></h2>
       <p id="evText"></p>
       <div id="evQuiz" hidden>

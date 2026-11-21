@@ -37,7 +37,10 @@
     "chain": "Chain",
     "chainSub": "Linked questions · once",
     "chainUsed": "Used in this battle",
-    "chainStep": "Chain {n} / {total} · {type}"
+    "chainStep": "Chain {n} / {total} · {type}",
+    "dmg": "Damage {d}",
+    "counterDmg": "Counter {d}",
+    "weakHit": "WEAK!"
   },
   "msg": {
     "choose": "Choose an action.",
@@ -230,7 +233,9 @@
     "tutorialSub": "Start a new map with the guide from the beginning.",
     "dataSub": "Back up your records, home-screen help, erase",
     "iosHint": "On iPhone your records can be erased",
-    "iosHintSub": "Safari clears them after about a week away. See how to keep them →"
+    "iosHintSub": "Safari clears them after about a week away. See how to keep them →",
+    "record": "Battles won {wins} · Towers cleared {clears}",
+    "tutorialShort": "Tutorial"
   },
   "scope": {
     "title": "Choose your range",

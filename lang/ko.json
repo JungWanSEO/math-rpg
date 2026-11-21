@@ -37,7 +37,10 @@
     "chain": "연속기",
     "chainSub": "이어 푸는 문제 · 1회",
     "chainUsed": "이번 전투에서 사용함",
-    "chainStep": "연속기 {n} / {total} · {type}"
+    "chainStep": "연속기 {n} / {total} · {type}",
+    "dmg": "피해 {d}",
+    "counterDmg": "반격 {d}",
+    "weakHit": "약점!"
   },
   "msg": {
     "choose": "행동을 고르세요.",
@@ -230,7 +233,9 @@
     "tutorialSub": "새 지도에서 처음부터 다시 안내합니다.",
     "dataSub": "기록 백업, 홈 화면 안내, 지우기",
     "iosHint": "아이폰에서는 기록이 지워질 수 있습니다",
-    "iosHintSub": "일주일쯤 쉬면 사파리가 기록을 지웁니다. 지키는 방법 보기 →"
+    "iosHintSub": "일주일쯤 쉬면 사파리가 기록을 지웁니다. 지키는 방법 보기 →",
+    "record": "이긴 전투 {wins} · 탑 클리어 {clears}",
+    "tutorialShort": "튜토리얼"
   },
   "scope": {
     "title": "범위 고르기",

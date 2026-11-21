@@ -6,6 +6,7 @@ import { t, pick } from './i18n.js';
 import { next, explainText, typeLabel, optionText, hasChain, nextChain, stepSummary, questionText, setDebugLast } from './questions.js';
 import { fillQuestion } from './qview.js';
 import { $ } from './ui.js';
+import { icon } from './art.js';
 import { play } from './sound.js';
 import { fitBattle } from './fit.js';
 
@@ -124,8 +125,17 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     $('foeName').textContent = name;
     $('foeWeak').textContent = t('ui.weak', { type: typeName(B.weak) });
     $('foeHpBar').style.width = `${Math.max(0, (B.foeHp / B.foeMax) * 100)}%`;
+    $('foeHpGhost').style.width = $('foeHpBar').style.width; // 흰 줄이 조금 늦게 따라 줄어, 방금 깎인 만큼이 보입니다.
     $('foeHpText').textContent = `${Math.max(0, B.foeHp)} / ${B.foeMax}`;
-    $('foeIntent').textContent = t(B.intent === 'big' ? 'ui.intentBig' : 'ui.intentNormal', { d: intentDamage() });
+    $('foeIntentText').textContent = t(B.intent === 'big' ? 'ui.intentBig' : 'ui.intentNormal', { d: intentDamage() });
+    if ($('foeIntentIco').dataset.kind !== B.intent) {
+      $('foeIntentIco').dataset.kind = B.intent;
+      $('foeIntentIco').innerHTML = icon(B.intent === 'big' ? 'warn' : 'sword');
+    }
+    // 버튼마다 맞혔을 때의 피해를 적습니다.
+    $('basicDmg').textContent = t('ui.dmg', { d: CONFIG.damage.basic + run.up.basic });
+    $('skillDmg').textContent = t('ui.dmg', { d: CONFIG.damage.skill + run.up.skill });
+    $('defendDmg').textContent = t('ui.counterDmg', { d: CONFIG.damage.counter + run.up.counter });
     $('foeIntent').classList.toggle('big', B.intent === 'big');
     // 강한 공격 턴에는 공격 버튼에도 "맞혀도 피해를 받는다"는 것을 적어 둡니다.
     $('basicSub').textContent = t(B.intent === 'big' ? 'ui.attackBigSub' : 'ui.basicSub');
@@ -138,6 +148,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     B.shownFoeHp = B.foeHp;
     $('meBox').classList.toggle('low', run.hp / run.maxHp <= 0.3);
     $('hpBar').style.width = `${Math.max(0, (run.hp / run.maxHp) * 100)}%`;
+    $('hpGhost').style.width = $('hpBar').style.width;
     $('hpText').textContent = `${Math.max(0, run.hp)} / ${run.maxHp}`;
     $('comboText').textContent = t('ui.combo', { n: B.combo });
 
@@ -169,7 +180,9 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     const ult = $('ultBtn');
     ult.disabled = !(choosing && ready) || Boolean(only);
     ult.classList.toggle('ready', ready);
-    ult.textContent = ready ? t('ui.ultReady') : t('ui.ultCharge', { n: B.combo, need: CONFIG.ultNeed });
+    $('ultText').textContent = ready ? t('ui.ultReady') : t('ui.ultCharge', { n: B.combo, need: CONFIG.ultNeed });
+    $('ultSub').textContent = t('ui.dmg', { d: CONFIG.damage.ult });
+    $('ultFill').style.width = `${Math.min(1, B.combo / CONFIG.ultNeed) * 100}%`; // 연속 정답만큼 차오릅니다.
 
     $('notice').textContent = t(B.notice.key, B.notice.vars);
     renderQuestion();
@@ -319,7 +332,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
         B.combo = Math.min(CONFIG.ultNeed, B.combo + 1);
         say(last ? 'msg.chainDone' : 'msg.chainNext', { d: dmg });
         render();
-        stage.heroAttack(`-${dmg}`, weak || last, live(() => chainHit(dmg)));
+        stage.heroAttack(`-${dmg}`, weak || last, live(() => chainHit(dmg)), weak ? t('ui.weakHit') : '');
       } else {
         // 틀리면 연속기는 거기서 끝납니다. 정답과 해설을 보여 주고 적의 공격을 받습니다.
         B.combo = 0;
@@ -339,7 +352,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
       B.combo = Math.min(CONFIG.ultNeed, B.combo + 1);
       say(weak ? 'msg.correctWeak' : 'msg.correct', { d: dmg });
       render();
-      stage.heroAttack(`-${dmg}`, weak, live(() => afterHit(dmg)));
+      stage.heroAttack(`-${dmg}`, weak, live(() => afterHit(dmg)), weak ? t('ui.weakHit') : '');
     } else {
       B.combo = 0;
       say('msg.wrong', { explain: explainText(B.cur.raw) });

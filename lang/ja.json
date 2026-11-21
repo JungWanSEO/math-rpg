@@ -37,7 +37,10 @@
     "chain": "連続技",
     "chainSub": "続けて解く問題 · 1回",
     "chainUsed": "この戦闘で使用済み",
-    "chainStep": "連続技 {n} / {total} · {type}"
+    "chainStep": "連続技 {n} / {total} · {type}",
+    "dmg": "ダメージ {d}",
+    "counterDmg": "反撃 {d}",
+    "weakHit": "弱点!"
   },
   "msg": {
     "choose": "行動を選んでください。",
@@ -230,7 +233,9 @@
     "tutorialSub": "新しいマップで最初から案内します。",
     "dataSub": "記録のバックアップ、ホーム画面の案内、削除",
     "iosHint": "iPhone では記録が消えることがあります",
-    "iosHintSub": "1週間ほど開かないと Safari が記録を消します。守る方法を見る →"
+    "iosHintSub": "1週間ほど開かないと Safari が記録を消します。守る方法を見る →",
+    "record": "勝った戦闘 {wins} · 塔クリア {clears}",
+    "tutorialShort": "あそび方"
   },
   "scope": {
     "title": "範囲を選ぶ",
