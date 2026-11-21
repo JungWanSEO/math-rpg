@@ -329,7 +329,7 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 .figure svg { width: 100%; max-width: 326px; height: auto; font-family: inherit; }
 
 /* while answering: make room for the question by folding the rest of the battle screen */
-.answering .me, .answering #actions, .answering #ultBtn, .answering .intent { display: none; }
+.answering .me, .answering #actions, .answering #specialRow, .answering .intent { display: none; }
 .answering canvas { height: 150px; aspect-ratio: auto; object-fit: cover; object-position: 50% 80%; }
 
 /* title screen */
@@ -512,3 +512,17 @@ body:not(.ready) .title .options, body:not(.ready) .title .settings, body:not(.r
 
 /* Korean: break lines between words, not inside them */
 html[lang="ko"] .question p, html[lang="ko"] .answers button, html[lang="ko"] .notice, html[lang="ko"] .q-note, html[lang="ko"] .event > p, html[lang="ko"] .menu-box p { word-break: keep-all; overflow-wrap: anywhere; }
+
+/* chain (linked questions): the fourth action and its question header */
+.special { display: flex; gap: 8px; }
+.special .ult { flex: 1 1 0; }
+.special .chain { flex: 1 1 0; min-height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 2px 6px; border-color: #c9a0ff; }
+.special .chain b { font-size: 14px; }
+.special .chain small { font-size: 10px; color: var(--muted); }
+.special .chain[hidden] { display: none; }
+.chain-box { display: flex; flex-direction: column; gap: 4px; padding-bottom: 6px; border-bottom: 1px dashed var(--line); }
+.chain-dots { font-size: 13px; letter-spacing: 4px; color: #c9a0ff; }
+.chain-intro { font-size: 14px; line-height: 1.5; color: var(--ink); }
+.chain-done { font-size: 13px; line-height: 1.5; color: var(--teal); white-space: pre-line; }
+.chain-done:empty { display: none; }
+.tight .chain-intro { font-size: 13px; }

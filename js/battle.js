@@ -3,7 +3,7 @@
 // 체력, 힌트, 강화는 "지도 한 장"의 상태(run)에서 가져옵니다.
 import { CONFIG } from './config.js';
 import { t, pick } from './i18n.js';
-import { next, explainText, typeLabel, optionText } from './questions.js';
+import { next, explainText, typeLabel, optionText, hasChain, nextChain, stepSummary, questionText, setDebugLast } from './questions.js';
 import { fillQuestion } from './qview.js';
 import { $ } from './ui.js';
 import { play } from './sound.js';
@@ -27,6 +27,8 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     picked: -1,
     notice: { key: 'msg.choose', vars: null },
     onEnd: null,
+    chain: null,     // 지금 푸는 연속기 { data, index }
+    chainUsed: false, // 연속기는 한 전투에 한 번만 씁니다.
     shownHp: null,   // 화면에 마지막으로 보여 준 체력 (줄어들면 연출을 냅니다)
     shownFoeHp: null,
   };
@@ -81,10 +83,21 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     hint.textContent = t('ui.hint', { n: run.hints });
     hint.disabled = run.hints <= 0 || B.cur.removed >= 0;
 
-    $('qMeta').textContent = t('ui.level', { n: B.cur.level, type: typeName(B.cur.type) });
+    $('qMeta').textContent = B.chain
+      ? t('ui.chainStep', { n: B.chain.index + 1, total: B.chain.data.steps.length, type: typeName(B.cur.type) })
+      : t('ui.level', { n: B.cur.level, type: typeName(B.cur.type) });
     const box = $('answers');
     fillQuestion({ text: $('qText'), figure: $('qFigure'), cap: $('qCap'), note: $('qNote'), answers: box }, B.cur);
     $('screenBattle').classList.toggle('has-figure', !$('qFigure').hidden);
+    // 연속기: 공통 지문, 진행 표시, 이미 푼 물음의 요약을 문제 위에 보여 줍니다.
+    $('qChain').hidden = !B.chain;
+    if (B.chain) {
+      const { data, index } = B.chain;
+      $('qChainDots').textContent = data.steps.map((_, i) => (i < index ? '●' : i === index ? '◉' : '○')).join('');
+      $('qChainIntro').textContent = data.intro();
+      $('qChainDone').textContent = data.steps.slice(0, index).map((q, i) => stepSummary(q, i)).join('\n');
+      $('qText').textContent = `(${index + 1}) ${questionText(B.cur.raw)}`;
+    }
     box.innerHTML = '';
     B.cur.options.forEach((text, i) => {
       const btn = document.createElement('button');
@@ -146,6 +159,12 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     });
     $('defendSub').textContent = t(cooling ? 'ui.defendWait' : 'ui.defendSub');
 
+    // 연속기 버튼: 이번 범위에 풀 수 있는 묶음이 있을 때만 보입니다.
+    const chainBtn = $('chainBtn');
+    chainBtn.hidden = !hasChain();
+    chainBtn.disabled = !choosing || Boolean(only) || B.chainUsed;
+    $('chainSub').textContent = t(B.chainUsed ? 'ui.chainUsed' : 'ui.chainSub');
+
     const ready = B.combo >= CONFIG.ultNeed;
     const ult = $('ultBtn');
     ult.disabled = !(choosing && ready) || Boolean(only);
@@ -175,6 +194,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   function backToChoose() {
     planIntent();
     B.phase = 'choose';
+    B.chain = null;
     B.cur = null;
     B.picked = -1;
     render();
@@ -198,6 +218,19 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
       return;
     }
 
+    if (action === 'chain') {
+      if (B.chainUsed) return;
+      const data = nextChain();
+      if (!data) return;
+      B.chainUsed = true;
+      B.lastAction = 'chain';
+      B.chain = { data, index: 0 };
+      askStep();
+      say('msg.solveChain');
+      render();
+      return;
+    }
+
     if (action === 'defend' && B.lastAction === 'defend') return;
     B.lastAction = action;
     let level = CONFIG.guardLevel;
@@ -211,6 +244,35 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     say(action === 'defend' ? 'msg.solveGuard' : 'msg.solve');
     tutorial.emit(`chose:${action}`);
     render();
+  }
+
+  // 연속기의 지금 물음을 문제로 올립니다.
+  function askStep() {
+    B.cur = B.chain.data.steps[B.chain.index];
+    B.cur.action = 'chain';
+    B.cur.removed = -1;
+    B.picked = -1;
+    B.phase = 'answer';
+    setDebugLast(B.cur);
+  }
+
+  // 연속기의 물음 하나를 맞혔을 때: 피해를 주고, 남은 물음이 있으면 이어 갑니다.
+  function chainHit(dmg) {
+    play('hit');
+    B.foeHp -= dmg;
+    render();
+    if (B.foeHp <= 0) {
+      win();
+    } else if (B.chain.index + 1 < B.chain.data.steps.length) {
+      B.chain.index += 1;
+      askStep();
+      render();
+    } else if (B.intent === 'big') {
+      say('msg.bigHit', { d: intentDamage() });
+      foeTurn(1);
+    } else {
+      backToChoose();
+    }
   }
 
   // 힌트: 틀린 보기 하나를 지웁니다.
@@ -245,6 +307,25 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
         say('msg.guardFail', { explain: explainText(B.cur.raw) });
         render();
         foeTurn(CONFIG.defendReduce);
+      }
+      return;
+    }
+
+    if (B.cur.action === 'chain') {
+      if (ok) {
+        const last = B.chain.index + 1 === B.chain.data.steps.length;
+        const weak = B.cur.type === B.weak;
+        const dmg = Math.round(CONFIG.damage.chain[B.chain.index] * (weak ? CONFIG.damage.weakBonus + run.up.weak : 1));
+        B.combo = Math.min(CONFIG.ultNeed, B.combo + 1);
+        say(last ? 'msg.chainDone' : 'msg.chainNext', { d: dmg });
+        render();
+        stage.heroAttack(`-${dmg}`, weak || last, live(() => chainHit(dmg)));
+      } else {
+        // 틀리면 연속기는 거기서 끝납니다. 정답과 해설을 보여 주고 적의 공격을 받습니다.
+        B.combo = 0;
+        say('msg.wrong', { explain: explainText(B.cur.raw) });
+        render();
+        stage.heroMiss(t('msg.miss'), live(() => foeTurn(1)));
       }
       return;
     }
@@ -344,6 +425,8 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     B.combo = 0;
     B.lastAction = null;
     B.onEnd = onEnd;
+    B.chain = null;
+    B.chainUsed = false;
     B.shownHp = null;
     B.shownFoeHp = null;
     stage.heroUp();
@@ -366,6 +449,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     B.gen += 1;
     B.phase = 'busy';
     B.onEnd = null;
+    B.chain = null;
     B.cur = null;
     B.picked = -1;
     render();

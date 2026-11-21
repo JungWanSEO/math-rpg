@@ -589,5 +589,80 @@
         "en": "(A's defective items) ÷ (all defective items) = {share} × {a} ÷ ({share} × {a} + {rest} × {b}) = {answer}"
       }
     }
+  ],
+  "chains": [
+    {
+      "id": "chain-prob",
+      "gen": "prob",
+      "intro": {
+        "ja": "赤玉 {r} 個、白玉 {w} 個が入った袋から、同時に2個の玉を取り出す。",
+        "ko": "빨간 공 {r}개, 흰 공 {w}개가 든 주머니에서 동시에 공 두 개를 꺼낸다.",
+        "en": "Two balls are drawn at once from a bag holding {r} red and {w} white balls."
+      },
+      "note": {
+        "ja": "玉はすべて区別し、どの取り出し方も同様に確からしいものとする。",
+        "ko": "공은 모두 구별하고, 어느 경우든 일어날 가능성은 같다.",
+        "en": "All balls are distinguishable and every draw is equally likely."
+      },
+      "steps": [
+        {
+          "type": "comb",
+          "level": 1,
+          "sum": {
+            "ja": "取り出し方",
+            "ko": "꺼내는 방법",
+            "en": "Ways to draw"
+          },
+          "text": {
+            "ja": "取り出し方は全部で何通り?",
+            "ko": "꺼내는 방법은 모두 몇 가지?",
+            "en": "In how many ways can the two balls be drawn?"
+          },
+          "explain": {
+            "ja": "順番を区別しないので組合せ。{answer}",
+            "ko": "순서를 구별하지 않으므로 조합입니다. {answer}",
+            "en": "Order does not matter, so it is a combination: {answer}"
+          }
+        },
+        {
+          "type": "prob",
+          "level": 2,
+          "sum": {
+            "ja": "2個とも赤の確率",
+            "ko": "둘 다 빨강일 확률",
+            "en": "P(both red)"
+          },
+          "text": {
+            "ja": "2個とも赤玉である確率は?",
+            "ko": "두 개 모두 빨간 공일 확률은?",
+            "en": "What is the probability that both are red?"
+          },
+          "explain": {
+            "ja": "(赤玉2個の選び方) ÷ (全部の取り出し方 {a1}) = {answer}",
+            "ko": "(빨간 공 2개를 고르는 방법) ÷ (전체 {a1}가지) = {answer}",
+            "en": "(Ways to choose 2 red) ÷ (all {a1} ways) = {answer}"
+          }
+        },
+        {
+          "type": "expect",
+          "level": 3,
+          "sum": {
+            "ja": "赤玉の個数の期待値",
+            "ko": "빨간 공 개수의 기댓값",
+            "en": "Expected red balls"
+          },
+          "text": {
+            "ja": "取り出した赤玉の個数の期待値は?",
+            "ko": "꺼낸 빨간 공의 개수의 기댓값은?",
+            "en": "What is the expected number of red balls drawn?"
+          },
+          "explain": {
+            "ja": "0個、1個、2個の確率にそれぞれ個数をかけて足すと {answer}",
+            "ko": "0개, 1개, 2개일 확률에 각각 개수를 곱해 더하면 {answer}",
+            "en": "Multiply the probabilities of 0, 1 and 2 red by those counts and add: {answer}"
+          }
+        }
+      ]
+    }
   ]
 }

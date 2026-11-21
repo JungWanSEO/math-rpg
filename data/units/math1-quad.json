@@ -449,5 +449,75 @@
         "en": "With height x the area is x({P} ÷ 2 − x). Completing the square gives the maximum {answer}"
       }
     }
+  ],
+  "chains": [
+    {
+      "id": "chain-quad",
+      "gen": "quad",
+      "intro": {
+        "ja": "関数 {f} について答えよ。",
+        "ko": "함수 {f}에 대하여 답하시오.",
+        "en": "Answer about the function {f}."
+      },
+      "steps": [
+        {
+          "type": "complete",
+          "level": 2,
+          "sum": {
+            "ja": "平方完成",
+            "ko": "완전제곱식",
+            "en": "Completed square"
+          },
+          "text": {
+            "ja": "平方完成した式は?",
+            "ko": "완전제곱식으로 고친 식은?",
+            "en": "What is the completed-square form?"
+          },
+          "explain": {
+            "ja": "x の係数の半分を2乗して足し引きすると {answer}",
+            "ko": "x의 계수의 절반을 제곱해 더하고 빼면 {answer}",
+            "en": "Add and subtract the square of half the x coefficient: {answer}"
+          }
+        },
+        {
+          "type": "vertex",
+          "level": 1,
+          "sum": {
+            "ja": "頂点",
+            "ko": "꼭짓점",
+            "en": "Vertex"
+          },
+          "text": {
+            "ja": "グラフの頂点は?",
+            "ko": "그래프의 꼭짓점은?",
+            "en": "What is the vertex of the graph?"
+          },
+          "explain": {
+            "ja": "{a1} より、頂点は {answer}",
+            "ko": "{a1}에서 꼭짓점은 {answer}",
+            "en": "From {a1}, the vertex is {answer}"
+          }
+        },
+        {
+          "type": "maxmin",
+          "level": 3,
+          "sum": {
+            "ja": "最大値",
+            "ko": "최댓값",
+            "en": "Maximum"
+          },
+          "text": {
+            "ja": "{s} ≦ x ≦ {t} における最大値は?",
+            "ko": "{s} ≦ x ≦ {t}에서의 최댓값은?",
+            "en": "What is the maximum for {s} ≦ x ≦ {t}?"
+          },
+          "explain": {
+            "ja": "頂点 {a2} から遠い方の端で最大になる。{answer}",
+            "ko": "꼭짓점 {a2}에서 먼 쪽 끝에서 최대가 됩니다. {answer}",
+            "en": "The maximum is at the end farther from the vertex {a2}: {answer}"
+          }
+        }
+      ]
+    }
   ]
 }

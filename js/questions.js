@@ -8,7 +8,7 @@
 // 유형의 이름은 "단원/유형" 입니다. (예: math1-trig/sinerule)
 // 플레이어가 고른 범위(유형 목록) 안에서만 문제를 냅니다.
 import { fill, pick, t } from './i18n.js';
-import { GENERATORS } from './generators.js';
+import { GENERATORS, CHAINS } from './generators.js';
 
 let catalog = null;
 const units = [];
@@ -18,6 +18,7 @@ const usedItems = new Map(); // 틀 id → 이미 낸 숫자 묶음의 번호
 const recent = [];           // 자동 생성 문제의 최근 기록 (바로 같은 문제가 나오지 않게)
 let scope = null;            // 범위: 유형 이름의 집합. null 이면 전체
 let last = null;
+const chains = [];        // 연속기 묶음 (단원 파일의 "chains")
 
 async function getJson(path) {
   const res = await fetch(path);
@@ -42,6 +43,9 @@ export async function loadAll(onStep = () => {}) {
     for (const [name, names] of Object.entries(unit.types)) {
       const key = `${unit.id}/${name}`;
       types.set(key, { key, unit, names });
+    }
+    for (const tpl of unit.chains || []) {
+      chains.push({ id: `${unit.id}/${tpl.id}`, tpl, gen: CHAINS[tpl.gen], types: tpl.steps.map((s) => `${unit.id}/${s.type}`) });
     }
     for (const tpl of unit.templates) {
       templates.push({
@@ -208,6 +212,44 @@ function shown(item) {
 // 예: "x 는 실수", "눈높이는 생각하지 않는다", "원주율은 3.14 로 계산한다"
 export function noteText(raw) {
   return raw.tpl.note ? fill(pick(raw.tpl.note), shown(raw.item)) : '';
+}
+
+// ---- 연속기: 한 상황에서 물음 (1)(2)(3) 을 이어 풉니다 ----
+// 묶음에 든 유형이 모두 이번 범위에 들어 있어야 그 묶음이 나옵니다.
+const chainPool = () => chains.filter((entry) => entry.gen && entry.types.every((key) => !scope || scope.has(key)));
+export const hasChain = () => chainPool().length > 0;
+
+// 연속기 하나를 만듭니다. 돌려주는 것: { intro(), steps: [물음, …] }
+// 물음 하나는 보통 문제와 같은 모양이라, 화면과 도감이 그대로 다룰 수 있습니다.
+export function nextChain() {
+  const pool = chainPool();
+  if (!pool.length) return null;
+  const entry = pool[rand(pool.length)];
+  const data = entry.gen();
+  const { steps: made, ...fields } = data;
+  const answers = {};
+  made.forEach((s, i) => { answers[`a${i + 1}`] = s.answer; });
+  const steps = entry.tpl.steps.map((def, i) => {
+    const options = shuffle([String(made[i].answer), ...made[i].wrong.map(String)]);
+    return {
+      raw: {
+        tpl: { text: def.text, explain: def.explain, note: def.note || entry.tpl.note, figure: entry.tpl.figure },
+        item: { ...fields, ...answers, answer: made[i].answer },
+      },
+      level: def.level,
+      type: entry.types[i],
+      options,
+      correct: options.indexOf(String(made[i].answer)),
+      sum: def.sum,
+    };
+  });
+  return { id: entry.id, intro: () => fill(pick(entry.tpl.intro), shown(fields)), steps };
+}
+// 풀어 낸 물음을 한 줄로 요약합니다. 예: "(1) 꼭짓점: (2, −1)"
+export const stepSummary = (q, index) => `(${index + 1}) ${pick(q.sum)}: ${optionText(q.raw.item.answer)}`;
+// 검사 도구용: 지금 푸는 물음을 "방금 낸 문제"로 알려 줍니다.
+export function setDebugLast(q) {
+  last = q;
 }
 
 // 자동 검사 도구가 방금 낸 문제의 정답을 확인할 때 씁니다. 게임에서는 쓰지 않습니다.
