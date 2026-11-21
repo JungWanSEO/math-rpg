@@ -1,6 +1,7 @@
 // 화면 크기에 맞추기. 스마트폰마다 화면 높이가 다르고, 브라우저의 주소 줄 때문에 실제로 보이는 높이는 더 작습니다.
 // 전투 화면에서 "지금 눌러야 하는 것"이 스크롤 없이 보이도록, 덜 중요한 것부터 차례로 줄입니다.
-//   1) 캐릭터가 나오는 그림판의 높이  2) 여백(tight)  3) 문제 그림의 크기(모자란 만큼만)  4) 글자 크기(tighter)
+//   1) 싸우는 그림의 높이(보기 좋은 높이까지)  2) 여백(tight)  3) 문제 그림의 크기(모자란 만큼만)  4) 글자 크기(tighter)
+//   5) 싸우는 그림의 높이(최소 높이까지)  — 화면에 여유가 있으면 싸우는 그림은 줄이지 않습니다.
 import { $ } from './ui.js';
 
 const viewHeight = () => (window.visualViewport ? window.visualViewport.height : window.innerHeight);
@@ -19,27 +20,35 @@ export function fitBattle() {
   const target = !$('nextBtn').hidden ? $('nextBtn') : answering ? $('answers') : $('ultBtn');
   const over = () => Math.ceil(target.getBoundingClientRect().bottom + window.scrollY + 10 - viewHeight());
 
-  let extra = over();
-  if (extra <= 0) return;
+  // 싸우는 그림은 게임의 얼굴이라 되도록 크게 남깁니다. 그래서 두 번에 나누어 줄입니다.
+  //   먼저 "보기 좋은 높이"까지만 줄이고 → 여백·문제 그림·글자를 줄인 뒤 → 그래도 모자라면 "최소 높이"까지 줄입니다.
   const natural = canvas.getBoundingClientRect().height;
-  const least = answering ? 0 : 96; // 행동을 고를 때는 캐릭터가 보여야 합니다.
-  const cut = Math.min(extra, Math.max(0, natural - least));
-  // 너무 얇게 남으면 보기 흉하므로 아예 접습니다.
-  const left = natural - cut < 48 && answering ? 0 : natural - cut;
-  canvas.style.height = `${Math.round(left)}px`;
-  extra = over();
-  if (extra <= 0) return;
+  const good = answering ? 132 : 96; // 보기 좋은 높이
+  const least = answering ? 84 : 96; // 최소 높이 (캐릭터와 적의 얼굴이 보이는 높이)
+  const shrink = (floor) => {
+    const now = canvas.getBoundingClientRect().height;
+    const cut = Math.min(over(), Math.max(0, now - floor));
+    if (cut > 0) canvas.style.height = `${Math.round(now - cut)}px`;
+    return over() <= 0;
+  };
+
+  if (over() <= 0) return;
+  if (shrink(Math.min(natural, good))) return;
   screen.classList.add('tight');
-  extra = over();
-  if (extra <= 0) return;
+  if (over() <= 0) return;
   // 그림은 모자란 만큼만 줄입니다. (너무 작아지지 않게 아래 한계를 둡니다)
   if (figure) {
     const box = figure.getBoundingClientRect();
-    const height = Math.max(Math.min(box.height, 104), box.height - extra);
+    const height = Math.max(Math.min(box.height, 104), box.height - over());
     figure.style.maxWidth = `${Math.floor((box.width * height) / box.height)}px`;
     if (over() <= 0) return;
   }
   screen.classList.add('tighter');
+  if (over() <= 0) return;
+  if (shrink(least)) return;
+  if (answering && shrink(60)) return; // 조금만 더 줄이면 들어가는 경우
+  // 아주 작은 화면: 답 버튼이 가려지는 것보다는 싸우는 그림을 접는 편이 낫습니다.
+  if (answering && over() > 24) canvas.style.height = '0px';
 }
 
 // 화면이 돌아가거나 주소 줄이 접히고 펴질 때 다시 맞춥니다.

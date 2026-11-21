@@ -903,6 +903,9 @@
             "ja": "余弦定理 a² = b² + c² − 2bc cos A より a = {answer}",
             "ko": "코사인 법칙 a² = b² + c² − 2bc cos A에서 a = {answer}",
             "en": "By the cosine rule a² = b² + c² − 2bc cos A, a = {answer}"
+          },
+          "figure": {
+            "sideA": "?"
           }
         },
         {
@@ -922,6 +925,9 @@
             "ja": "S = (1/2) × b × c × sin A = {answer}",
             "ko": "S = (1/2) × b × c × sin A = {answer}",
             "en": "S = (1/2) × b × c × sin A = {answer}"
+          },
+          "figure": {
+            "sideA": "{a1}"
           }
         },
         {
@@ -941,6 +947,9 @@
             "ja": "S = r(a + b + c) ÷ 2 に a = {a1}、S = {a2} を代入すると r = {answer}",
             "ko": "S = r(a + b + c) ÷ 2에 a = {a1}, S = {a2}를 대입하면 r = {answer}",
             "en": "Substitute a = {a1} and S = {a2} into S = r(a + b + c) ÷ 2: r = {answer}"
+          },
+          "figure": {
+            "sideA": "{a1}"
           }
         }
       ]

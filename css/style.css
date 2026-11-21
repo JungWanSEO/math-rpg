@@ -372,7 +372,8 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 /* while answering: make room for the question by folding the rest of the battle screen */
 .answering .me, .answering #actions, .answering #specialRow, .answering .intent { display: none; }
-.answering canvas { height: 150px; aspect-ratio: auto; object-fit: cover; object-position: 50% 80%; }
+/* 문제를 푸는 동안에도 싸우는 그림은 화면이 허락하는 만큼 크게 둡니다. 줄이는 일은 js/fit.js 가 합니다. */
+.answering canvas { max-height: 230px; object-fit: cover; object-position: 50% 62%; }
 
 /* title screen */
 .title { display: flex; flex-direction: column; gap: 14px; padding: 48px 20px 24px; }
@@ -465,7 +466,7 @@ button, select, .node { touch-action: manipulation; } /* 두 번 눌러 확대�
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 #app { min-height: 100dvh; }
 button, .node, .scope-item, canvas { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
-canvas { object-fit: cover; object-position: 50% 80%; }
+canvas { object-fit: cover; object-position: 50% 62%; }
 .panel { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
 
 /* question header: type on the left, hint button on the right */
