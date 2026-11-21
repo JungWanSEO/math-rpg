@@ -22,6 +22,7 @@
 <link rel="modulepreload" href="./js/figures.js">
 <link rel="modulepreload" href="./js/fit.js">
 <link rel="modulepreload" href="./js/generators.js">
+<link rel="modulepreload" href="./js/guide.js">
 <link rel="modulepreload" href="./js/i18n.js">
 <link rel="modulepreload" href="./js/main.js">
 <link rel="modulepreload" href="./js/map.js">
@@ -92,6 +93,7 @@
         <button type="button" id="titleContinue" hidden><b></b><small></small></button>
         <button type="button" id="titleNew"><b></b><small></small></button>
         <button type="button" id="titleCodex"><b data-i18n="ui.codex"></b><small data-i18n="title.codexSub"></small></button>
+        <button type="button" id="titleTutorial" hidden><b data-i18n="title.tutorial"></b><small data-i18n="title.tutorialSub"></small></button>
       </div>
       <div class="settings">
         <button type="button" class="hint sound-toggle"></button>
@@ -264,6 +266,25 @@
         </label>
       </div>
       <button type="button" class="hint" id="menuQuit" data-i18n="menu.quit"></button>
+    </div>
+  </div>
+
+  <!-- 강조 안내 (튜토리얼): 어두운 가림막 네 장, 강조 테두리, 말풍선 -->
+  <div class="guide" id="guide" hidden>
+    <div class="guide-shade" id="guideTop"></div>
+    <div class="guide-shade" id="guideBottom"></div>
+    <div class="guide-shade" id="guideLeft"></div>
+    <div class="guide-shade" id="guideRight"></div>
+    <div class="guide-block" id="guideBlock" hidden></div>
+    <div class="guide-ring" id="guideRing"></div>
+    <div class="guide-bubble" id="guideBubble" role="dialog" aria-live="polite">
+      <span class="guide-arrow" id="guideArrow"></span>
+      <p id="guideText"></p>
+      <div class="guide-foot">
+        <button type="button" class="guide-skip" id="guideSkip"></button>
+        <span id="guideStep"></span>
+        <button type="button" class="guide-next" id="guideNext" hidden></button>
+      </div>
     </div>
   </div>
 

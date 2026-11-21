@@ -156,17 +156,23 @@
     }
   },
   "tut": {
-    "start": "Tap a space on the bottom row to start a battle.",
-    "basic": "Tap Attack.",
+    "start": "Tap a space in the bottom row to set out. A battle will begin.",
+    "basic": "Tap Attack. You will get an easy question.",
     "answer": "Pick an answer to attack. There is no time limit.",
-    "skill": "Now try Skill. The question is harder, but it hits harder.",
-    "defend": "The enemy is preparing a heavy attack. Tap Defend.",
+    "skill": "Now try Skill. The question is harder but the damage is bigger.",
+    "defend": "Tap Defend to block the heavy attack.",
     "guard": "Answer correctly to block the attack completely and counter.",
     "free": "Now fight freely. Three correct answers in a row charge your ultimate.",
-    "ult": "The gauge is full. Tap the Ultimate button.",
-    "reward": "When you win, choose one upgrade. It lasts until the map ends.",
-    "map": "Choose the next space from the ones connected by a line.",
-    "skip": "Skip"
+    "ult": "The gauge is full. Tap Special for big damage with no question.",
+    "reward": "After a win you choose one upgrade. It lasts until this map ends.",
+    "map": "Choose your next space from those joined by a line.",
+    "skip": "Skip",
+    "look1": "This is the enemy’s name and HP. The yellow tag is its weakness: a correct answer of that type deals 1.5 times the damage.",
+    "look2": "This shows what the enemy will do next turn. If you answer wrongly, you take the damage written here.",
+    "look3": "This is your HP and your special gauge. Three correct answers in a row fill the gauge.",
+    "warn": "A red warning means a heavy attack. It hits even if you answer correctly; only Defend blocks it.",
+    "chain": "This is Chain. You answer parts (1), (2), (3) about one situation. Each correct answer hits harder, and a wrong answer ends it. You can use it once per battle.",
+    "next": "Next"
   },
   "mystery": {
     "spring": {
@@ -218,7 +224,9 @@
     "sub": "{subjects} · {n} types",
     "confirmTitle": "Start over?",
     "confirmCancel": "Cancel",
-    "confirmOk": "Erase and start new"
+    "confirmOk": "Erase and start new",
+    "tutorial": "Replay the tutorial",
+    "tutorialSub": "Start a new map with the guide from the beginning."
   },
   "scope": {
     "title": "Choose your range",

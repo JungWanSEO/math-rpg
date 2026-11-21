@@ -17,6 +17,7 @@ import { createScope } from './scope.js';
 import { $, show } from './ui.js';
 import { play, setSound } from './sound.js';
 import { fitBattle, watchFit } from './fit.js';
+import { showGuide, hideGuide } from './guide.js';
 
 const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
 
@@ -80,16 +81,32 @@ async function boot() {
   const persist = () => store(data);
   let screen = 'screenTitle';
 
-  // 튜토리얼 안내 줄
+  // 튜토리얼 안내: 강조 안내(말풍선)가 있으면 그것을, 없으면 위쪽 안내 줄을 보여 줍니다.
   function updateCoach() {
-    const key = tutorial.coach();
+    const menuOpen = !$('menu').hidden || !$('confirm').hidden;
+    const spec = menuOpen ? null : tutorial.guide({
+      screen,
+      choosing: screen === 'screenBattle' && battle.choosing(),
+      chainReady: screen === 'screenBattle' && battle.chainReady(),
+    });
+    if (spec) {
+      showGuide({ ...spec, onNext: spec.next, onSkip: skipTutorial });
+    } else {
+      hideGuide();
+    }
+    const key = spec ? null : tutorial.coach();
     const el = $('coach');
-    el.hidden = !key || screen === 'screenCodex' || screen === 'screenTitle' || screen === 'screenScope';
+    el.hidden = !key || screen !== 'screenBattle';
     if (key) $('coachText').textContent = t(key);
+  }
+  function skipTutorial() {
+    tutorial.skip();
+    if (screen === 'screenBattle') battle.refresh();
   }
   const tutorial = createTutorial(data, () => {
     persist();
-    updateCoach();
+    if (screen === 'screenBattle') battle.refresh(); // 눌러도 되는 버튼이 바뀌므로 다시 그립니다.
+    else updateCoach();
   });
 
   // 유형별 정답 기록 (도감, 범위 고르기, 복습에 씁니다)
@@ -152,9 +169,11 @@ async function boot() {
     $('menu').dataset.key = key;
     $('menu').hidden = false;
     $('menuResume').focus();
+    updateCoach(); // 메뉴가 열려 있는 동안에는 강조 안내를 치웁니다.
   }
   function closeMenu() {
     $('menu').hidden = true;
+    updateCoach();
   }
   $('menuBtn').addEventListener('click', openMenu);
   $('menuResume').addEventListener('click', closeMenu);
@@ -190,10 +209,7 @@ async function boot() {
   });
 
   // 튜토리얼 건너뛰기: 잠겨 있던 버튼이 바로 풀립니다.
-  $('coachSkip').addEventListener('click', () => {
-    tutorial.skip();
-    if (screen === 'screenBattle') battle.refresh();
-  });
+  $('coachSkip').addEventListener('click', skipTutorial);
 
   // 도감 열고 닫기: 닫으면 보던 화면으로 돌아갑니다.
   let beforeCodex = 'screenMap';
@@ -243,7 +259,18 @@ async function boot() {
   }
 
   // 처음 화면: 이어서 하기 / 처음부터 시작 / 도감
-  const title = createTitle({ getRun, onContinue: goMap, onNew: goScope, onCodex: openCodex });
+  const title = createTitle({
+    getRun,
+    onContinue: goMap,
+    onNew: goScope,
+    onCodex: openCodex,
+    tutorialDone: () => tutorial.done(),
+    // 튜토리얼 다시 보기: 처음부터 다시 안내하도록 돌려놓고, 새 지도를 시작합니다.
+    onTutorial() {
+      tutorial.restart();
+      goScope();
+    },
+  });
   function goTitle() {
     persist();
     title.reset();
