@@ -40,6 +40,16 @@
       "ja": "2つの円の位置関係",
       "ko": "두 원의 위치 관계",
       "en": "Two circles"
+    },
+    "menelaus": {
+      "ja": "メネラウスの定理",
+      "ko": "메넬라우스의 정리",
+      "en": "Menelaus's theorem"
+    },
+    "sides": {
+      "ja": "辺と角の大小・多面体",
+      "ko": "변과 각의 크기·다면체",
+      "en": "Sides, angles and polyhedra"
     }
   },
   "groups": [
@@ -52,7 +62,9 @@
       "types": [
         "bisector",
         "centers",
-        "ceva"
+        "ceva",
+        "sides",
+        "menelaus"
       ]
     },
     {
@@ -354,6 +366,70 @@
         "ja": "中心間の距離を、半径の和 {r1} + {r2} と差 {r1} − {r2} と比べると {answer} 本",
         "ko": "중심 사이의 거리를 반지름의 합 {r1} + {r2}, 차 {r1} − {r2}와 비교하면 {answer}개",
         "en": "Compare the distance with the sum {r1} + {r2} and the difference {r1} − {r2} of the radii: {answer}"
+      }
+    },
+    {
+      "id": "menelaus",
+      "level": 3,
+      "type": "menelaus",
+      "gen": "menelaus",
+      "text": {
+        "ja": "△ABC の辺 AB 上に点 R、辺 CA 上に点 Q、辺 BC の延長上に点 P があり、3点 P, Q, R は一直線上にある。AR : RB = {p} : {q}、BP : PC = {r} : {s} のとき、CQ : QA は?",
+        "ko": "△ABC의 변 AB 위에 점 R, 변 CA 위에 점 Q, 변 BC의 연장선 위에 점 P가 있고, 세 점 P, Q, R은 한 직선 위에 있다. AR : RB = {p} : {q}, BP : PC = {r} : {s}일 때, CQ : QA는?",
+        "en": "R lies on side AB, Q on side CA and P on the extension of side BC of △ABC, and P, Q, R are on one line. If AR : RB = {p} : {q} and BP : PC = {r} : {s}, what is CQ : QA?"
+      },
+      "figure": {
+        "kind": "menelaus",
+        "ar": "{p}",
+        "rb": "{q}",
+        "bp": "BP : PC = {r} : {s}",
+        "cq": "?"
+      },
+      "explain": {
+        "ja": "メネラウスの定理 (AR/RB) × (BP/PC) × (CQ/QA) = 1 より CQ : QA = {answer}",
+        "ko": "메넬라우스의 정리 (AR/RB) × (BP/PC) × (CQ/QA) = 1에서 CQ : QA = {answer}",
+        "en": "By Menelaus's theorem, (AR/RB) × (BP/PC) × (CQ/QA) = 1, so CQ : QA = {answer}"
+      }
+    },
+    {
+      "id": "largest-angle",
+      "level": 1,
+      "type": "sides",
+      "gen": "largestangle",
+      "text": {
+        "ja": "△ABC で BC = {a}、CA = {b}、AB = {c} のとき、最も大きい角は?",
+        "ko": "△ABC에서 BC = {a}, CA = {b}, AB = {c}일 때, 가장 큰 각은?",
+        "en": "In △ABC, BC = {a}, CA = {b} and AB = {c}. Which angle is the largest?"
+      },
+      "figure": {
+        "kind": "anytri",
+        "angleA": "",
+        "angleB": "",
+        "angleC": "",
+        "sideA": "{a}",
+        "sideB": "{b}",
+        "sideC": "{c}"
+      },
+      "explain": {
+        "ja": "最も長い辺に向かい合う角が最も大きい。{answer}",
+        "ko": "가장 긴 변과 마주 보는 각이 가장 큽니다. {answer}",
+        "en": "The largest angle is opposite the longest side: {answer}"
+      }
+    },
+    {
+      "id": "euler",
+      "level": 1,
+      "type": "sides",
+      "gen": "euler",
+      "text": {
+        "ja": "ある凸多面体は {given} である。{ask} は?",
+        "ko": "어떤 볼록다면체가 {given}이다. {ask}는?",
+        "en": "A convex polyhedron has {given}. What is its {ask}?"
+      },
+      "explain": {
+        "ja": "オイラーの多面体定理 (頂点の数) − (辺の数) + (面の数) = 2 より {answer}",
+        "ko": "오일러의 다면체 정리 (꼭짓점의 수) − (모서리의 수) + (면의 수) = 2에서 {answer}",
+        "en": "By Euler's formula, vertices − edges + faces = 2: {answer}"
       }
     }
   ]

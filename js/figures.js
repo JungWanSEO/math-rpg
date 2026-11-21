@@ -424,6 +424,26 @@ Object.assign(DRAW, {
     const B = [x0 + cols * cell, y0];
     return frame(out + dot(A, ASK) + dot(B, ASK) + small([A[0] - 12, A[1] + 6], 'A', 'middle', INK, 14) + small([B[0] + 12, B[1] + 2], 'B', 'middle', INK, 14), y0 + rows * cell + 22);
   },
+  // 메넬라우스의 정리: ar, rb 는 비의 값, bp 는 "BP : PC = …" 글, cq 는 묻는 자리
+  menelaus(L) {
+    const A = [120, 20];
+    const B = [34, 132];
+    const C = [206, 132];
+    const P = [296, 132];
+    const R = between(A, B, 0.42);
+    // 직선 PR 과 변 CA 의 교점 Q
+    const d1 = [R[0] - P[0], R[1] - P[1]];
+    const d2 = [A[0] - C[0], A[1] - C[1]];
+    const k = ((C[0] - P[0]) * d2[1] - (C[1] - P[1]) * d2[0]) / (d1[0] * d2[1] - d1[1] * d2[0]);
+    const Q = [P[0] + d1[0] * k, P[1] + d1[1] * k];
+    const G = [120, 95];
+    return frame(
+      shape([A, B, C]) + seg(C, P, LINE, 2.5, '6 5') + seg(P, along(R, P, -8), ASK, 2) + dot(P) + dot(Q) + dot(R) +
+      vertex(A, 'A', G) + vertex(B, 'B', G) + vertex(C, 'C', [C[0], 0], 15) + vertex(P, 'P', [P[0], 0], 15) + vertex(R, 'R', [R[0] + 20, R[1] + 6], 18) + small([Q[0] - 8, Q[1] + 18], 'Q', 'middle', DIM, 13) +
+      tag(beside(A, R, 14), L.ar, -1) + tag(beside(R, B, 14), L.rb, -1) + tag(beside(C, A, 26, 0.5), L.cq, 1) + tag([166, 166], L.bp),
+      182,
+    );
+  },
   // 정사면체: edge 는 모서리의 길이, h 는 높이의 이름표 (비우면 높이를 그리지 않습니다)
   tetra(L) {
     const A = [150, 16];

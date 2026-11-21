@@ -30,6 +30,16 @@
       "ja": "n 進法",
       "ko": "n진법",
       "en": "Number bases"
+    },
+    "divis": {
+      "ja": "素因数分解・倍数の判定・有限小数",
+      "ko": "소인수분해·배수의 판정·유한소수",
+      "en": "Prime factors, divisibility, terminating decimals"
+    },
+    "coord": {
+      "ja": "座標の考え方",
+      "ko": "좌표의 생각",
+      "en": "Coordinates in space"
     }
   },
   "groups": [
@@ -40,6 +50,7 @@
         "en": "Divisors and multiples"
       },
       "types": [
+        "divis",
         "gcdlcm",
         "euclid",
         "remainder"
@@ -53,7 +64,8 @@
       },
       "types": [
         "dioph",
-        "nbase"
+        "nbase",
+        "coord"
       ]
     }
   ],
@@ -206,6 +218,92 @@
         "ja": "{base} で割り続けて、余りを下から順に並べると {answer}",
         "ko": "{base}로 계속 나누어 나머지를 아래에서부터 차례로 늘어놓으면 {answer}",
         "en": "Keep dividing by {base} and read the remainders from the bottom: {answer}"
+      }
+    },
+    {
+      "id": "prime-factor",
+      "level": 1,
+      "type": "divis",
+      "gen": "primefactor",
+      "text": {
+        "ja": "{n} を素因数分解すると?",
+        "ko": "{n}을 소인수분해하면?",
+        "en": "Write {n} as a product of primes."
+      },
+      "explain": {
+        "ja": "小さい素数から順に割っていくと {answer}",
+        "ko": "작은 소수부터 차례로 나누어 가면 {answer}",
+        "en": "Divide by the smallest primes in turn: {answer}"
+      }
+    },
+    {
+      "id": "divisible-9",
+      "level": 2,
+      "type": "divis",
+      "gen": "divisible",
+      "text": {
+        "ja": "4桁の数 {num} が 9 の倍数になるとき、□ に入る数字は?",
+        "ko": "네 자리 수 {num}이 9의 배수가 될 때, □에 들어갈 숫자는?",
+        "en": "The four-digit number {num} is a multiple of 9. Which digit goes in □?"
+      },
+      "explain": {
+        "ja": "各位の数の和が 9 の倍数になればよい。{answer}",
+        "ko": "각 자리 숫자의 합이 9의 배수가 되면 됩니다. {answer}",
+        "en": "The digit sum must be a multiple of 9: {answer}"
+      }
+    },
+    {
+      "id": "finite-decimal",
+      "level": 2,
+      "type": "divis",
+      "gen": "finitedec",
+      "text": {
+        "ja": "次の分数のうち、有限小数で表せるものは?",
+        "ko": "다음 분수 중 유한소수로 나타낼 수 있는 것은?",
+        "en": "Which of these fractions is a terminating decimal?"
+      },
+      "explain": {
+        "ja": "分母の素因数が 2 と 5 だけのものを探すと {answer}",
+        "ko": "분모의 소인수가 2와 5뿐인 것을 찾으면 {answer}",
+        "en": "Look for a denominator whose only prime factors are 2 and 5: {answer}"
+      }
+    },
+    {
+      "id": "coord-dist",
+      "level": 2,
+      "type": "coord",
+      "gen": "coord3d",
+      "params": {
+        "ask": "dist"
+      },
+      "text": {
+        "ja": "座標空間で、原点 O と点 P{P} の距離は?",
+        "ko": "좌표공간에서 원점 O와 점 P{P} 사이의 거리는?",
+        "en": "In coordinate space, what is the distance from the origin O to P{P}?"
+      },
+      "explain": {
+        "ja": "OP = √(x² + y² + z²) = {answer}",
+        "ko": "OP = √(x² + y² + z²) = {answer}",
+        "en": "OP = √(x² + y² + z²) = {answer}"
+      }
+    },
+    {
+      "id": "coord-mirror",
+      "level": 1,
+      "type": "coord",
+      "gen": "coord3d",
+      "params": {
+        "ask": "mirror"
+      },
+      "text": {
+        "ja": "座標空間で、点 P{P} と {plane} 平面に関して対称な点の座標は?",
+        "ko": "좌표공간에서 점 P{P}와 {plane}평면에 대하여 대칭인 점의 좌표는?",
+        "en": "In coordinate space, which point is the mirror image of P{P} in the {plane}-plane?"
+      },
+      "explain": {
+        "ja": "{plane} 平面に関して対称な点は、残りの1つの座標の符号だけが変わる。{answer}",
+        "ko": "{plane}평면에 대하여 대칭인 점은 나머지 한 좌표의 부호만 바뀝니다. {answer}",
+        "en": "Only the coordinate not named in the {plane}-plane changes sign: {answer}"
       }
     }
   ]
