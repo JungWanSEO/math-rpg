@@ -221,6 +221,7 @@ export const hasChain = () => chainPool().length > 0;
 
 // 연속기 하나를 만듭니다. 돌려주는 것: { intro(), steps: [물음, …] }
 // 물음 하나는 보통 문제와 같은 모양이라, 화면과 도감이 그대로 다룰 수 있습니다.
+// 물음에 figure 를 적으면 묶음의 그림에 그 이름표만 덮어씁니다. (구할 것은 "?", 구한 뒤에는 "{a1}")
 export function nextChain() {
   const pool = chainPool();
   if (!pool.length) return null;
@@ -233,7 +234,7 @@ export function nextChain() {
     const options = shuffle([String(made[i].answer), ...made[i].wrong.map(String)]);
     return {
       raw: {
-        tpl: { text: def.text, explain: def.explain, note: def.note || entry.tpl.note, figure: entry.tpl.figure },
+        tpl: { text: def.text, explain: def.explain, note: def.note || entry.tpl.note, figure: entry.tpl.figure && { ...entry.tpl.figure, ...(def.figure || {}) } },
         item: { ...fields, ...answers, answer: made[i].answer },
       },
       level: def.level,
