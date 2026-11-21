@@ -216,49 +216,91 @@ button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
   border-color: var(--teal);
 }
 
-/* map: the boss is at the top, the start at the bottom */
-.map-tip { margin: 0; padding: 0 16px 6px; font-size: 12px; color: var(--muted); }
-.map { position: relative; margin: 4px 16px 0; }
+/* map: the inside of the tower. The boss is at the top, the gate at the bottom */
+.map-bar { height: 4px; margin: 0 16px 8px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.map-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--teal), var(--amber)); transition: width 0.4s; }
+.map-tip { margin: 0; padding: 0 16px 8px; font-size: 12px; color: var(--muted); }
+.map {
+  position: relative;
+  margin: 0 12px;
+  border-radius: 22px 22px 8px 8px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  /* 양옆의 돌벽과 위로 갈수록 붉어지는 탑 안쪽 */
+  background:
+    linear-gradient(90deg, rgba(8, 14, 34, 0.9) 0, rgba(8, 14, 34, 0) 9%, rgba(8, 14, 34, 0) 91%, rgba(8, 14, 34, 0.9) 100%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 52px),
+    linear-gradient(180deg, #3a1c3f 0, #1b2452 26%, #14224a 70%, #0f1a3a 100%);
+}
+.map-floor { position: absolute; left: 0; right: 0; border-bottom: 1px dashed rgba(169, 192, 230, 0.13); pointer-events: none; }
+.map-floor span { position: absolute; left: 6px; bottom: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; color: rgba(169, 192, 230, 0.45); }
+.map-floor.is-midboss { background: linear-gradient(90deg, transparent, rgba(255, 138, 90, 0.13), transparent); }
+.map-floor.is-boss { background: radial-gradient(ellipse at 50% 50%, rgba(255, 90, 90, 0.28), transparent 70%); }
+.map-floor.is-midboss span, .map-floor.is-boss span { color: #ffb08a; }
 .map-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
-.map-lines .path { stroke: var(--line); stroke-width: 2; vector-effect: non-scaling-stroke; }
-.map-lines .path.walked { stroke: var(--teal); stroke-width: 3; }
-.map-lines .path.open { stroke: var(--amber); stroke-width: 3; stroke-dasharray: 6 5; }
+.map-lines .path { fill: none; stroke: rgba(169, 192, 230, 0.28); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1 7; vector-effect: non-scaling-stroke; }
+.map-lines .path.walked { stroke: var(--teal); stroke-width: 3.5; stroke-dasharray: none; }
+.map-lines .path.open { stroke: var(--amber); stroke-width: 3; stroke-dasharray: 7 6; animation: mapFlow 0.9s linear infinite; }
+@keyframes mapFlow { to { stroke-dashoffset: -13; } }
+
 .node {
+  --c: #5aa9ff;
   position: absolute;
   transform: translate(-50%, -50%);
-  width: 72px;
-  min-height: 44px;
-  padding: 2px 4px;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.2;
-  border-bottom-width: 4px;
+  width: 46px;
+  height: 46px;
+  min-height: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--c);
+  background: radial-gradient(circle at 35% 28%, #2a3c74, #131d42 75%);
+  color: var(--c);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+  overflow: visible;
 }
+.node svg { display: block; width: 26px; height: 26px; margin: auto; }
+.node small { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: 2px; font-size: 10px; font-weight: 700; line-height: 1.2; white-space: nowrap; color: var(--muted); text-shadow: 0 1px 2px #0b1430, 0 0 4px #0b1430; pointer-events: none; }
 .node:disabled { transform: translate(-50%, -50%); }
-.node:active { transform: translate(-50%, -50%) scale(0.96); }
-.node.type-battle { border-bottom-color: #5aa9ff; }
-.node.type-elite { border-bottom-color: var(--rose); }
-.node.type-event { border-bottom-color: #9aa6c4; font-size: 18px; }
-.node.type-shop { border-bottom-color: var(--amber); }
-.node.type-rest { border-bottom-color: var(--teal); }
-.node.type-treasure { border-bottom-color: #c9a0ff; }
-.node.type-midboss { width: 96px; border-bottom-color: #ff8a5a; background: #3a2a1c; }
-.node.type-boss { width: 96px; border-bottom-color: #ff5a5a; background: #3a1c33; }
-.node.open { border-color: var(--amber); box-shadow: 0 0 0 2px var(--amber); }
-.node.done { background: #12564d; border-color: var(--teal); opacity: 1; }
-.node:disabled:not(.done) { opacity: 0.55; }
-.legend { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px 24px; }
-.legend div { display: flex; align-items: baseline; gap: 8px; font-size: 12px; }
+.node:active { transform: translate(-50%, -50%) scale(0.94); }
+.node.type-elite, .dot.type-elite { --c: var(--rose); }
+.node.type-event, .dot.type-event { --c: #c3cde6; }
+.node.type-shop, .dot.type-shop { --c: var(--amber); }
+.node.type-rest, .dot.type-rest { --c: var(--teal); }
+.node.type-treasure, .dot.type-treasure { --c: #c9a0ff; }
+.node.type-midboss, .dot.type-midboss { --c: #ff9a6a; }
+.node.type-boss, .dot.type-boss { --c: #ff6a6a; }
+.node.type-midboss, .node.type-boss { width: 60px; height: 60px; border-width: 3px; background: radial-gradient(circle at 35% 28%, #5a2c3c, #2a1430 75%); }
+.node.type-midboss svg, .node.type-boss svg { width: 34px; height: 34px; }
+.node.type-boss { box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35), 0 0 18px rgba(255, 90, 90, 0.55); }
+.node:disabled:not(.done) { opacity: 0.6; filter: saturate(0.7); }
+.node.type-midboss:disabled:not(.done), .node.type-boss:disabled:not(.done) { opacity: 0.9; filter: none; }
+.node.done { border-color: var(--teal); color: var(--teal); background: #10463f; opacity: 1; }
+.node.done small { color: var(--teal); }
+.node.open { background: radial-gradient(circle at 35% 28%, #3d4f8c, #1a2756 75%); animation: mapPulse 1.4s ease-in-out infinite; }
+.node.open small { color: var(--ink); font-size: 11px; }
+.node.type-event small { display: none; } /* 그림이 곧 이름입니다 */
+.node.picked { animation: none; box-shadow: 0 0 0 4px var(--amber); }
+@keyframes mapPulse {
+  0%, 100% { box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35), 0 0 0 2px var(--amber); }
+  50% { box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35), 0 0 0 5px rgba(255, 200, 87, 0.45), 0 0 16px rgba(255, 200, 87, 0.6); }
+}
+
+.map-gate { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; color: var(--muted); pointer-events: none; }
+.map-gate svg { width: 30px; height: 30px; }
+.map-gate small { font-size: 10px; font-weight: 700; }
+/* my piece: a pin that stands above the space I am on */
+.map-token { position: absolute; width: 18px; height: 18px; margin: -44px 0 0 -9px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--teal); border: 2px solid #eafff9; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); pointer-events: none; z-index: 2; animation: mapBob 1.2s ease-in-out infinite; }
+.map-token.walking { transition: left 0.34s ease-in-out, top 0.34s ease-in-out; animation: none; }
+@keyframes mapBob { 50% { margin-top: -49px; } }
+
+.legend { display: grid; grid-template-columns: 1fr; gap: 6px; padding: 14px 16px 24px; }
+.legend div { display: flex; align-items: center; gap: 8px; font-size: 12px; }
 .legend b { min-width: 64px; }
 .legend small { color: var(--muted); }
-.dot { flex: 0 0 10px; width: 10px; height: 10px; border-radius: 3px; background: #5aa9ff; align-self: center; }
-.dot.type-elite { background: var(--rose); }
-.dot.type-event { background: #9aa6c4; }
-.dot.type-shop { background: var(--amber); }
-.dot.type-rest { background: var(--teal); }
-.dot.type-treasure { background: #c9a0ff; }
-.dot.type-midboss { background: #ff8a5a; }
-.dot.type-boss { background: #ff5a5a; }
+.dot { --c: #5aa9ff; flex: 0 0 24px; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--c); color: var(--c); background: #131d42; display: grid; place-items: center; }
+.dot svg { width: 15px; height: 15px; }
+@media (prefers-reduced-motion: reduce) { .node.open, .map-token, .map-lines .path.open { animation: none; } .node.open { box-shadow: 0 0 0 3px var(--amber); } }
 
 /* shop, rest, treasure, reward, result */
 .event { display: flex; flex-direction: column; gap: 12px; padding: 18px 16px max(20px, env(safe-area-inset-bottom)); }
@@ -454,8 +496,8 @@ body.is-answering .unit span { display: none; }
   .panel, .event, .foe, .top, .me { padding-left: 12px; padding-right: 12px; }
   .actions b { font-size: 13px; }
   .title h1 { font-size: 27px; }
-  .node { width: 62px; font-size: 11px; }
-  .node.type-midboss, .node.type-boss { width: 84px; }
+  .node { width: 44px; height: 44px; }
+  .node.type-midboss, .node.type-boss { width: 56px; height: 56px; }
 }
 
 /* scope screen: the start button stays on screen however long the list is */

@@ -59,7 +59,8 @@
   "map": {
     "title": "Crossroads map",
     "progress": "Floor {n} of {total}",
-    "tip": "Pick a starting space at the bottom. You can only move along the lines."
+    "tip": "Pick a starting space from the gate. You can only climb along the paths.",
+    "gate": "Gate"
   },
   "node": {
     "battle": "Battle",
