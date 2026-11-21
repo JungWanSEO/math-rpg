@@ -427,7 +427,9 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
   }
 
   function win() {
-    stage.foeDefeat(live(() => finish('win')));
+    const big = B.kind === 'midboss' || B.kind === 'boss';
+    pulse($('screenBattle'), 'koflash');
+    stage.foeDefeat(live(() => finish('win')), t('ui.defeated'), big);
   }
 
   function finish(result) {

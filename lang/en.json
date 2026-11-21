@@ -41,7 +41,13 @@
     "dmg": "Damage {d}",
     "counterDmg": "Counter {d}",
     "weakHit": "WEAK!",
-    "reviewAnswer": "Answer: {answer}"
+    "reviewAnswer": "Answer: {answer}",
+    "defeated": "Defeated!",
+    "where": "Floor {n} / {total}",
+    "whereStart": "Tower gate · {total} floors",
+    "ok": "OK",
+    "musicOn": "Music: on",
+    "musicOff": "Music: off"
   },
   "msg": {
     "choose": "Choose an action.",
@@ -106,7 +112,7 @@
     "treasureText": "Answer correctly to open the chest.",
     "treasureOk": "The chest opened. You got {gold}G and 1 hint.",
     "treasureFail": "The lock held, but you picked up {gold}G from the floor. {explain}",
-    "clearTitle": "Unit cleared",
+    "clearTitle": "Tower cleared",
     "clearText": "You defeated the boss. You have cleared this unit {n} time(s).",
     "newRun": "Choose range",
     "overTitle": "Game over",
@@ -145,7 +151,7 @@
   },
   "codex": {
     "title": "Codex",
-    "summary": "Battles won {wins} · Units cleared {clears}",
+    "summary": "Battles won {wins} · Towers cleared {clears}",
     "monsters": "Monsters",
     "types": "Record by type",
     "unseen": "???",
@@ -376,6 +382,7 @@
   },
   "cheer": {
     "short": "Cheer {n}",
-    "text": "Cheer level {n}: until you clear the tower you also get Max HP +{hp} and take {pct}% less damage."
+    "text": "Cheer level {n}: until you clear the tower you also get Max HP +{hp} and take {pct}% less damage.",
+    "name": "Cheer"
   }
 }

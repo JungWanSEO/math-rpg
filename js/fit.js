@@ -16,8 +16,8 @@ export function fitBattle() {
   screen.classList.remove('tight', 'tighter');
 
   const answering = screen.classList.contains('answering');
-  // 지금 꼭 보여야 하는 마지막 요소: 틀린 문제 확인 중이면 "다음" 버튼, 문제를 푸는 중이면 답 버튼, 아니면 필살기 버튼
-  const target = !$('nextBtn').hidden ? $('nextBtn') : answering ? $('answers') : $('ultBtn');
+  // 지금 꼭 보여야 하는 마지막 요소: 틀린 문제 확인 중이면 "다음" 버튼, 문제를 푸는 중이면 답 버튼, 아니면 맨 아래 안내 글
+  const target = !$('nextBtn').hidden ? $('nextBtn') : answering ? $('answers') : $('notice'); // 행동을 고를 때는 아래의 안내 글까지
   const over = () => Math.ceil(target.getBoundingClientRect().bottom + window.scrollY + 10 - viewHeight());
 
   // 싸우는 그림은 게임의 얼굴이라 되도록 크게 남깁니다. 그래서 두 번에 나누어 줄입니다.

@@ -5,7 +5,7 @@ import { t } from './i18n.js';
 import { next, nextByType, explainText, typeLabel, optionText } from './questions.js';
 import { fillQuestion } from './qview.js';
 import { UPGRADES, SHOP, rollUpgrades } from './run.js';
-import { $, twoLineButton } from './ui.js';
+import { $, twoLineButton, toast } from './ui.js';
 import { play } from './sound.js';
 import { scene, hasScene, icon } from './art.js';
 
@@ -25,6 +25,9 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
     draw();
     onChange();
   }
+
+  // 무엇을 얻었는지 잠깐 알려 줍니다. 예: "단단한 줄자 · 기본 공격 피해 +1"
+  const gained = (key, ico) => toast(`${t(`${key}.name`)} · ${t(`${key}.desc`)}`, icon(ico));
 
   // ---- 화면 조각 ----
   function base(titleKey, text) {
@@ -132,6 +135,7 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
         picks.forEach((id) => {
           option(t(`up.${id}.name`), t(`up.${id}.desc`), false, () => {
             UPGRADES[id](getRun());
+            gained(`up.${id}`, id);
             draw = null;
             done();
           }, id);
@@ -149,6 +153,8 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
             if (run.gold < price) return;
             run.gold -= price;
             UPGRADES[id](run);
+            play('right');
+            gained(`up.${id}`, id);
             redraw();
           }, id, `${price}G`);
         });
@@ -313,6 +319,7 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
         picks.forEach((id) => {
           option(t(`bless.${id}`, B), t(`bless.${id}Sub`, B), false, () => {
             gifts[id]();
+            toast(`${t(`bless.${id}`, B)} · ${t(`bless.${id}Sub`, B)}`, icon(ICONS[id]));
             draw = null;
             done();
           }, ICONS[id]);

@@ -782,3 +782,36 @@ html[lang="ko"] .review p { word-break: keep-all; overflow-wrap: anywhere; }
 .legend-box[open] summary::after { transform: rotate(-135deg); margin-top: 7px; }
 .legend-box .legend { padding: 2px 14px 14px; }
 @media (prefers-reduced-motion: reduce) { .screen:not([hidden]), .review, .statusbar.low .stat.hp { animation: none; } }
+
+/* ================= feel pass ================= */
+/* toast: what you just got */
+.toast { position: fixed; left: 50%; top: max(64px, calc(env(safe-area-inset-top) + 56px)); z-index: 70; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; max-width: min(92vw, 440px); padding: 10px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; color: #0b1430; background: var(--amber); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45); pointer-events: none; }
+.toast[hidden] { display: none; }
+.toast i { flex: 0 0 auto; width: 18px; height: 18px; }
+.toast i svg { display: block; width: 100%; height: 100%; }
+.toast.show { animation: toastIn 2.2s ease-out both; }
+@keyframes toastIn { 0% { opacity: 0; transform: translate(-50%, -14px) scale(0.9); } 8% { opacity: 1; transform: translate(-50%, 0) scale(1.04); } 14% { transform: translate(-50%, 0) scale(1); } 85% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -6px); } }
+/* confetti when the tower is cleared */
+.confetti { position: fixed; inset: 0; z-index: 65; overflow: hidden; pointer-events: none; }
+.confetti i { position: absolute; top: -14px; width: 8px; height: 12px; border-radius: 2px; animation: confettiFall linear both; }
+@keyframes confettiFall { to { transform: translate(var(--drift), 105vh) rotate(var(--spin)); } }
+/* a white flash when the enemy goes down */
+#screenBattle.koflash { animation: koFlash 0.45s ease-out; }
+@keyframes koFlash { 0% { box-shadow: inset 0 0 0 100vmax rgba(255, 255, 255, 0.4); } 100% { box-shadow: inset 0 0 0 100vmax rgba(255, 255, 255, 0); } }
+/* effect tags are buttons: tap to read what they do */
+button.stat.tag { min-height: 0; line-height: 1.5; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+/* three settings in a row: sound, music, language */
+.settings { flex-wrap: wrap; }
+.settings > * { min-width: 0; font-size: 13px; }
+.settings .hint { padding-left: 6px; padding-right: 6px; }
+.settings .hint[aria-pressed="false"] { color: var(--muted); }
+.settings .lang { flex: 1 1 100%; }
+/* codex: a face for every monster you have met */
+.codex-card.with-face { display: grid; grid-template-columns: 64px 1fr; column-gap: 12px; align-items: center; }
+.codex-card.with-face img { grid-row: 1 / span 4; width: 64px; height: 64px; border-radius: 12px; background: #14224a; border: 1px solid var(--line); }
+.codex-card.with-face > :not(img) { grid-column: 2; }
+@media (prefers-reduced-motion: reduce) { .toast.show { animation: none; } #screenBattle.koflash { animation: none; } }
+/* top bar: the small line never wraps, the buttons never squeeze */
+.unit { min-width: 0; }
+.unit span, .unit strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top-btn { flex: 0 0 auto; white-space: nowrap; }

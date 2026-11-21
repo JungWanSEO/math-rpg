@@ -5,7 +5,8 @@ import { scopeTree, typeLabel, hasType } from './questions.js';
 import { statusOf } from './scope.js';
 import { $ } from './ui.js';
 
-export function createCodex({ data, monsters }) {
+export function createCodex({ data, monsters, portrait = () => '' }) {
+  const faces = {}; // 몬스터 얼굴 그림 (한 번 그리면 다시 씁니다)
   function card(title, lines, badge) {
     const el = document.createElement('div');
     el.className = 'codex-card';
@@ -50,7 +51,19 @@ export function createCodex({ data, monsters }) {
     for (const m of met) {
       const lines = [t('codex.mistake', { text: pick(m.mistake) })];
       if (hasType(m.weak)) lines.push(t('ui.weak', { type: typeLabel(m.weak) }));
-      mBox.appendChild(card(pick(m.name), lines));
+      const el = card(pick(m.name), lines);
+      // 몬스터 탭을 볼 때만 얼굴을 그립니다. (전투 그림판을 잠깐 빌려 그리므로)
+      if (tab === 'monsters') {
+        if (!(m.id in faces)) faces[m.id] = portrait(m.id);
+        if (faces[m.id]) {
+          const img = document.createElement('img');
+          img.src = faces[m.id];
+          img.alt = '';
+          el.classList.add('with-face');
+          el.prepend(img);
+        }
+      }
+      mBox.appendChild(el);
     }
     if (met.length < monsters.length) mBox.appendChild(card(t('codex.unseen'), [t('codex.unseenLeft', { n: monsters.length - met.length })]));
 

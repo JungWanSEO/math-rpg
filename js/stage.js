@@ -884,13 +884,57 @@ export function createStage(canvas) {
       if (!S.foe.gone && S.foe.dead === 0) S.foe.spec = 1;
     },
     // 적이 쓰러짐
-    foeDefeat(done) {
+    // 적이 쓰러짐. text: 떠오르는 글("격파!"), big: 중간 보스·보스의 더 큰 연출
+    foeDefeat(done, text = '', big = false) {
       S.foe.dead = 1;
-      after(0.2, () => {
-        burst(S.foe.x, S.foe.y, '#ffc857', 34);
-        S.shake = 5;
+      S.shake = big ? 16 : 9;
+      slash(S.foe.x, S.foe.y, '#ffc857', true);
+      ring(S.foe.x, S.foe.y, '#ffffff');
+      after(0.12, () => {
+        burst(S.foe.x, S.foe.y, '#ffc857', big ? 46 : 34);
+        burst(S.foe.x, S.foe.y, '#eef6ff', 16);
+        ring(S.foe.x, S.foe.y, '#ffc857');
+        if (text) num(S.foe.x, S.foe.y - 62, text, '#ffc857', big ? 34 : 26);
       });
-      after(0.9, done);
+      if (big) {
+        // 큰 적은 여기저기서 연달아 터집니다.
+        for (let i = 1; i <= 4; i++) {
+          after(0.15 + i * 0.16, () => {
+            const x = S.foe.x + (Math.random() - 0.5) * 90;
+            const y = S.foe.y + (Math.random() - 0.5) * 70;
+            burst(x, y, i % 2 ? '#8ff0ff' : '#ff9db0', 22);
+            ring(x, y, i % 2 ? '#8ff0ff' : '#ff9db0');
+            S.shake = 10;
+          });
+        }
+      }
+      after(big ? 1.35 : 0.95, done);
+    },
+    // 도감용 얼굴 그림: 그 몬스터만 그려서 작은 그림(data URL)으로 돌려줍니다.
+    portrait(kind) {
+      try {
+        const dpr = canvas.width / W;
+        ctx.save();
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = '#14224a';
+        ctx.fillRect(0, 0, W, H);
+        ell(264, 176, 40, 6, '#0b1430');
+        const calm = { x: 264, y: 112, lunge: 0, hit: 0, dead: 0, gone: false, spawn: 0, spec: 0, flag: false };
+        ctx.translate(calm.x, calm.y);
+        (FOE_DRAW[kind] || drawTwins)(calm);
+        ctx.restore();
+        const size = 120;
+        const off = document.createElement('canvas');
+        off.width = size * 2;
+        off.height = size * 2;
+        off.getContext('2d').drawImage(canvas, (264 - 66) * dpr, (112 - 76) * dpr, 132 * dpr, 132 * dpr, 0, 0, size * 2, size * 2);
+        const url = off.toDataURL('image/png');
+        draw();
+        return url || '';
+      } catch (e) {
+        return '';
+      }
     },
   };
 }

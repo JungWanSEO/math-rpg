@@ -15,6 +15,7 @@ const { window } = dom; window.scrollTo = () => {};
 const noop = new Proxy(function () {}, { get: (t, k) => (k === Symbol.toPrimitive ? () => 1 : k === 'canvas' ? {} : noop), apply: () => noop, set: () => true });
 window.HTMLCanvasElement.prototype.getContext = () => noop;
 window.Element.prototype.scrollIntoView = () => {};
+window.HTMLCanvasElement.prototype.toDataURL = () => ''; // 봇은 그림을 보지 않습니다
 let frames = [];
 const g = globalThis;
 g.window = window; g.document = window.document; g.localStorage = window.localStorage;

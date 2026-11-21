@@ -14,11 +14,11 @@ import { createCodex } from './codex.js';
 import { createTutorial } from './tutorial.js';
 import { createTitle } from './title.js';
 import { createScope } from './scope.js';
-import { $, show } from './ui.js';
-import { play, setSound } from './sound.js';
+import { $, show, celebrate } from './ui.js';
+import { play, setSound, setMusic, music, wake } from './sound.js';
 import { fitBattle, watchFit } from './fit.js';
 import { showGuide, hideGuide } from './guide.js';
-import { createData, inIosSafariTab } from './data.js';
+import { createData, inIosSafariTab, ask } from './data.js';
 import { fillIcons, icon } from './art.js';
 
 const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
@@ -73,9 +73,27 @@ async function boot() {
       play('right');
     });
   });
+  // 배경 음악 켜고 끄기 (효과음과 따로 켜고 끕니다)
+  setMusic(data.music !== false);
+  function renderMusic() {
+    document.querySelectorAll('.music-toggle').forEach((btn) => {
+      btn.textContent = t(data.music !== false ? 'ui.musicOn' : 'ui.musicOff');
+      btn.setAttribute('aria-pressed', String(data.music !== false));
+    });
+  }
+  document.querySelectorAll('.music-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      data.music = data.music === false;
+      setMusic(data.music);
+      store(data);
+      renderMusic();
+    });
+  });
+  document.addEventListener('pointerdown', wake, { passive: true }); // 브라우저는 화면을 누른 뒤에야 소리를 허락합니다.
   // 버튼을 누를 때의 짧은 소리 (답 버튼은 정답·오답 소리가 따로 납니다)
   document.addEventListener('click', (event) => {
     const btn = event.target.closest && event.target.closest('button');
+    wake();
     if (btn && !btn.closest('#answers, #evAnswers') && !btn.classList.contains('sound-toggle')) play('tap');
   });
 
@@ -128,17 +146,30 @@ async function boot() {
   // 위쪽 상태 줄
   function onChange() {
     const run = getRun();
-    $('subjectName').textContent = subjectNames(run.scope).join(' · ');
-    $('unitName').textContent = t('ui.scopeCount', { n: run.scope.length, total: allTypeKeys().length });
+    // 위쪽 줄: 큰 글씨는 지금 몇 층인지, 작은 글씨는 이번 판의 범위
+    const spot = run.nodes.find((n) => n.id === (run.pending ?? run.at));
+    $('subjectName').textContent = `${subjectNames(run.scope).join(' · ')} · ${t('ui.scopeCount', { n: run.scope.length, total: allTypeKeys().length })}`;
+    $('unitName').textContent = spot ? t('ui.where', { n: spot.floor + 1, total: run.floors }) : t('ui.whereStart', { total: run.floors });
     // 체력·골드·힌트는 그림이 붙은 칩으로, 지금 걸려 있는 효과는 색 딱지로 보여 줍니다.
     const chips = [
       ['hp', 'maxhp', `${Math.max(0, run.hp)}/${run.maxHp}`],
       ['gold', 'coin', `${run.gold}G`],
       ['hints', 'hint', String(run.hints)],
     ];
-    if (run.ascend) chips.push(['tag ascend', '', t('ascend.short', { n: run.ascend })]);
-    if (run.cheer) chips.push(['tag cheer', '', t('cheer.short', { n: run.cheer })]);
-    if (run.frail > 0) chips.push(['tag frail', '', t('bless.frailLeft', { n: run.frail })]);
+    // 효과 딱지는 누르면 설명이 나옵니다.
+    const info = {};
+    if (run.ascend) {
+      chips.push(['tag ascend', '', t('ascend.short', { n: run.ascend })]);
+      info.ascend = [t('ascend.name'), Array.from({ length: run.ascend }, (_, i) => t(`ascend.l${i + 1}`)).join('\n')];
+    }
+    if (run.cheer) {
+      chips.push(['tag cheer', '', t('cheer.short', { n: run.cheer })]);
+      info.cheer = [t('cheer.name'), t('cheer.text', { n: run.cheer, hp: CONFIG.cheer.hp * run.cheer, pct: Math.round(CONFIG.cheer.guard * run.cheer * 100) })];
+    }
+    if (run.frail > 0) {
+      chips.push(['tag frail', '', t('bless.frailLeft', { n: run.frail })]);
+      info.frail = [t('bless.frail'), t('bless.frailSub', CONFIG.bless)];
+    }
     const label = t('ui.status', { hp: Math.max(0, run.hp), max: run.maxHp, gold: run.gold, hints: run.hints });
     const bar = $('runStatus');
     if (bar.dataset.shown !== chips.join('|')) { // 바뀌었을 때만 다시 그립니다
@@ -146,8 +177,13 @@ async function boot() {
       bar.setAttribute('aria-label', label);
       bar.innerHTML = '';
       for (const [cls, ico, text] of chips) {
-        const chip = document.createElement('span');
+        const kind = cls.split(' ')[1];
+        const chip = document.createElement(info[kind] ? 'button' : 'span');
         chip.className = `stat ${cls}`;
+        if (info[kind]) {
+          chip.type = 'button';
+          chip.addEventListener('click', () => ask({ title: info[kind][0], text: info[kind][1], buttons: [{ label: t('ui.ok'), kind: 'primary' }] }));
+        }
         if (ico) chip.innerHTML = icon(ico);
         chip.append(text);
         bar.appendChild(chip);
@@ -161,11 +197,12 @@ async function boot() {
   const battle = createBattle({ stage, getRun, record, tutorial, onChange });
   const events = createEvents({ getRun, data, record, onChange, persist });
   const map = createMap({ getRun, onPick, getWins: () => data.wins });
-  const codex = createCodex({ data, monsters });
+  const codex = createCodex({ data, monsters, portrait: (id) => stage.portrait(id) });
 
   function go(name) {
     screen = name;
     show(name);
+    if (name !== 'screenBattle') music('calm'); // 전투가 아니면 잔잔한 곡
     window.scrollTo(0, 0); // 긴 화면에서 넘어와도 맨 위부터 보이게
     const menu = name === 'screenTitle' || name === 'screenScope' || name === 'screenData';
     // 도감은 지도와 이벤트 화면에서만 엽니다. (전투 중에는 숨김)
@@ -354,6 +391,7 @@ async function boot() {
     const monster = monsters.find((m) => m.id === node.monster) || monsters[0];
     if (!node.weak || !run.scope.includes(node.weak)) node.weak = chooseWeak(monster);
     run.lastFoe = monster.id;
+    music(kind === 'midboss' || kind === 'boss' ? 'boss' : 'battle');
     data.seen[monster.id] = true;
     persist();
 
@@ -393,6 +431,7 @@ async function boot() {
         data.run = newRun(run.scope);
         persist();
         events.clear(gold, goScope, opened ? level + 1 : 0);
+        celebrate();
       } else {
         persist();
         events.reward(gold, () => {
@@ -442,11 +481,13 @@ async function boot() {
       if (screen === 'screenData') dataScreen.render();
       if (!$('menu').hidden) $('menuText').textContent = t($('menu').dataset.key);
       renderSound();
+      renderMusic();
       onChange();
     });
   });
 
   renderSound();
+  renderMusic();
   watchFit();
   goTitle();
   document.body.classList.add('ready'); // 불러오기 끝: 진행 막대를 치우고 버튼을 보여 줍니다.
