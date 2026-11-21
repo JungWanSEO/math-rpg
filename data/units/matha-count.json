@@ -45,6 +45,21 @@
       "ja": "反復試行・和事象の確率",
       "ko": "반복시행·합사건의 확률",
       "en": "Repeated trials and unions"
+    },
+    "grouping": {
+      "ja": "組分け・条件のついた順列と組合せ",
+      "ko": "조 나누기·조건이 붙은 순열과 조합",
+      "en": "Grouping and conditional arrangements"
+    },
+    "independent": {
+      "ja": "独立な試行・乗法定理",
+      "ko": "독립시행·곱셈정리",
+      "en": "Independent trials and the multiplication rule"
+    },
+    "bayes": {
+      "ja": "原因の確率",
+      "ko": "원인의 확률",
+      "en": "Probability of causes"
     }
   },
   "groups": [
@@ -58,7 +73,8 @@
         "perm",
         "comb",
         "arrange",
-        "counting"
+        "counting",
+        "grouping"
       ]
     },
     {
@@ -71,7 +87,9 @@
         "prob",
         "conditional",
         "expect",
-        "repeated"
+        "repeated",
+        "independent",
+        "bayes"
       ]
     }
   ],
@@ -322,6 +340,253 @@
         "ja": "それぞれの個数を足して、両方の倍数を1回引く。{answer}",
         "ko": "각각의 개수를 더하고, 둘 다의 배수를 한 번 뺍니다. {answer}",
         "en": "Add the two counts and subtract the multiples of both once: {answer}"
+      }
+    },
+    {
+      "id": "group-plain",
+      "level": 3,
+      "type": "grouping",
+      "gen": "grouping",
+      "text": {
+        "ja": "{n} 人を {size} 人ずつ {groups} つの組に分ける方法は何通り?",
+        "ko": "{n}명을 {size}명씩 {groups}개의 조로 나누는 방법은 몇 가지?",
+        "en": "In how many ways can {n} people be split into {groups} groups of {size}?"
+      },
+      "note": {
+        "ja": "人はすべて区別し、組は区別しない。",
+        "ko": "사람은 모두 구별하고, 조는 구별하지 않는다.",
+        "en": "The people are distinguishable; the groups are not."
+      },
+      "explain": {
+        "ja": "組に名前をつけて分けてから、組の並べかえ {groups}! で割ると {answer}",
+        "ko": "조에 이름을 붙여 나눈 뒤, 조끼리 자리를 바꾸는 {groups}!로 나누면 {answer}",
+        "en": "Split into named groups first, then divide by {groups}! for the order of the groups: {answer}"
+      }
+    },
+    {
+      "id": "group-named",
+      "level": 2,
+      "type": "grouping",
+      "gen": "grouping",
+      "params": {
+        "labelled": true
+      },
+      "text": {
+        "ja": "{n} 人を {size} 人ずつ、名前のついた {groups} つの部屋に分ける方法は何通り?",
+        "ko": "{n}명을 {size}명씩, 이름이 붙은 {groups}개의 방에 나누어 넣는 방법은 몇 가지?",
+        "en": "In how many ways can {n} people be put into {groups} named rooms, {size} in each?"
+      },
+      "note": {
+        "ja": "人はすべて区別する。",
+        "ko": "사람은 모두 서로 구별한다.",
+        "en": "All the people are distinguishable."
+      },
+      "explain": {
+        "ja": "部屋ごとに順に選ぶ。部屋は区別するので割らない。{answer}",
+        "ko": "방마다 차례로 뽑습니다. 방은 구별하므로 나누지 않습니다. {answer}",
+        "en": "Choose room by room. The rooms are different, so do not divide: {answer}"
+      }
+    },
+    {
+      "id": "perm-adjacent",
+      "level": 2,
+      "type": "grouping",
+      "gen": "permcond",
+      "params": {
+        "ask": "adjacent"
+      },
+      "text": {
+        "ja": "{n} 人が1列に並ぶとき、特定の2人が隣り合う並び方は何通り?",
+        "ko": "{n}명이 한 줄로 설 때, 특정한 두 사람이 이웃하는 방법은 몇 가지?",
+        "en": "{n} people line up. In how many ways are two particular people next to each other?"
+      },
+      "note": {
+        "ja": "人はすべて区別する。",
+        "ko": "사람은 모두 서로 구별한다.",
+        "en": "All the people are distinguishable."
+      },
+      "explain": {
+        "ja": "2人を1つにまとめて並べ、2人の入れかえ 2 通りをかけると {answer}",
+        "ko": "두 사람을 하나로 묶어 세운 뒤, 두 사람이 자리를 바꾸는 2가지를 곱하면 {answer}",
+        "en": "Treat the pair as one, arrange, then multiply by 2 for their order: {answer}"
+      }
+    },
+    {
+      "id": "perm-ends",
+      "level": 2,
+      "type": "grouping",
+      "gen": "permcond",
+      "params": {
+        "ask": "ends"
+      },
+      "text": {
+        "ja": "{n} 人が1列に並ぶとき、特定の2人が両端にくる並び方は何通り?",
+        "ko": "{n}명이 한 줄로 설 때, 특정한 두 사람이 양 끝에 오는 방법은 몇 가지?",
+        "en": "{n} people line up. In how many ways are two particular people at the two ends?"
+      },
+      "note": {
+        "ja": "人はすべて区別する。",
+        "ko": "사람은 모두 서로 구별한다.",
+        "en": "All the people are distinguishable."
+      },
+      "explain": {
+        "ja": "両端の並べ方 2 通り × 残りの人の並べ方 = {answer}",
+        "ko": "양 끝에 서는 방법 2가지 × 나머지 사람이 서는 방법 = {answer}",
+        "en": "2 ways for the ends × the arrangements of the others = {answer}"
+      }
+    },
+    {
+      "id": "comb-cond",
+      "level": 2,
+      "type": "grouping",
+      "gen": "combcond",
+      "text": {
+        "ja": "男子 {a} 人、女子 {b} 人の中から、男子 {p} 人と女子 {q} 人を選ぶ方法は何通り?",
+        "ko": "남자 {a}명, 여자 {b}명 중에서 남자 {p}명과 여자 {q}명을 뽑는 방법은 몇 가지?",
+        "en": "From {a} boys and {b} girls, in how many ways can {p} boys and {q} girls be chosen?"
+      },
+      "note": {
+        "ja": "人はすべて区別する。",
+        "ko": "사람은 모두 서로 구별한다.",
+        "en": "All the people are distinguishable."
+      },
+      "explain": {
+        "ja": "男子の選び方 × 女子の選び方 = {answer}",
+        "ko": "남자를 뽑는 방법 × 여자를 뽑는 방법 = {answer}",
+        "en": "(Ways to choose the boys) × (ways to choose the girls) = {answer}"
+      }
+    },
+    {
+      "id": "homogeneous",
+      "level": 3,
+      "type": "counting",
+      "gen": "homogeneous",
+      "text": {
+        "ja": "{n} 種類の果物から、重複を許して {r} 個選ぶ方法は何通り?",
+        "ko": "{n}종류의 과일에서 중복을 허락하여 {r}개를 고르는 방법은 몇 가지?",
+        "en": "In how many ways can {r} fruits be chosen from {n} kinds, with repetition allowed?"
+      },
+      "note": {
+        "ja": "選ばない種類があってもよい。",
+        "ko": "고르지 않는 종류가 있어도 된다.",
+        "en": "Some kinds may not be chosen at all."
+      },
+      "explain": {
+        "ja": "{r} 個の ○ と仕切り ({n} − 1) 本を並べる方法と同じ。{answer}",
+        "ko": "○ {r}개와 칸막이 ({n} − 1)개를 늘어놓는 방법과 같습니다. {answer}",
+        "en": "It equals arranging {r} circles and ({n} − 1) dividers: {answer}"
+      }
+    },
+    {
+      "id": "indep-both",
+      "level": 2,
+      "type": "independent",
+      "gen": "indep",
+      "params": {
+        "ask": "both"
+      },
+      "text": {
+        "ja": "A が的に当てる確率は {p1}、B が当てる確率は {p2} である。2人が1回ずつ投げるとき、2人とも当てる確率は?",
+        "ko": "A가 과녁을 맞힐 확률은 {p1}, B가 맞힐 확률은 {p2}이다. 두 사람이 한 번씩 던질 때, 둘 다 맞힐 확률은?",
+        "en": "A hits the target with probability {p1} and B with probability {p2}. If each throws once, what is the probability that both hit?"
+      },
+      "note": {
+        "ja": "2人の結果は互いに影響しない。",
+        "ko": "두 사람의 결과는 서로 영향을 주지 않는다.",
+        "en": "The two results do not affect each other."
+      },
+      "explain": {
+        "ja": "独立な試行なので確率をかけて {answer}",
+        "ko": "독립시행이므로 확률을 곱하면 {answer}",
+        "en": "The trials are independent, so multiply: {answer}"
+      }
+    },
+    {
+      "id": "indep-atleast",
+      "level": 3,
+      "type": "independent",
+      "gen": "indep",
+      "params": {
+        "ask": "atleast"
+      },
+      "text": {
+        "ja": "A が的に当てる確率は {p1}、B が当てる確率は {p2} である。2人が1回ずつ投げるとき、少なくとも1人が当てる確率は?",
+        "ko": "A가 과녁을 맞힐 확률은 {p1}, B가 맞힐 확률은 {p2}이다. 두 사람이 한 번씩 던질 때, 적어도 한 사람이 맞힐 확률은?",
+        "en": "A hits the target with probability {p1} and B with probability {p2}. If each throws once, what is the probability that at least one hits?"
+      },
+      "note": {
+        "ja": "2人の結果は互いに影響しない。",
+        "ko": "두 사람의 결과는 서로 영향을 주지 않는다.",
+        "en": "The two results do not affect each other."
+      },
+      "explain": {
+        "ja": "1 − (2人とも外す確率) = {answer}",
+        "ko": "1 − (둘 다 못 맞힐 확률) = {answer}",
+        "en": "1 − (probability that both miss) = {answer}"
+      }
+    },
+    {
+      "id": "multiply-rr",
+      "level": 2,
+      "type": "independent",
+      "gen": "multiply",
+      "params": {
+        "ask": "rr"
+      },
+      "text": {
+        "ja": "赤玉 {r} 個、白玉 {w} 個が入った袋から、玉を1個ずつ続けて2個取り出す。2個とも赤玉である確率は?",
+        "ko": "빨간 공 {r}개, 흰 공 {w}개가 든 주머니에서 공을 한 개씩 차례로 두 개 꺼낸다. 두 개 모두 빨간 공일 확률은?",
+        "en": "A bag holds {r} red and {w} white balls. Two are drawn one after another. What is the probability that both are red?"
+      },
+      "note": {
+        "ja": "取り出した玉はもとに戻さない。",
+        "ko": "꺼낸 공은 되돌려 놓지 않는다.",
+        "en": "Drawn balls are not put back."
+      },
+      "explain": {
+        "ja": "(1個目が赤の確率) × (そのとき2個目も赤の確率) = {answer}",
+        "ko": "(첫 번째가 빨강일 확률) × (그때 두 번째도 빨강일 확률) = {answer}",
+        "en": "P(first red) × P(second red given the first was red) = {answer}"
+      }
+    },
+    {
+      "id": "multiply-rw",
+      "level": 2,
+      "type": "independent",
+      "gen": "multiply",
+      "params": {
+        "ask": "rw"
+      },
+      "text": {
+        "ja": "赤玉 {r} 個、白玉 {w} 個が入った袋から、玉を1個ずつ続けて2個取り出す。1個目が赤玉、2個目が白玉である確率は?",
+        "ko": "빨간 공 {r}개, 흰 공 {w}개가 든 주머니에서 공을 한 개씩 차례로 두 개 꺼낸다. 첫 번째가 빨간 공, 두 번째가 흰 공일 확률은?",
+        "en": "A bag holds {r} red and {w} white balls. Two are drawn one after another. What is the probability that the first is red and the second is white?"
+      },
+      "note": {
+        "ja": "取り出した玉はもとに戻さない。",
+        "ko": "꺼낸 공은 되돌려 놓지 않는다.",
+        "en": "Drawn balls are not put back."
+      },
+      "explain": {
+        "ja": "(1個目が赤の確率) × (そのとき2個目が白の確率) = {answer}",
+        "ko": "(첫 번째가 빨강일 확률) × (그때 두 번째가 흰색일 확률) = {answer}",
+        "en": "P(first red) × P(second white given the first was red) = {answer}"
+      }
+    },
+    {
+      "id": "bayes",
+      "level": 3,
+      "type": "bayes",
+      "gen": "bayes",
+      "text": {
+        "ja": "ある製品を、機械 A が全体の {share}%、機械 B が {rest}% 作っている。不良品の割合は A が {a}%、B が {b}% である。取り出した1個が不良品であったとき、それが A の製品である確率は?",
+        "ko": "어떤 제품을 기계 A가 전체의 {share}%, 기계 B가 {rest}% 만든다. 불량품의 비율은 A가 {a}%, B가 {b}%이다. 꺼낸 한 개가 불량품이었을 때, 그것이 A의 제품일 확률은?",
+        "en": "Machine A makes {share}% of a product and machine B makes {rest}%. {a}% of A's and {b}% of B's are defective. Given that an item is defective, what is the probability that A made it?"
+      },
+      "explain": {
+        "ja": "(A の不良品) ÷ (不良品全体) = {share} × {a} ÷ ({share} × {a} + {rest} × {b}) = {answer}",
+        "ko": "(A의 불량품) ÷ (불량품 전체) = {share} × {a} ÷ ({share} × {a} + {rest} × {b}) = {answer}",
+        "en": "(A's defective items) ÷ (all defective items) = {share} × {a} ÷ ({share} × {a} + {rest} × {b}) = {answer}"
       }
     }
   ]

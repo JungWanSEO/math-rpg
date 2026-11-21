@@ -259,6 +259,10 @@
     "reject": "Chance is an unlikely explanation; we can judge that it works",
     "keep": "This could happen by chance; we cannot judge that it works",
     "surely": "It is proven that it always works",
-    "never": "It is proven that it does not work"
+    "never": "It is proven that it does not work",
+    "allsame": "all three are equal",
+    "vertices": "number of vertices",
+    "edges": "number of edges",
+    "faces": "number of faces"
   }
 }

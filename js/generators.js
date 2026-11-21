@@ -1625,3 +1625,169 @@ GENERATORS.setop = function setop(params) {
   const [answer, ...rest] = labelled(params.options.map((k) => all[k]));
   return item({ A: setStr(A), B: setStr(B) }, answer, rest);
 };
+
+// =====================================================================
+// 数学A 마무리
+// =====================================================================
+
+Object.assign(GENERATORS, {
+  // 조 나누기. params.labelled 이면 조에 이름(방 A, B, …)이 있어 서로 구별합니다.
+  grouping(params) {
+    const [n, size, groups] = pickOne([[4, 2, 2], [6, 2, 3], [6, 3, 2], [8, 4, 2], [8, 2, 4], [9, 3, 3], [10, 5, 2]]);
+    const named = fact(n) / fact(size) ** groups; // 조를 구별할 때
+    const plain = named / fact(groups);            // 조를 구별하지 않을 때
+    const answer = params.labelled ? named : plain;
+    return item({ n, size, groups }, int(answer), [int(params.labelled ? plain : named), int(nCr(n, size)), int(fact(n) / fact(size))],
+      [int(answer * 2), int(answer + groups), int(nPr(n, size)), int(answer + 1)]);
+  },
+
+  // 조건이 붙은 순열. params.ask 는 'adjacent' (두 사람이 이웃) 또는 'ends' (두 사람이 양 끝)
+  permcond(params) {
+    const n = pickOne(range(4, 7));
+    const answer = params.ask === 'adjacent' ? 2 * fact(n - 1) : 2 * fact(n - 2);
+    return item({ n }, int(answer), [int(answer / 2), int(fact(n)), int(params.ask === 'adjacent' ? 2 * fact(n - 2) : 2 * fact(n - 1))],
+      [int(fact(n) / 2), int(answer * 2), int(fact(n - 1) + 2)]);
+  },
+
+  // 남녀를 나누어 뽑는 조합
+  combcond() {
+    const a = pickOne(range(3, 7));
+    const b = pickOne(range(3, 6));
+    const p = pickOne(range(1, Math.min(3, a - 1)));
+    const q = pickOne(range(1, Math.min(2, b - 1)));
+    const answer = nCr(a, p) * nCr(b, q);
+    return item({ a, b, p, q }, int(answer), [int(nCr(a, p) + nCr(b, q)), int(nCr(a + b, p + q)), int(nPr(a, p) * nPr(b, q))],
+      [int(answer + a), int(answer * 2), int(a * b), int(answer + 1)]);
+  },
+
+  // 중복조합: n 종류에서 중복을 허락해 r 개 고르기
+  homogeneous() {
+    const n = pickOne(range(2, 4));
+    const r = pickOne(range(3, 6));
+    const answer = nCr(n + r - 1, r);
+    return item({ n, r }, int(answer), [int(n ** r), int(nCr(n + r, r)), int(n * r)], [int(answer + 1), int(answer + n), int(answer * 2)]);
+  },
+
+  // 독립인 두 시행. params.ask 는 'both' (둘 다 성공) 또는 'atleast' (적어도 한쪽 성공)
+  indep(params) {
+    const [a, b] = pickOne([[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [2, 5], [3, 5]]);
+    const [c, d] = pickOne([[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [1, 5], [4, 5]].filter(([x, y]) => x !== a || y !== b));
+    const both = frac(a * c, b * d);
+    const atleast = frac(b * d - (b - a) * (d - c), b * d);
+    const fields = { p1: `${a}/${b}`, p2: `${c}/${d}` };
+    if (params.ask === 'both') return item(fields, both, [a * d + b * c < b * d ? frac(a * d + b * c, b * d) : null, atleast, frac(a + c, b + d)], [frac(a, b), frac(c, d), frac(1, b * d)]);
+    return item(fields, atleast, [both, frac((b - a) * (d - c), b * d), frac(a + c, b + d)], [frac(a, b), frac(c, d), frac(b * d - 1, b * d)]);
+  },
+
+  // 확률의 곱셈정리: 되돌려 놓지 않고 두 번 꺼내기. params.ask 는 'rr' (둘 다 빨강) 또는 'rw' (빨강, 흰색 순서)
+  multiply(params) {
+    const r = pickOne(range(2, 6));
+    const w = pickOne(range(2, 6));
+    const all = r + w;
+    const answer = params.ask === 'rr' ? frac(r * (r - 1), all * (all - 1)) : frac(r * w, all * (all - 1));
+    return item({ r, w }, answer, [params.ask === 'rr' ? frac(r * r, all * all) : frac(r * w, all * all), frac(r, all), frac(r - 1, all - 1), frac(w, all - 1)],
+      [frac(r * w * 2, all * (all - 1)), frac(1, all), frac(r, all - 1)]);
+  },
+
+  // 원인의 확률: 불량품이 A 에서 나왔을 확률
+  bayes() {
+    const share = pickOne([20, 30, 40, 50, 60, 70, 80]);
+    const a = pickOne(range(1, 5));
+    const b = pickOne(range(1, 5).filter((n) => n !== a));
+    const fromA = share * a;
+    const fromB = (100 - share) * b;
+    return item({ share, rest: 100 - share, a, b }, frac(fromA, fromA + fromB), [frac(a, a + b), frac(share, 100), frac(fromB, fromA + fromB), frac(fromA, 10000)],
+      [frac(a, 100), frac(fromA + 1, fromA + fromB + 1), frac(1, 2)]);
+  },
+
+  // 메넬라우스의 정리
+  menelaus() {
+    let p;
+    let q;
+    let r;
+    let s;
+    do {
+      [p, q, s] = [1 + rand(4), 1 + rand(4), 1 + rand(3)];
+      r = s + 1 + rand(3); // P 는 BC 의 C 쪽 연장선 위에 있으므로 BP > PC
+    } while (gcd(p, q) !== 1 || gcd(r, s) !== 1 || s * q === r * p);
+    return item({ p, q, r, s }, ratio(s * q, r * p), [ratio(r * p, s * q), ratio(r * q, s * p), ratio(s * p, r * q)], [ratio(s * q + 1, r * p), ratio(s * q, r * p + 1)]);
+  },
+
+  // 변과 각의 크기 관계: 가장 큰 각
+  largestangle() {
+    let a;
+    let b;
+    let c;
+    do {
+      [a, b, c] = [pickOne(range(3, 12)), pickOne(range(3, 12)), pickOne(range(3, 12))];
+    } while (a === b || b === c || a === c || a >= b + c || b >= a + c || c >= a + b);
+    const top = Math.max(a, b, c);
+    return fixed({ a, b, c }, top === a ? '∠A' : top === b ? '∠B' : '∠C', ['∠A', '∠B', '∠C', '@allsame']);
+  },
+
+  // 오일러의 다면체 정리 v − e + f = 2
+  euler() {
+    const [v, e, f] = pickOne([[4, 6, 4], [8, 12, 6], [6, 12, 8], [20, 30, 12], [12, 30, 20], [5, 8, 5], [6, 9, 5], [7, 12, 7], [10, 15, 7], [9, 16, 9], [12, 18, 8]]);
+    const ask = pickOne(['@vertices', '@edges', '@faces']);
+    const answer = { '@vertices': v, '@edges': e, '@faces': f }[ask];
+    const given = { '@vertices': `@edges ${e}, @faces ${f}`, '@edges': `@vertices ${v}, @faces ${f}`, '@faces': `@vertices ${v}, @edges ${e}` }[ask];
+    const sum = ask === '@edges' ? v + f : ask === '@vertices' ? e + f : v + e;
+    return item({ given, ask }, int(answer), [int(answer + 2), int(answer - 2), int(sum), int(answer + 4)], [int(answer + 1), int(answer - 1)]);
+  },
+
+  // 소인수분해
+  primefactor() {
+    let e;
+    let n;
+    do {
+      e = [rand(5), rand(4), rand(3), rand(2)];
+      n = 2 ** e[0] * 3 ** e[1] * 5 ** e[2] * 7 ** e[3];
+    } while (e.filter((x) => x > 0).length < 2 || n > 900 || n < 12);
+    const SUP = ['', '', '²', '³', '⁴'];
+    const show = (ex) => {
+      const text = [2, 3, 5, 7].map((prime, i) => (ex[i] > 0 ? `${prime}${SUP[ex[i]]}` : '')).filter(Boolean).join(' × ');
+      return { s: text, v: 2 ** ex[0] * 3 ** ex[1] * 5 ** ex[2] * 7 ** ex[3] };
+    };
+    const bump = (i, d) => e.map((x, k) => (k === i ? Math.max(0, Math.min(4, x + d)) : x));
+    const first = e.findIndex((x) => x > 0);
+    const last = e.length - 1 - [...e].reverse().findIndex((x) => x > 0);
+    return item({ n }, show(e), [show(bump(first, 1)), show(bump(last, 1)), show(bump(first, -1))], [show(bump(last, -1)), show(bump(0, 1)), show(bump(1, 1)), show(bump(2, 1))]);
+  },
+
+  // 배수의 판정: 9 의 배수가 되도록 빈칸의 숫자 정하기
+  divisible() {
+    let a;
+    let b;
+    let c;
+    let d;
+    do {
+      [a, b, c] = [1 + rand(9), rand(10), rand(10)];
+      d = (9 - ((a + b + c) % 9)) % 9;
+    } while (d === 0); // 0 과 9 가 모두 답이 되는 경우는 내지 않습니다.
+    return item({ num: `${a}${b}□${c}` }, int(d), shuffled(range(1, 8).filter((x) => x !== d)).slice(0, 5).map(int));
+  },
+
+  // 유한소수가 되는 분수 고르기
+  finitedec() {
+    const good = pickOne([[3, 8], [7, 20], [9, 25], [3, 40], [11, 16], [7, 50], [13, 80], [9, 125], [1, 32], [3, 16]]);
+    const bad = shuffled([[5, 12], [4, 15], [7, 30], [2, 9], [5, 14], [8, 21], [5, 18], [7, 24], [4, 35], [1, 6], [5, 22], [7, 45]]).slice(0, 3);
+    const show = ([n, d]) => ({ s: `${n}/${d}`, v: n / d });
+    return item({}, show(good), bad.map(show));
+  },
+
+  // 공간의 좌표. params.ask 는 'dist' (원점까지의 거리) 또는 'mirror' (좌표평면에 대한 대칭점)
+  coord3d(params) {
+    const a = nonzero(-6, 6);
+    const b = nonzero(-6, 6);
+    const c = nonzero(-6, 6);
+    const P = `(${numStr(a)}, ${numStr(b)}, ${numStr(c)})`;
+    if (params.ask === 'dist') {
+      const sq = a * a + b * b + c * c;
+      return item({ P }, surd(1, sq), [surd(1, a * a + b * b), surd(Math.abs(a) + Math.abs(b) + Math.abs(c)), surd(sq)], [surd(1, sq + 1), surd(2, sq), surd(1, b * b + c * c)]);
+    }
+    const plane = pickOne(['xy', 'yz', 'zx']);
+    const pt = (x, y, z) => ({ s: `(${numStr(x)}, ${numStr(y)}, ${numStr(z)})`, v: x * 10000.5 + y * 100.25 + z });
+    const mirror = { xy: pt(a, b, -c), yz: pt(-a, b, c), zx: pt(a, -b, c) };
+    return item({ P, plane }, mirror[plane], Object.keys(mirror).filter((k) => k !== plane).map((k) => mirror[k]), [pt(-a, -b, -c), pt(-a, -b, c), pt(a, -b, -c)]);
+  },
+});
