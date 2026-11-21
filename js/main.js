@@ -19,7 +19,7 @@ import { play, setSound } from './sound.js';
 import { fitBattle, watchFit } from './fit.js';
 import { showGuide, hideGuide } from './guide.js';
 import { createData, inIosSafariTab } from './data.js';
-import { fillIcons } from './art.js';
+import { fillIcons, icon } from './art.js';
 
 const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
 
@@ -130,19 +130,37 @@ async function boot() {
     const run = getRun();
     $('subjectName').textContent = subjectNames(run.scope).join(' · ');
     $('unitName').textContent = t('ui.scopeCount', { n: run.scope.length, total: allTypeKeys().length });
-    $('runStatus').textContent = t('ui.status', {
-      hp: Math.max(0, run.hp),
-      max: run.maxHp,
-      gold: run.gold,
-      hints: run.hints,
-    }) + (run.ascend ? ` · ${t('ascend.short', { n: run.ascend })}` : '') + (run.cheer ? ` · ${t('cheer.short', { n: run.cheer })}` : '') + (run.frail > 0 ? ` · ${t('bless.frailLeft', { n: run.frail })}` : '');
+    // 체력·골드·힌트는 그림이 붙은 칩으로, 지금 걸려 있는 효과는 색 딱지로 보여 줍니다.
+    const chips = [
+      ['hp', 'maxhp', `${Math.max(0, run.hp)}/${run.maxHp}`],
+      ['gold', 'coin', `${run.gold}G`],
+      ['hints', 'hint', String(run.hints)],
+    ];
+    if (run.ascend) chips.push(['tag ascend', '', t('ascend.short', { n: run.ascend })]);
+    if (run.cheer) chips.push(['tag cheer', '', t('cheer.short', { n: run.cheer })]);
+    if (run.frail > 0) chips.push(['tag frail', '', t('bless.frailLeft', { n: run.frail })]);
+    const label = t('ui.status', { hp: Math.max(0, run.hp), max: run.maxHp, gold: run.gold, hints: run.hints });
+    const bar = $('runStatus');
+    if (bar.dataset.shown !== chips.join('|')) { // 바뀌었을 때만 다시 그립니다
+      bar.dataset.shown = chips.join('|');
+      bar.setAttribute('aria-label', label);
+      bar.innerHTML = '';
+      for (const [cls, ico, text] of chips) {
+        const chip = document.createElement('span');
+        chip.className = `stat ${cls}`;
+        if (ico) chip.innerHTML = icon(ico);
+        chip.append(text);
+        bar.appendChild(chip);
+      }
+    }
+    bar.classList.toggle('low', run.hp / run.maxHp <= 0.3);
     updateCoach();
   }
 
   const stage = createStage($('stage'));
   const battle = createBattle({ stage, getRun, record, tutorial, onChange });
   const events = createEvents({ getRun, data, record, onChange, persist });
-  const map = createMap({ getRun, onPick });
+  const map = createMap({ getRun, onPick, getWins: () => data.wins });
   const codex = createCodex({ data, monsters });
 
   function go(name) {

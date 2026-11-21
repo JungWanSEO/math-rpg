@@ -40,19 +40,20 @@
     "chainStep": "Chain {n} / {total} · {type}",
     "dmg": "Damage {d}",
     "counterDmg": "Counter {d}",
-    "weakHit": "WEAK!"
+    "weakHit": "WEAK!",
+    "reviewAnswer": "Answer: {answer}"
   },
   "msg": {
     "choose": "Choose an action.",
     "solve": "Solve the question to attack. There is no time limit.",
     "correct": "Correct! {d} damage",
     "correctWeak": "Correct! You hit its weak point. {d} damage",
-    "wrong": "Not quite. {explain}",
+    "wrong": "Wrong! Check the answer and the solution.",
     "miss": "Miss",
     "ult": "Ultimate! {d} damage",
     "solveGuard": "Answer correctly to block the attack completely and counter.",
     "guardOk": "Perfect block! You counterattack.",
-    "guardFail": "The block failed, so you take half damage. {explain}",
+    "guardFail": "Not blocked: you took half damage. Check the answer and the solution.",
     "blocked": "Blocked",
     "bigHit": "Your attack landed, but the heavy attack hit you. Only Defend can block a heavy attack. ({d} damage)",
     "solveChain": "Answer the parts in order. A wrong answer ends the chain.",
@@ -63,7 +64,8 @@
     "title": "Crossroads map",
     "progress": "Floor {n} of {total}",
     "tip": "Pick a starting space from the gate. You can only climb along the paths.",
-    "gate": "Gate"
+    "gate": "Gate",
+    "legend": "Show the space guide"
   },
   "node": {
     "battle": "Battle",
@@ -157,7 +159,10 @@
       "open": "Not mastered",
       "progress": "In progress",
       "done": "Mastered"
-    }
+    },
+    "met": "Monsters met {n} / {total}",
+    "unseenLeft": "{n} monsters are still waiting to be met.",
+    "unitDone": "Mastered {done} / {total}"
   },
   "tut": {
     "start": "Tap a space in the bottom row to set out. A battle will begin.",

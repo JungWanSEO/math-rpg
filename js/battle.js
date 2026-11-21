@@ -85,6 +85,13 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     const hint = $('hintBtn');
     hint.hidden = B.phase !== 'answer';
     $('nextBtn').hidden = B.phase !== 'review';
+    // 틀린 순간부터 정답과 해설을 답 아래에 보여 줍니다. (배우는 순간이라 가장 잘 보이는 자리에 둡니다)
+    const missed = Boolean(showing) && B.picked >= 0 && B.picked !== B.cur.correct;
+    $('reviewBox').hidden = !missed;
+    if (missed) {
+      $('reviewAnswer').textContent = t('ui.reviewAnswer', { answer: optionText(B.cur.options[B.cur.correct]) });
+      $('reviewText').textContent = explainText(B.cur.raw);
+    }
     if (!showing) return;
 
     const run = getRun();
@@ -198,7 +205,7 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     // 문제를 푸는 동안에는 위쪽 줄들을 줄여 문제에 자리를 내 줍니다. 그다음 화면 높이에 맞춥니다.
     document.body.classList.toggle('is-answering', $('screenBattle').classList.contains('answering'));
     fitBattle();
-    if (B.phase === 'review') $('notice').scrollIntoView({ block: 'nearest' });
+    if (B.phase === 'review') $('nextBtn').scrollIntoView({ block: 'nearest' });
   }
 
   // ---- 턴 진행 ----
