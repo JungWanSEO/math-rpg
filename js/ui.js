@@ -25,3 +25,41 @@ export function twoLineButton(title, sub) {
   }
   return btn;
 }
+
+// 잠깐 떴다 사라지는 알림. ico 에는 그림(SVG 글)을 넣을 수 있습니다. 예: "단단한 줄자 획득"
+let toastTimer = 0;
+export function toast(text, ico = '') {
+  const box = $('toast');
+  if (!box) return;
+  box.innerHTML = ico ? `<i>${ico}</i>` : '';
+  const span = document.createElement('span');
+  span.textContent = text;
+  box.appendChild(span);
+  box.hidden = false;
+  box.classList.remove('show');
+  void box.offsetWidth;
+  box.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { box.hidden = true; }, 2200);
+}
+
+// 색종이가 쏟아지는 축하 연출 (탑 클리어 때)
+export function celebrate(count = 70) {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const layer = document.createElement('div');
+  layer.className = 'confetti';
+  const colors = ['#2fd9b9', '#ffc857', '#ff7d8f', '#8fb4ff', '#c9a0ff', '#eef6ff'];
+  for (let i = 0; i < count; i++) {
+    const bit = document.createElement('i');
+    bit.style.left = `${Math.random() * 100}%`;
+    bit.style.background = colors[i % colors.length];
+    bit.style.animationDuration = `${2 + Math.random() * 1.8}s`;
+    bit.style.animationDelay = `${Math.random() * 0.9}s`;
+    bit.style.setProperty('--drift', `${(Math.random() - 0.5) * 120}px`);
+    bit.style.setProperty('--spin', `${(Math.random() - 0.5) * 1400}deg`);
+    if (i % 3 === 0) bit.style.borderRadius = '50%';
+    layer.appendChild(bit);
+  }
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), 5000);
+}

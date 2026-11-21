@@ -41,7 +41,13 @@
     "dmg": "피해 {d}",
     "counterDmg": "반격 {d}",
     "weakHit": "약점!",
-    "reviewAnswer": "정답: {answer}"
+    "reviewAnswer": "정답: {answer}",
+    "defeated": "격파!",
+    "where": "탑 {n}층 / {total}층",
+    "whereStart": "탑 입구 · 전체 {total}층",
+    "ok": "확인",
+    "musicOn": "음악: 켜짐",
+    "musicOff": "음악: 꺼짐"
   },
   "msg": {
     "choose": "행동을 고르세요.",
@@ -79,7 +85,7 @@
     "treasure": "보물",
     "treasureSub": "문제를 맞히면 열림",
     "boss": "보스",
-    "bossSub": "이기면 단원 클리어",
+    "bossSub": "이기면 탑 클리어",
     "event": "?",
     "eventSub": "좋은 일일 수도, 나쁜 일일 수도",
     "midboss": "중간 보스",
@@ -106,7 +112,7 @@
     "treasureText": "문제를 맞히면 상자가 열립니다.",
     "treasureOk": "상자가 열렸습니다. {gold}G와 힌트 1개를 얻었습니다.",
     "treasureFail": "자물쇠를 풀지 못했지만 떨어진 {gold}G를 주웠습니다. {explain}",
-    "clearTitle": "단원 클리어",
+    "clearTitle": "탑 클리어",
     "clearText": "보스를 쓰러뜨렸습니다. 지금까지 {n}번 클리어했습니다.",
     "newRun": "범위 고르기로",
     "overTitle": "게임 오버",
@@ -145,7 +151,7 @@
   },
   "codex": {
     "title": "도감",
-    "summary": "이긴 전투 {wins} · 단원 클리어 {clears}",
+    "summary": "이긴 전투 {wins} · 탑 클리어 {clears}",
     "monsters": "몬스터",
     "types": "유형별 기록",
     "unseen": "???",
@@ -376,6 +382,7 @@
   },
   "cheer": {
     "short": "격려 {n}",
-    "text": "격려 {n}단계: 탑을 깰 때까지 최대 체력 +{hp}, 받는 피해 −{pct}%가 함께 적용됩니다."
+    "text": "격려 {n}단계: 탑을 깰 때까지 최대 체력 +{hp}, 받는 피해 −{pct}%가 함께 적용됩니다.",
+    "name": "격려"
   }
 }

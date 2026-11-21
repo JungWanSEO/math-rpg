@@ -103,6 +103,7 @@
       </div>
       <div class="settings">
         <button type="button" class="hint sound-toggle"></button>
+        <button type="button" class="hint music-toggle"></button>
         <label class="lang">
           <span class="sr" data-i18n="ui.language"></span>
           <select id="langSelect" class="lang-select">
@@ -332,6 +333,9 @@
     </div>
   </div>
 
+  <!-- 잠깐 떴다 사라지는 알림 (강화를 얻었을 때 등) -->
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
   <!-- 여러 버튼이 달린 확인 창 (데이터 관리에서 씁니다) -->
   <div class="menu-overlay" id="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" hidden>
     <div class="menu-box">
@@ -358,6 +362,7 @@
       <button type="button" class="primary" id="menuResume" data-i18n="menu.resume"></button>
       <div class="settings">
         <button type="button" class="hint sound-toggle"></button>
+        <button type="button" class="hint music-toggle"></button>
         <label class="lang">
           <span class="sr" data-i18n="ui.language"></span>
           <select id="langSelectMenu" class="lang-select">
