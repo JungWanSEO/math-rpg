@@ -306,5 +306,75 @@
         "en": "Only the coordinate not named in the {plane}-plane changes sign: {answer}"
       }
     }
+  ],
+  "chains": [
+    {
+      "id": "chain-int",
+      "gen": "int",
+      "intro": {
+        "ja": "2つの自然数 {a} と {b} について答えよ。",
+        "ko": "두 자연수 {a}와 {b}에 대하여 답하시오.",
+        "en": "Answer about the two natural numbers {a} and {b}."
+      },
+      "steps": [
+        {
+          "type": "gcdlcm",
+          "level": 1,
+          "sum": {
+            "ja": "最大公約数",
+            "ko": "최대공약수",
+            "en": "GCD"
+          },
+          "text": {
+            "ja": "最大公約数は?",
+            "ko": "최대공약수는?",
+            "en": "What is the greatest common divisor?"
+          },
+          "explain": {
+            "ja": "両方を割り切る最大の数は {answer}",
+            "ko": "둘을 모두 나누어떨어지게 하는 가장 큰 수는 {answer}",
+            "en": "The largest number dividing both is {answer}"
+          }
+        },
+        {
+          "type": "gcdlcm",
+          "level": 1,
+          "sum": {
+            "ja": "最小公倍数",
+            "ko": "최소공배수",
+            "en": "LCM"
+          },
+          "text": {
+            "ja": "最小公倍数は?",
+            "ko": "최소공배수는?",
+            "en": "What is the least common multiple?"
+          },
+          "explain": {
+            "ja": "{a} × {b} ÷ (最大公約数 {a1}) = {answer}",
+            "ko": "{a} × {b} ÷ (최대공약수 {a1}) = {answer}",
+            "en": "{a} × {b} ÷ (GCD {a1}) = {answer}"
+          }
+        },
+        {
+          "type": "gcdlcm",
+          "level": 2,
+          "sum": {
+            "ja": "積",
+            "ko": "곱",
+            "en": "Product"
+          },
+          "text": {
+            "ja": "最大公約数と最小公倍数の積は?",
+            "ko": "최대공약수와 최소공배수의 곱은?",
+            "en": "What is the product of the GCD and the LCM?"
+          },
+          "explain": {
+            "ja": "(最大公約数) × (最小公倍数) は2数の積 {a} × {b} に等しい。{answer}",
+            "ko": "(최대공약수) × (최소공배수)는 두 수의 곱 {a} × {b}와 같습니다. {answer}",
+            "en": "GCD × LCM equals the product {a} × {b}: {answer}"
+          }
+        }
+      ]
+    }
   ]
 }

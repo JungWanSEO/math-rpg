@@ -33,7 +33,11 @@
     "cond": "Given: {text}",
     "rotate": "Please turn your phone upright.",
     "update": "A new version is ready.",
-    "updateBtn": "Reload"
+    "updateBtn": "Reload",
+    "chain": "Chain",
+    "chainSub": "Linked questions · once",
+    "chainUsed": "Used in this battle",
+    "chainStep": "Chain {n} / {total} · {type}"
   },
   "msg": {
     "choose": "Choose an action.",
@@ -47,7 +51,10 @@
     "guardOk": "Perfect block! You counterattack.",
     "guardFail": "The block failed, so you take half damage. {explain}",
     "blocked": "Blocked",
-    "bigHit": "Your attack landed, but the heavy attack hit you. Only Defend can block a heavy attack. ({d} damage)"
+    "bigHit": "Your attack landed, but the heavy attack hit you. Only Defend can block a heavy attack. ({d} damage)",
+    "solveChain": "Answer the parts in order. A wrong answer ends the chain.",
+    "chainNext": "Correct! {d} damage. On to the next part.",
+    "chainDone": "Chain complete! Final hit: {d} damage"
   },
   "map": {
     "title": "Crossroads map",

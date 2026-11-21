@@ -175,12 +175,21 @@
         <button type="button" data-action="skill"><b data-i18n="ui.skill"></b><small id="skillSub"></small></button>
         <button type="button" data-action="defend"><b data-i18n="ui.defend"></b><small id="defendSub"></small></button>
       </div>
-      <button type="button" class="ult" id="ultBtn" data-action="ult" disabled></button>
+      <div class="special" id="specialRow">
+        <button type="button" class="chain" id="chainBtn" data-action="chain" disabled><b data-i18n="ui.chain"></b><small id="chainSub"></small></button>
+        <button type="button" class="ult" id="ultBtn" data-action="ult" disabled></button>
+      </div>
 
       <div class="question" id="question" hidden>
         <div class="q-head">
           <span class="meta" id="qMeta"></span>
           <button type="button" class="hint" id="hintBtn" hidden></button>
+        </div>
+        <!-- 연속기: 공통 지문과 이미 푼 물음 -->
+        <div class="chain-box" id="qChain" hidden>
+          <span class="chain-dots" id="qChainDots"></span>
+          <span class="chain-intro" id="qChainIntro"></span>
+          <span class="chain-done" id="qChainDone"></span>
         </div>
         <div class="figure" id="qFigure" hidden></div>
         <p id="qText"></p>

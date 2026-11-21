@@ -1791,3 +1791,106 @@ Object.assign(GENERATORS, {
     return item({ P, plane }, mirror[plane], Object.keys(mirror).filter((k) => k !== plane).map((k) => mirror[k]), [pt(-a, -b, -c), pt(-a, -b, c), pt(a, -b, -c)]);
   },
 });
+
+// =====================================================================
+// 연속기: 한 상황에서 물음 (1)(2)(3) 을 이어 푸는 문제
+// 돌려주는 것: { ...지문과 그림에 들어갈 값, steps: [{ answer, wrong }, …] }
+// 앞 물음의 정답은 뒤 물음의 문장에서 {a1}, {a2} 로 쓸 수 있습니다.
+// =====================================================================
+const step = (answer, candidates, pads) => item({}, answer, candidates, pads);
+
+export const CHAINS = {
+  // 이차함수: 완전제곱식 → 꼭짓점 → 정해진 범위에서의 최댓값
+  quad() {
+    const p = nonzero(-3, 3);
+    const q = pickOne(range(-5, 5));
+    const left = 1 + rand(3);
+    const right = pickOne(range(1, 4).filter((n) => n !== left));
+    const [s, t] = [p - left, p + right];
+    const f = (x) => (x - p) ** 2 + q;
+    const c = p * p + q;
+    const form = (pp, qq) => ({ s: vertexForm(1, pp, qq), v: (1.37 - pp) ** 2 + qq });
+    const max = Math.max(f(s), f(t));
+    return {
+      f: `y = ${polyStr(1, -2 * p, c)}`, s: numStr(s), t: numStr(t),
+      steps: [
+        step(form(p, q), [form(-p, q), form(p, c), form(p, -q)], [form(-p, c), form(p + 1, q)]),
+        step(point(p, q), [point(-p, q), point(p, -q), point(q, p)], [point(-p, -q), point(p + 1, q)]),
+        step(int(max), [int(Math.min(f(s), f(t))), int(q), int(p)], [int(max + 1), int(max - 1), int(f(s) + f(t))]),
+      ],
+    };
+  },
+
+  // 삼각형: 코사인 법칙으로 변 → 넓이 → 내접원의 반지름
+  tri() {
+    const rows = INT_TRIANGLES.filter((row) => row[3] !== 90);
+    let [a, b, c, A] = pickOne(rows);
+    if (Math.random() < 0.5) [b, c] = [c, b];
+    const bc = b * c;
+    const sum = a + b + c;
+    const area = surd(bc, 3, 4);
+    const other = Math.round(Math.sqrt(b * b + c * c + (A === 60 ? 1 : -1) * bc) * 100) / 100; // cos 의 부호를 틀린 값
+    return {
+      b, c, A,
+      steps: [
+        step(int(a), [dec(other), surd(1, b * b + c * c), int(b + c)], [int(a + 1), int(a - 1), int(a + 2)]),
+        step(area, [surd(bc, 1, 4), surd(bc, 3, 2), surd(bc, 1, 2)], [times(area, 2), over(area, 2)]),
+        step(surd(bc, 3, 2 * sum), [surd(bc, 3, 4 * sum), surd(bc, 3, sum), surd(sum, 1, 2)], [surd(bc, 1, 2 * sum), surd(bc, 3, 2 * (sum - a))]),
+      ],
+    };
+  },
+
+  // 데이터: 평균 → 분산 → 표준편차
+  data() {
+    const devs = pickOne(SD_SETS);
+    const { mean, values, list } = dataFrom(devs);
+    const sq = devs.reduce((sum, d) => sum + d * d, 0);
+    const variance = sq / devs.length;
+    const sd = Math.sqrt(variance);
+    const sorted = [...values].sort((x, y) => x - y);
+    return {
+      list,
+      steps: [
+        step(int(mean), [int(sorted[Math.floor(values.length / 2)]), int(mean + 1), int(mean - 1)], [int(mean + 2), int(mean - 2)]),
+        step(int(variance), [int(sq), int(sd), int(sorted[values.length - 1] - sorted[0])], [int(variance + 1), int(variance * 2), int(variance + 2)]),
+        step(int(sd), [int(variance), int(sq), int(sd + 1)], [int(sd + 2), dec(sd / 2), int(sd * 3)]),
+      ],
+    };
+  },
+
+  // 확률: 전체 경우의 수 → 확률 → 기댓값 (빨간 공의 개수)
+  prob() {
+    const r = pickOne(range(2, 5));
+    const w = pickOne(range(2, 5));
+    const n = r + w;
+    const all = nCr(n, 2);
+    return {
+      r, w,
+      steps: [
+        step(int(all), [int(nPr(n, 2)), int(n * 2), int(n * n)], [int(all + 1), int(all + n), int(all - 1)]),
+        step(frac(nCr(r, 2), all), [frac(r, n), frac(r * r, n * n), frac(r * w, all)], [frac(1, all), frac(nCr(r, 2) + 1, all), frac(nCr(w, 2), all)]),
+        step(frac(2 * r, n), [frac(r, n), frac(nCr(r, 2), all), int(1)], [frac(2 * w, n), frac(2 * r + 1, n), frac(r, 2)]),
+      ],
+    };
+  },
+
+  // 정수: 최대공약수 → 최소공배수 → 둘의 곱
+  int() {
+    const g = pickOne(range(2, 9));
+    let m;
+    let n;
+    do {
+      [m, n] = [2 + rand(6), 2 + rand(6)];
+    } while (m === n || gcd(m, n) !== 1);
+    const [a, b] = [g * m, g * n];
+    const l = g * m * n;
+    return {
+      a, b,
+      steps: [
+        step(int(g), [int(l), int(Math.abs(a - b)), int(g * 2)], [int(g + 1), int(1), int(Math.min(a, b))]),
+        step(int(l), [int(a * b), int(g), int(a + b)], [int(l * 2), int(l + g), int(Math.max(a, b))]),
+        step(int(a * b), [int(g * l + g), int(a + b), int(l)], [int(a * b + g), int(a * b * 2), int(g + l)]),
+      ],
+    };
+  },
+};

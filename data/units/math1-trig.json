@@ -866,5 +866,84 @@
         "en": "Volume = base area × height ÷ 3 = (√2 ÷ 12) × {a}³ = {answer}"
       }
     }
+  ],
+  "chains": [
+    {
+      "id": "chain-tri",
+      "gen": "tri",
+      "intro": {
+        "ja": "△ABC で b = {b}、c = {c}、A = {A}° とする。",
+        "ko": "△ABC에서 b = {b}, c = {c}, A = {A}°이다.",
+        "en": "In △ABC, b = {b}, c = {c} and A = {A}°."
+      },
+      "figure": {
+        "kind": "anytri",
+        "angleA": "{A}°",
+        "angleB": "",
+        "angleC": "",
+        "sideA": "",
+        "sideB": "{b}",
+        "sideC": "{c}"
+      },
+      "steps": [
+        {
+          "type": "cosrule",
+          "level": 2,
+          "sum": {
+            "ja": "a",
+            "ko": "a",
+            "en": "a"
+          },
+          "text": {
+            "ja": "辺 a の長さは?",
+            "ko": "변 a의 길이는?",
+            "en": "How long is side a?"
+          },
+          "explain": {
+            "ja": "余弦定理 a² = b² + c² − 2bc cos A より a = {answer}",
+            "ko": "코사인 법칙 a² = b² + c² − 2bc cos A에서 a = {answer}",
+            "en": "By the cosine rule a² = b² + c² − 2bc cos A, a = {answer}"
+          }
+        },
+        {
+          "type": "area",
+          "level": 2,
+          "sum": {
+            "ja": "面積",
+            "ko": "넓이",
+            "en": "Area"
+          },
+          "text": {
+            "ja": "△ABC の面積 S は?",
+            "ko": "△ABC의 넓이 S는?",
+            "en": "What is the area S of △ABC?"
+          },
+          "explain": {
+            "ja": "S = (1/2) × b × c × sin A = {answer}",
+            "ko": "S = (1/2) × b × c × sin A = {answer}",
+            "en": "S = (1/2) × b × c × sin A = {answer}"
+          }
+        },
+        {
+          "type": "inradius",
+          "level": 3,
+          "sum": {
+            "ja": "内接円の半径",
+            "ko": "내접원의 반지름",
+            "en": "Inradius"
+          },
+          "text": {
+            "ja": "内接円の半径 r は?",
+            "ko": "내접원의 반지름 r은?",
+            "en": "What is the inradius r?"
+          },
+          "explain": {
+            "ja": "S = r(a + b + c) ÷ 2 に a = {a1}、S = {a2} を代入すると r = {answer}",
+            "ko": "S = r(a + b + c) ÷ 2에 a = {a1}, S = {a2}를 대입하면 r = {answer}",
+            "en": "Substitute a = {a1} and S = {a2} into S = r(a + b + c) ÷ 2: r = {answer}"
+          }
+        }
+      ]
+    }
   ]
 }

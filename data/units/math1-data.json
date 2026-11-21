@@ -539,5 +539,80 @@
         "en": "Compare {p} with the threshold 0.05. If it is smaller, chance is an unlikely explanation: {answer}"
       }
     }
+  ],
+  "chains": [
+    {
+      "id": "chain-data",
+      "gen": "data",
+      "intro": {
+        "ja": "データ {list} について答えよ。",
+        "ko": "자료 {list}에 대하여 답하시오.",
+        "en": "Answer about the data {list}."
+      },
+      "note": {
+        "ja": "分散は「偏差の2乗の平均」(データの個数 n で割る)で求める。",
+        "ko": "분산은 '편차 제곱의 평균'(자료의 개수 n으로 나눔)으로 구한다.",
+        "en": "Variance means the mean of the squared deviations (divide by the number of data n)."
+      },
+      "steps": [
+        {
+          "type": "mean",
+          "level": 1,
+          "sum": {
+            "ja": "平均値",
+            "ko": "평균",
+            "en": "Mean"
+          },
+          "text": {
+            "ja": "平均値は?",
+            "ko": "평균은?",
+            "en": "What is the mean?"
+          },
+          "explain": {
+            "ja": "すべての値を足して個数で割ると {answer}",
+            "ko": "모든 값을 더해 개수로 나누면 {answer}",
+            "en": "Add the values and divide by how many there are: {answer}"
+          }
+        },
+        {
+          "type": "variance",
+          "level": 2,
+          "sum": {
+            "ja": "分散",
+            "ko": "분산",
+            "en": "Variance"
+          },
+          "text": {
+            "ja": "分散は?",
+            "ko": "분산은?",
+            "en": "What is the variance?"
+          },
+          "explain": {
+            "ja": "平均値 {a1} との差の2乗の平均を求めると {answer}",
+            "ko": "평균 {a1}과의 차의 제곱의 평균을 구하면 {answer}",
+            "en": "Take the mean of the squared differences from the mean {a1}: {answer}"
+          }
+        },
+        {
+          "type": "sd",
+          "level": 3,
+          "sum": {
+            "ja": "標準偏差",
+            "ko": "표준편차",
+            "en": "Standard deviation"
+          },
+          "text": {
+            "ja": "標準偏差は?",
+            "ko": "표준편차는?",
+            "en": "What is the standard deviation?"
+          },
+          "explain": {
+            "ja": "分散 {a2} の正の平方根なので {answer}",
+            "ko": "분산 {a2}의 양의 제곱근이므로 {answer}",
+            "en": "It is the positive square root of the variance {a2}: {answer}"
+          }
+        }
+      ]
+    }
   ]
 }
