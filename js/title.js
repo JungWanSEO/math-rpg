@@ -3,11 +3,13 @@ import { t } from './i18n.js';
 import { allTypeKeys, subjectNames } from './questions.js';
 import { nodeOf } from './run.js';
 import { $ } from './ui.js';
+import { scene } from './art.js';
 
 // 진행 중인 지도가 있는지 (칸을 하나라도 골랐는지)
 export const hasProgress = (run) => run.at !== null || run.pending !== null;
 
-export function createTitle({ getRun, onContinue, onNew, onCodex, tutorialDone = () => false, onTutorial = () => {} }) {
+export function createTitle({ getRun, getRecord = () => null, onContinue, onNew, onCodex, tutorialDone = () => false, onTutorial = () => {} }) {
+  $('titleArt').innerHTML = scene('title'); // 탑 그림
   let pending = null; // 확인 창에서 "지우고 새로 시작" 을 눌렀을 때 할 일
 
   function render() {
@@ -15,6 +17,11 @@ export function createTitle({ getRun, onContinue, onNew, onCodex, tutorialDone =
     const going = hasProgress(run);
     const all = allTypeKeys();
     $('titleUnit').textContent = t('title.sub', { subjects: subjectNames(all).join(' · '), n: all.length });
+
+    // 지금까지의 기록 한 줄 (한 번이라도 이긴 뒤에만 보입니다)
+    const rec = getRecord();
+    $('titleRecord').hidden = !rec || !rec.wins;
+    if (rec && rec.wins) $('titleRecord').textContent = t('title.record', { wins: rec.wins, clears: rec.clears });
 
     const cont = $('titleContinue');
     cont.hidden = !going;

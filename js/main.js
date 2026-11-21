@@ -19,6 +19,7 @@ import { play, setSound } from './sound.js';
 import { fitBattle, watchFit } from './fit.js';
 import { showGuide, hideGuide } from './guide.js';
 import { createData, inIosSafariTab } from './data.js';
+import { fillIcons } from './art.js';
 
 const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
 
@@ -260,8 +261,10 @@ async function boot() {
   }
 
   // 처음 화면: 이어서 하기 / 처음부터 시작 / 도감
+  fillIcons(); // 버튼의 작은 그림
   const title = createTitle({
     getRun,
+    getRecord: () => ({ wins: data.wins, clears: data.clears }),
     onContinue: goMap,
     onNew: goScope,
     onCodex: openCodex,

@@ -7,6 +7,11 @@ import { fillQuestion } from './qview.js';
 import { UPGRADES, SHOP, rollUpgrades } from './run.js';
 import { $, twoLineButton } from './ui.js';
 import { play } from './sound.js';
+import { scene, hasScene, icon } from './art.js';
+
+// 화면 제목으로 위쪽 장면 그림을 고릅니다. (? 칸은 mystery.<사건>.title 의 사건 이름이 곧 그림 이름)
+const ART = { 'ev.rewardTitle': 'reward', 'ev.shopTitle': 'shop', 'ev.restTitle': 'rest', 'ev.treasureTitle': 'treasure', 'ev.overTitle': 'over', 'ev.clearTitle': 'clear' };
+const artOf = (titleKey) => ART[titleKey] || (titleKey.split('.')[0] === 'mystery' ? titleKey.split('.')[1] : '');
 
 export function createEvents({ getRun, data, record, onChange, persist = () => {} }) {
   let draw = null; // 지금 화면을 다시 그리는 함수 (언어를 바꿀 때 씁니다)
@@ -25,12 +30,32 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
   function base(titleKey, text) {
     $('evTitle').textContent = t(titleKey);
     $('evText').textContent = text;
+    const art = artOf(titleKey);
+    const box = $('evArt');
+    box.hidden = !hasScene(art);
+    if (box.dataset.art !== art) { // 같은 그림이면 다시 그리지 않아 움직임이 끊기지 않습니다.
+      box.dataset.art = art;
+      box.innerHTML = scene(art);
+    }
     $('evQuiz').hidden = true;
     $('evOptions').innerHTML = '';
     $('evLeave').hidden = true;
   }
-  function option(title, sub, disabled, onClick) {
+  // ico: 왼쪽에 붙일 그림 이름, price: 오른쪽에 붙일 값 (예: "30G")
+  function option(title, sub, disabled, onClick, ico = '', price = '') {
     const btn = twoLineButton(title, sub);
+    if (ico) {
+      btn.classList.add('with-ico');
+      const mark = document.createElement('i');
+      mark.className = `ico ico-${ico}`;
+      mark.innerHTML = icon(ico);
+      btn.prepend(mark);
+    }
+    if (price) {
+      const tag = document.createElement('em');
+      tag.textContent = price;
+      btn.appendChild(tag);
+    }
     btn.disabled = disabled;
     btn.addEventListener('click', onClick);
     $('evOptions').appendChild(btn);
@@ -109,7 +134,7 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
             UPGRADES[id](getRun());
             draw = null;
             done();
-          });
+          }, id);
         });
       });
     },
@@ -120,12 +145,12 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
         const run = getRun();
         base('ev.shopTitle', t('ev.shopText', { gold: run.gold }));
         SHOP.forEach(({ id, price }) => {
-          option(`${t(`up.${id}.name`)} · ${price}G`, t(`up.${id}.desc`), run.gold < price, () => {
+          option(t(`up.${id}.name`), t(`up.${id}.desc`), run.gold < price, () => {
             if (run.gold < price) return;
             run.gold -= price;
             UPGRADES[id](run);
             redraw();
-          });
+          }, id, `${price}G`);
         });
         leave('ev.leave', done);
       });
@@ -147,7 +172,7 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
           run.hp = Math.min(run.maxHp, run.hp + heal);
           slept = true;
           redraw();
-        });
+        }, 'heal');
         option(t('ev.restReview'), t('ev.restReviewSub'), false, () => {
           quizScreen({
             titleKey: 'ev.restTitle',
@@ -163,7 +188,7 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
             },
             done,
           });
-        });
+        }, 'book');
       };
       open(menu);
     },

@@ -25,6 +25,8 @@ export function createStage(canvas) {
     guard: 0,
     parts: [],
     nums: [],
+    slashes: [],
+    rings: [],
     events: [],
     hero: { x: 88, y: 148, lunge: 0, hit: 0, down: false },
     foe: { x: 264, y: 112, lunge: 0, hit: 0, dead: 0, gone: false, spawn: 0, spec: 0, flag: false },
@@ -44,8 +46,17 @@ export function createStage(canvas) {
       S.parts.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 40, life: 0.5 + Math.random() * 0.4, color, r: 2 + Math.random() * 3 });
     }
   }
-  function num(x, y, text, color) {
-    S.nums.push({ x, y, text, color, life: 0.9 });
+  // 떠오르는 글자. size 는 글자 크기, 처음 잠깐은 크게 튀어나왔다가 제 크기로 돌아옵니다.
+  function num(x, y, text, color, size = 24) {
+    S.nums.push({ x, y, text, color, size, life: 1, age: 0 });
+  }
+  // 베는 자국 (cross 이면 X 모양)
+  function slash(x, y, color, cross) {
+    S.slashes.push({ x, y, color, cross, life: 1 });
+  }
+  // 퍼져 나가는 고리
+  function ring(x, y, color) {
+    S.rings.push({ x, y, color, life: 1 });
   }
   function dec(obj, key, dur, dt) {
     if (obj[key] > 0) {
@@ -86,9 +97,16 @@ export function createStage(canvas) {
     }
     for (let i = S.nums.length - 1; i >= 0; i--) {
       const n = S.nums[i];
-      n.y -= 34 * dt;
+      n.y -= 30 * dt;
       n.life -= dt;
+      n.age += dt;
       if (n.life <= 0) S.nums.splice(i, 1);
+    }
+    for (const list of [S.slashes, S.rings]) {
+      for (let i = list.length - 1; i >= 0; i--) {
+        list[i].life -= dt / 0.32;
+        if (list[i].life <= 0) list.splice(i, 1);
+      }
     }
   }
 
@@ -740,11 +758,42 @@ export function createStage(canvas) {
       ctx.fillStyle = p.color;
       ctx.fillRect(p.x, p.y, p.r, p.r);
     }
-    ctx.font = '800 22px system-ui, sans-serif';
+    // 베는 자국: 가운데가 굵고 양 끝이 가는 흰 선이 순식간에 그어졌다 사라집니다.
+    for (const s of S.slashes) {
+      const grow = Math.min(1, (1 - s.life) * 3.2);
+      ctx.globalAlpha = Math.min(1, s.life * 1.6);
+      for (const dir of s.cross ? [1, -1] : [1]) {
+        const len = 46 * grow;
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 7 * s.life + 1;
+        ctx.beginPath();
+        ctx.moveTo(s.x - len * dir, s.y - len * 0.8);
+        ctx.lineTo(s.x + len * dir, s.y + len * 0.8);
+        ctx.stroke();
+        ctx.strokeStyle = s.color;
+        ctx.lineWidth = 2.5 * s.life + 0.5;
+        ctx.stroke();
+      }
+    }
+    for (const r of S.rings) {
+      ctx.globalAlpha = Math.max(0, r.life) * 0.8;
+      ctx.strokeStyle = r.color;
+      ctx.lineWidth = 4 * r.life + 1;
+      ctx.beginPath();
+      ctx.arc(r.x, r.y, 14 + (1 - r.life) * 52, 0, 6.2832);
+      ctx.stroke();
+    }
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.lineJoin = 'round';
     for (const n of S.nums) {
-      ctx.globalAlpha = Math.min(1, n.life * 2.5);
+      const pop = n.age < 0.16 ? 1.7 - (n.age / 0.16) * 0.7 : 1; // 처음에 크게 튀어나옴
+      ctx.font = `900 ${Math.round(n.size * pop)}px system-ui, sans-serif`;
+      ctx.globalAlpha = Math.min(1, n.life * 3);
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = '#0b1430';
+      ctx.strokeText(n.text, n.x, n.y);
       ctx.fillStyle = n.color;
       ctx.fillText(n.text, n.x, n.y);
     }
@@ -781,13 +830,17 @@ export function createStage(canvas) {
       S.hero.down = true;
     },
     // 정답: 주인공이 공격
-    heroAttack(text, strong, done) {
+    // tag: 숫자 위에 덧붙이는 짧은 말 (예: "약점!")
+    heroAttack(text, strong, done, tag = '') {
       S.hero.lunge = 1;
       after(0.2, () => {
         S.foe.hit = 1;
-        S.shake = strong ? 10 : 6;
+        S.shake = strong ? 11 : 6;
+        slash(S.foe.x, S.foe.y, '#8ff0ff', false);
+        if (strong) ring(S.foe.x, S.foe.y, '#ffc857');
         burst(S.foe.x, S.foe.y, '#8ff0ff', strong ? 28 : 16);
-        num(S.foe.x, S.foe.y - 58, text, '#ffc857');
+        num(S.foe.x, S.foe.y - 56, text, '#ffc857', strong ? 34 : 26);
+        if (tag) num(S.foe.x, S.foe.y - 86, tag, '#ff9db0', 15);
       });
       after(0.6, done);
     },
@@ -802,10 +855,13 @@ export function createStage(canvas) {
       S.hero.lunge = 1;
       after(0.2, () => {
         S.foe.hit = 1;
-        S.shake = 14;
+        S.shake = 15;
+        slash(S.foe.x, S.foe.y, '#ffc857', true);
+        ring(S.foe.x, S.foe.y, '#ffc857');
+        after(0.12, () => ring(S.foe.x, S.foe.y, '#8ff0ff'));
         burst(S.foe.x, S.foe.y, '#ffc857', 36);
         burst(S.foe.x, S.foe.y, '#8ff0ff', 24);
-        num(S.foe.x, S.foe.y - 58, text, '#ffc857');
+        num(S.foe.x, S.foe.y - 58, text, '#ffc857', 40);
       });
       after(0.75, done);
     },
@@ -817,7 +873,9 @@ export function createStage(canvas) {
         S.hero.hit = guarded ? 0.5 : 1;
         S.shake = guarded ? 3 : 8;
         burst(S.hero.x, S.hero.y - 10, guarded ? '#2fd9b9' : '#ff7d8f', guarded ? 8 : 16);
-        num(S.hero.x, S.hero.y - 80, text, '#ff7d8f');
+        if (guarded) ring(S.hero.x + 10, S.hero.y - 10, '#2fd9b9');
+        else slash(S.hero.x, S.hero.y - 6, '#ff7d8f', false);
+        num(S.hero.x, S.hero.y - 80, text, guarded ? '#2fd9b9' : '#ff7d8f', guarded ? 20 : 28);
       });
       after(0.65, done);
     },
