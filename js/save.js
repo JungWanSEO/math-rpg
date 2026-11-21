@@ -12,6 +12,10 @@ export function blank() {
     tut: 'start',              // 튜토리얼 진행 단계 ('done' 이면 끝)
     sound: true,               // 효과음 켜기
     run: null,                 // 진행 중인 지도 한 장 (js/run.js)
+    last: null,                // 지난 판의 결과 { floor, clear } (재도전 선물이 봅니다)
+    falls: 0,                  // 탑을 깨지 못하고 연달아 쓰러진 횟수 (격려 단계)
+    ascend: 0,                 // 고른 도전 단계
+    ascendMax: 0,              // 열린 가장 높은 도전 단계
   };
 }
 
@@ -61,6 +65,10 @@ export function decodeSave(code) {
     if (typeof raw.tut === 'string' && raw.tut.length < 20) out.tut = raw.tut;
     if (typeof raw.sound === 'boolean') out.sound = raw.sound;
     if (typeof raw.seenChain === 'boolean') out.seenChain = raw.seenChain;
+    if (isNum(raw.falls)) out.falls = Math.floor(raw.falls);
+    if (isNum(raw.ascendMax)) out.ascendMax = Math.min(CONFIG.ascend.max, Math.floor(raw.ascendMax));
+    if (isNum(raw.ascend)) out.ascend = Math.min(out.ascendMax, Math.floor(raw.ascend));
+    if (raw.last && isNum(raw.last.floor)) out.last = { floor: Math.floor(raw.last.floor), clear: raw.last.clear === true };
     for (const [key, entry] of Object.entries(raw.codex)) {
       if (key.length < 60 && entry && isNum(entry.right) && isNum(entry.wrong)) out.codex[key] = { right: entry.right, wrong: entry.wrong, streak: isNum(entry.streak) ? entry.streak : 0 };
     }

@@ -14,11 +14,13 @@ const WEIGHTS = { battle: 4, event: 2.5, elite: 1.5, treasure: 1.2, shop: 1, res
 
 const rand = (n) => Math.floor(Math.random() * n);
 
-function weightedPick(types) {
-  const total = types.reduce((sum, type) => sum + WEIGHTS[type], 0);
+// boost: 칸 종류별로 무게에 곱할 값 (도전 단계에서 강적을 늘릴 때 씁니다)
+function weightedPick(types, boost = {}) {
+  const weight = (type) => WEIGHTS[type] * (boost[type] || 1);
+  const total = types.reduce((sum, type) => sum + weight(type), 0);
   let r = Math.random() * total;
   for (const type of types) {
-    r -= WEIGHTS[type];
+    r -= weight(type);
     if (r < 0) return type;
   }
   return types[types.length - 1];
@@ -61,7 +63,7 @@ function buildHalf(base, tag) {
   };
 }
 
-function assignTypes(nodes) {
+function assignTypes(nodes, boost) {
   const { half } = CONFIG.map;
   const parents = {};
   for (const n of nodes) {
@@ -78,7 +80,7 @@ function assignTypes(nodes) {
     let pool = Object.keys(WEIGHTS);
     if (n.floor < 2) pool = pool.filter((type) => type !== 'elite' && type !== 'rest' && type !== 'shop');
     if (n.floor === half + 1) pool = pool.filter((type) => type !== 'elite'); // 중간 보스 바로 다음
-    let type = weightedPick(pool);
+    let type = weightedPick(pool, boost);
     // 휴식·상점·강적이 연달아 나오지 않게 합니다.
     const above = parents[n.id] || [];
     if ((type === 'rest' || type === 'shop' || type === 'elite') && above.some((p) => p.type === type)) type = 'battle';
@@ -86,7 +88,8 @@ function assignTypes(nodes) {
   }
 }
 
-export function makeMap() {
+// ascend: 도전 단계 (2 이상이면 강적 칸이 늘어납니다)
+export function makeMap(ascend = 0) {
   const { half, width } = CONFIG.map;
   const lower = buildHalf(0, 'a');
   const upper = buildHalf(half + 1, 'b');
@@ -96,25 +99,29 @@ export function makeMap() {
   lower.last.forEach((n) => { n.next = ['mid']; });
   upper.last.forEach((n) => { n.next = ['boss']; });
   const nodes = [...lower.list, mid, ...upper.list, boss];
-  assignTypes(nodes);
+  assignTypes(nodes, ascend >= 2 ? { elite: CONFIG.ascend.eliteWeight } : {});
   return nodes;
 }
 
 // scope: 이번 판에 나올 문제 유형의 목록 ("단원/유형")
-export function newRun(scope) {
+// ascend: 이번 판의 도전 단계 (0 이면 보통), cheer: 격려 단계 (연달아 쓰러진 횟수에서 나옵니다)
+export function newRun(scope, ascend = 0, cheer = 0) {
   const { bonusPerType, bonusMax } = CONFIG.scope;
   return {
     scope: [...scope],
     goldMul: 1 + Math.min(bonusMax, bonusPerType * Math.max(0, scope.length - 1)), // 범위가 넓을수록 골드를 더 받습니다
-    nodes: makeMap(),
+    nodes: makeMap(ascend),
+    ascend,          // 도전 단계
+    cheer,           // 격려 단계 (받는 피해가 줄어듭니다)
+    frail: 0,        // 재도전 선물: 적 체력이 1 이 되는 전투가 몇 번 남았는지
     floors: 2 * CONFIG.map.half + 2,
     at: null,        // 마지막으로 끝낸 칸 (아직 출발 전이면 null)
     pending: null,   // 들어갔지만 아직 끝내지 못한 칸
     visited: [],     // 지나온 칸
-    hp: CONFIG.player.hp,
-    maxHp: CONFIG.player.hp,
+    hp: CONFIG.player.hp + CONFIG.cheer.hp * cheer,
+    maxHp: CONFIG.player.hp + CONFIG.cheer.hp * cheer,
     gold: 0,
-    hints: CONFIG.player.hints,
+    hints: ascend >= 4 ? CONFIG.ascend.hints : CONFIG.player.hints,
     up: { basic: 0, skill: 0, counter: 0, weak: 0 }, // 강화로 더해진 값
     lastFoe: null,
   };

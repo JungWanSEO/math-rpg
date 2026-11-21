@@ -334,5 +334,43 @@
     "wipedText": "Nothing is left on this device. Close this tab and you are done. If you added an icon to your Home Screen, please remove it yourself.",
     "wipedAgain": "Start again (downloads the files again)",
     "back": "Back to title"
+  },
+  "bless": {
+    "title": "The Keeper's Gift",
+    "textEarly": "You fell on floor {n} last time. Let me help a little this time. Choose one.",
+    "textFar": "You climbed to floor {n} last time. A gift for climbing again. Choose one.",
+    "textClear": "You conquered the tower and came back. A gift for climbing again. Choose one.",
+    "maxHp": "A hearty breakfast",
+    "maxHpSub": "Max HP +{maxHp}",
+    "frail": "Weakened foes",
+    "frailSub": "Enemies have 1 HP in your first {frail} battles (not the mid-boss or boss)",
+    "gold": "Travel money",
+    "goldSub": "Gold +{gold}",
+    "hints": "A bundle of seniors' notes",
+    "hintsSub": "Hints +{hints}",
+    "maxHpSmall": "Warm tea",
+    "maxHpSmallSub": "Max HP +{maxHpSmall}",
+    "basic": "A well-used tape measure",
+    "basicSub": "Basic attack damage +1",
+    "skill": "A polished protractor",
+    "skillSub": "Skill damage +1",
+    "frailLeft": "Weak foes ×{n}"
+  },
+  "ascend": {
+    "name": "Challenge level",
+    "short": "Challenge {n}",
+    "best": "Challenge level {n}",
+    "stack": "(all lower levels apply too)",
+    "opened": "Challenge level {n} is unlocked. You can change it on the range screen.",
+    "l0": "Normal difficulty.",
+    "l1": "Level 1: all enemies have +15% HP",
+    "l2": "Level 2: more elite spaces",
+    "l3": "Level 3: normal enemy attacks deal +1",
+    "l4": "Level 4: start with no hints, half healing after a win",
+    "l5": "Level 5: mid-boss and boss have +25% HP, heavy attacks deal +2"
+  },
+  "cheer": {
+    "short": "Cheer {n}",
+    "text": "Cheer level {n}: until you clear the tower you also get Max HP +{hp} and take {pct}% less damage."
   }
 }

@@ -23,6 +23,7 @@ const ICON = {
   skill: '<path d="M12 2l2.2 6.3L20.5 10.5l-6.3 2.2L12 19l-2.2-6.3L3.5 10.5l6.3-2.2z"/>',
   maxhp: '<path d="M12 20.5S3.5 15.5 3.5 9.3A4.3 4.3 0 0112 7a4.3 4.3 0 018.5 2.3c0 6.2-8.5 11.2-8.5 11.2z"/><path d="M12 10.5v5M9.5 13h5"/>',
   counter: '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M14.5 9l-5 5M9.5 9.5V14H14"/>',
+  coin: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M14.5 9.5h-3.7a1.7 1.7 0 000 3.4h2.4a1.7 1.7 0 010 3.4H9.5"/>',
   weak: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/><path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4"/>',
 };
 
@@ -101,6 +102,15 @@ const SCENES = {
     `<rect x="204" y="78" width="64" height="5" fill="${AMBER}"/><rect x="214" y="64" width="5" height="44" fill="${AMBER}" opacity="0.8"/><rect x="253" y="64" width="5" height="44" fill="${AMBER}" opacity="0.8"/>` +
     `<rect x="230" y="78" width="12" height="13" rx="2" fill="${AMBER}"/><circle cx="236" cy="84" r="2" fill="#6b4a2a"/>` +
     hero(104, 108),
+  ),
+  // 재도전 선물: 탑 입구의 등불과 선물 상자
+  bless: () => frame(
+    stars() + hills + ground() +
+    `<path d="M214 108V44h44v64z" fill="#22336a"/><path d="M208 44h56l-6-10h-44z" fill="#2c4186"/><path d="M226 108V78a10 10 0 0120 0v30z" fill="#0f1a3a"/>` +
+    `<path d="M186 108V54" stroke="#6b4a2a" stroke-width="4" stroke-linecap="round"/><path d="M186 56h-16v8" stroke="#6b4a2a" stroke-width="3" fill="none" stroke-linecap="round"/>` +
+    glow(170, 74, 30, AMBER, 0.3) + `<rect class="tw tw0" x="163" y="64" width="14" height="18" rx="4" fill="${AMBER}"/><rect x="161" y="62" width="18" height="4" rx="2" fill="#6b4a2a"/>` +
+    `<rect x="126" y="92" width="24" height="16" rx="2" fill="${ROSE}"/><rect x="124" y="88" width="28" height="6" rx="2" fill="#ff9db0"/><rect x="136" y="88" width="4" height="20" fill="#eef6ff"/>` +
+    hero(86, 108),
   ),
   // 승리: 지팡이를 들고 기뻐함
   reward: () => frame(
