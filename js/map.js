@@ -37,8 +37,11 @@ function wobble(id, salt) {
 // 움직임을 줄이도록 설정한 기기에서는 말의 이동을 생략합니다.
 const still = () => !window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export function createMap({ getRun, onPick }) {
+export function createMap({ getRun, onPick, getWins = () => 0 }) {
   let moving = false;
+  $('mapLegendBox').addEventListener('click', (event) => {
+    if (event.target.tagName === 'SUMMARY') $('mapLegendBox').dataset.touched = '1';
+  });
 
   function render() {
     moving = false;
@@ -173,6 +176,9 @@ export function createMap({ getRun, onPick }) {
       legend.appendChild(row);
     }
 
+    // 칸 설명은 처음 몇 판 동안만 펼쳐 두고, 그 뒤로는 접어 둡니다. (직접 여닫은 뒤에는 그대로 둡니다)
+    const fold = $('mapLegendBox');
+    if (!fold.dataset.touched) fold.open = getRun().floors > 0 && (getWins() < 3);
     const look = focus || door;
     if (look.scrollIntoView) look.scrollIntoView({ block: 'center' });
   }

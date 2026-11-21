@@ -40,19 +40,20 @@
     "chainStep": "연속기 {n} / {total} · {type}",
     "dmg": "피해 {d}",
     "counterDmg": "반격 {d}",
-    "weakHit": "약점!"
+    "weakHit": "약점!",
+    "reviewAnswer": "정답: {answer}"
   },
   "msg": {
     "choose": "행동을 고르세요.",
     "solve": "문제를 풀어 공격하세요. 시간 제한은 없습니다.",
     "correct": "정답! 피해 {d}",
     "correctWeak": "정답! 약점을 찔렀습니다. 피해 {d}",
-    "wrong": "오답. {explain}",
+    "wrong": "오답! 정답과 풀이를 확인하세요.",
     "miss": "빗나감",
     "ult": "필살기! 피해 {d}",
     "solveGuard": "문제를 맞히면 공격을 완전히 막고 반격합니다.",
     "guardOk": "완벽하게 막았습니다! 반격합니다.",
-    "guardFail": "막지 못해 피해를 절반 받았습니다. {explain}",
+    "guardFail": "막지 못해 피해를 절반 받았습니다. 정답과 풀이를 확인하세요.",
     "blocked": "막음",
     "bigHit": "공격은 성공했지만 강한 공격을 맞았습니다. 강한 공격은 방어로만 막을 수 있습니다. (피해 {d})",
     "solveChain": "물음을 차례로 풉니다. 틀리면 거기서 끝납니다.",
@@ -63,7 +64,8 @@
     "title": "갈림길 지도",
     "progress": "{total}층 중 {n}층",
     "tip": "입구에서 출발할 칸을 고르세요. 길로 이어진 칸으로만 올라갈 수 있습니다.",
-    "gate": "입구"
+    "gate": "입구",
+    "legend": "칸 설명 보기"
   },
   "node": {
     "battle": "전투",
@@ -157,7 +159,10 @@
       "open": "미정복",
       "progress": "진행 중",
       "done": "정복"
-    }
+    },
+    "met": "만난 몬스터 {n} / {total}",
+    "unseenLeft": "아직 만나지 않은 몬스터가 {n}종 있습니다.",
+    "unitDone": "정복 {done} / {total}"
   },
   "tut": {
     "start": "맨 아래 줄에서 출발할 칸을 눌러 보세요. 전투가 시작됩니다.",

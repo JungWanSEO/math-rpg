@@ -80,7 +80,7 @@ function act() {
   if (!$('confirm').hidden) { $('confirmOk').click(); return; }
   if (vis('screenScope')) { stats.scope = (stats.scope || 0) + 1; const mode = process.env.SCOPE || 'all';
     if (mode === 'all') $('scopeAll').click();
-    else { $('scopeAll').click(); const items = [...window.document.querySelectorAll('.scope-item')]; items.forEach((b, i) => { if (!mode.split(',').includes(String(i))) b.click(); }); }
+    else { $('scopeAll').click(); window.document.querySelectorAll('.scope-fold').forEach((x) => { if (x.getAttribute('aria-expanded') !== 'true') x.click(); }); const items = [...window.document.querySelectorAll('.scope-item')]; items.forEach((b, i) => { if (!mode.split(',').includes(String(i))) b.click(); }); }
     $('scopeStart').click(); return; }
   if (vis('screenCodex')) { stats.codexOpened++; $('codexClose').click(); return; }
   if (vis('screenMap')) {

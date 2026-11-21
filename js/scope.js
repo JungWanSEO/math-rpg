@@ -21,6 +21,7 @@ export function goldBonus(count) {
 
 export function createScope({ data, onStart, onBack }) {
   let chosen = new Set();
+  const open = new Set(); // 펼쳐 놓은 단원
 
   function setChosen(keys) {
     chosen = new Set(keys.filter(hasType));
@@ -32,12 +33,28 @@ export function createScope({ data, onStart, onBack }) {
     box.innerHTML = '';
     for (const subject of scopeTree()) {
       for (const unit of subject.units) {
-        // 단원 제목 옆의 버튼으로 그 단원의 유형을 한꺼번에 고르거나 뺍니다.
+        // 단원은 접혀 있습니다. 제목 줄을 누르면 펼쳐지고, 옆의 버튼으로 통째로 고르거나 뺍니다.
         const unitKeys = unit.groups.flatMap((group) => group.types);
         const picked = unitKeys.filter((key) => chosen.has(key)).length;
-        const head = document.createElement('h3');
-        const title = document.createElement('span');
-        title.textContent = `${pick(subject.names)} · ${pick(unit.names)} (${picked}/${unitKeys.length})`;
+        const id = unitKeys[0].split('/')[0];
+        const isOpen = open.has(id);
+        const head = document.createElement('div');
+        head.className = `scope-head${picked ? ' some' : ''}${picked === unitKeys.length ? ' all' : ''}`;
+        const fold = document.createElement('button');
+        fold.type = 'button';
+        fold.className = 'scope-fold';
+        fold.setAttribute('aria-expanded', String(isOpen));
+        const caret = document.createElement('i');
+        const title = document.createElement('b');
+        title.textContent = `${pick(subject.names)} · ${pick(unit.names)}`;
+        const count = document.createElement('small');
+        count.textContent = `${picked} / ${unitKeys.length}`;
+        fold.append(caret, title, count);
+        fold.addEventListener('click', () => {
+          if (isOpen) open.delete(id);
+          else open.add(id);
+          render();
+        });
         const toggle = document.createElement('button');
         toggle.type = 'button';
         toggle.className = 'scope-unit';
@@ -47,8 +64,9 @@ export function createScope({ data, onStart, onBack }) {
           unitKeys.forEach((key) => (all ? chosen.delete(key) : chosen.add(key)));
           render();
         });
-        head.append(title, toggle);
+        head.append(fold, toggle);
         box.appendChild(head);
+        if (!isOpen) continue;
         for (const group of unit.groups) {
           const sub = document.createElement('h4');
           sub.textContent = pick(group.names);
