@@ -20,7 +20,7 @@ const g = globalThis;
 g.window = window; g.document = window.document; g.localStorage = window.localStorage;
 g.requestAnimationFrame = (fn) => { frames.push(fn); return frames.length; };
 window.requestAnimationFrame = g.requestAnimationFrame;
-window.matchMedia = () => ({ matches: false });
+window.matchMedia = (q) => ({ matches: /reduced-motion/.test(q) }); // 봇은 기다리지 않으므로 지도의 말 이동을 생략시킵니다
 g.matchMedia = window.matchMedia;
 g.addEventListener = window.addEventListener.bind(window);
 window.devicePixelRatio = 1;
