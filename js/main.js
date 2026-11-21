@@ -135,7 +135,7 @@ async function boot() {
       max: run.maxHp,
       gold: run.gold,
       hints: run.hints,
-    });
+    }) + (run.ascend ? ` · ${t('ascend.short', { n: run.ascend })}` : '') + (run.cheer ? ` · ${t('cheer.short', { n: run.cheer })}` : '') + (run.frail > 0 ? ` · ${t('bless.frailLeft', { n: run.frail })}` : '');
     updateCoach();
   }
 
@@ -248,8 +248,17 @@ async function boot() {
     data,
     onStart(keys) {
       data.lastScope = keys;
-      data.run = newRun(keys);
+      const level = Math.min(data.ascend || 0, data.ascendMax || 0);
+      // 격려는 보통 난이도에서만 붙습니다. (도전 단계는 스스로 고른 어려움이므로)
+      data.run = newRun(keys, level, level ? 0 : Math.min(CONFIG.cheer.max, data.falls || 0));
       setScope(keys);
+      // 재도전 선물: 한 판이라도 끝낸 적이 있으면, 지난 판의 성적에 맞는 선물을 고르고 출발합니다.
+      if (CONFIG.bless.on && data.last && !tutorial.active()) {
+        persist();
+        go('screenEvent');
+        events.blessing(data.last, goMap);
+        return;
+      }
       goMap();
     },
     onBack: () => goTitle(),
@@ -264,7 +273,7 @@ async function boot() {
   fillIcons(); // 버튼의 작은 그림
   const title = createTitle({
     getRun,
-    getRecord: () => ({ wins: data.wins, clears: data.clears }),
+    getRecord: () => ({ wins: data.wins, clears: data.clears, ascendMax: data.ascendMax || 0 }),
     onContinue: goMap,
     onNew: goScope,
     onCodex: openCodex,
@@ -336,6 +345,8 @@ async function boot() {
       if (result === 'lose') {
         // 게임 오버: 지도 한 장의 진행은 사라지고, 도감 기록은 남습니다.
         data.deaths = (data.deaths || 0) + 1;
+        data.last = { floor: node.floor + 1, clear: false }; // 다음 판의 재도전 선물이 이것을 봅니다
+        if (!run.ascend) data.falls = (data.falls || 0) + 1; // 연달아 쓰러진 횟수 (격려 단계가 됩니다)
         data.run = newRun(run.scope);
         persist();
         go('screenEvent');
@@ -345,15 +356,25 @@ async function boot() {
       const gold = Math.round(CONFIG.gold[kind] * (run.goldMul || 1));
       data.wins += 1;
       run.gold += gold;
-      run.hp = Math.min(run.maxHp, run.hp + CONFIG.player.healOnWin);
+      run.hp = Math.min(run.maxHp, run.hp + ((run.ascend || 0) >= 4 ? CONFIG.ascend.heal : CONFIG.player.healOnWin));
+      if (run.frail > 0 && (kind === 'battle' || kind === 'elite')) run.frail -= 1;
       tutorial.emit('won');
       go('screenEvent');
       if (kind === 'boss') {
         play('clear');
         data.clears += 1;
+        data.last = { floor: run.floors, clear: true };
+        data.falls = 0;
+        // 지금 열려 있는 가장 높은 도전 단계로 깼으면 다음 단계가 열립니다.
+        const level = run.ascend || 0;
+        const opened = level === (data.ascendMax || 0) && level < CONFIG.ascend.max;
+        if (opened) {
+          data.ascendMax = level + 1;
+          data.ascend = level + 1;
+        }
         data.run = newRun(run.scope);
         persist();
-        events.clear(gold, goScope);
+        events.clear(gold, goScope, opened ? level + 1 : 0);
       } else {
         persist();
         events.reward(gold, () => {

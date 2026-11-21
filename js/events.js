@@ -10,7 +10,7 @@ import { play } from './sound.js';
 import { scene, hasScene, icon } from './art.js';
 
 // 화면 제목으로 위쪽 장면 그림을 고릅니다. (? 칸은 mystery.<사건>.title 의 사건 이름이 곧 그림 이름)
-const ART = { 'ev.rewardTitle': 'reward', 'ev.shopTitle': 'shop', 'ev.restTitle': 'rest', 'ev.treasureTitle': 'treasure', 'ev.overTitle': 'over', 'ev.clearTitle': 'clear' };
+const ART = { 'bless.title': 'bless', 'ev.rewardTitle': 'reward', 'ev.shopTitle': 'shop', 'ev.restTitle': 'rest', 'ev.treasureTitle': 'treasure', 'ev.overTitle': 'over', 'ev.clearTitle': 'clear' };
 const artOf = (titleKey) => ART[titleKey] || (titleKey.split('.')[0] === 'mystery' ? titleKey.split('.')[1] : '');
 
 export function createEvents({ getRun, data, record, onChange, persist = () => {} }) {
@@ -289,6 +289,37 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
       });
     },
 
+    // 재도전 선물: 새 판을 시작할 때 하나를 고릅니다. last = 지난 판 { floor, clear }
+    //   중간 보스 층 이하에서 쓰러졌으면 "도움" 둘 중 하나, 더 올라갔거나 깼으면 보통 선물 셋 중 하나.
+    blessing(last, done) {
+      const B = CONFIG.bless;
+      const run = getRun();
+      const gifts = {
+        maxHp: () => { run.maxHp += B.maxHp; run.hp += B.maxHp; },
+        frail: () => { run.frail = B.frail; },
+        gold: () => { run.gold += B.gold; },
+        hints: () => { run.hints += B.hints; },
+        maxHpSmall: () => { run.maxHp += B.maxHpSmall; run.hp += B.maxHpSmall; },
+        basic: () => UPGRADES.basic(run),
+        skill: () => UPGRADES.skill(run),
+      };
+      const ICONS = { maxHp: 'maxhp', frail: 'weak', gold: 'coin', hints: 'hint', maxHpSmall: 'maxhp', basic: 'basic', skill: 'skill' };
+      const early = !last.clear && last.floor <= B.early;
+      const pool = ['gold', 'hints', 'maxHpSmall', 'basic', 'skill'].sort(() => Math.random() - 0.5).slice(0, 3);
+      const picks = early ? ['maxHp', 'frail'] : pool;
+      open(() => {
+        const cheer = run.cheer ? `\n\n${t('cheer.text', { n: run.cheer, hp: CONFIG.cheer.hp * run.cheer, pct: Math.round(CONFIG.cheer.guard * run.cheer * 100) })}` : '';
+        base('bless.title', t(last.clear ? 'bless.textClear' : early ? 'bless.textEarly' : 'bless.textFar', { n: last.floor }) + cheer);
+        picks.forEach((id) => {
+          option(t(`bless.${id}`, B), t(`bless.${id}Sub`, B), false, () => {
+            gifts[id]();
+            draw = null;
+            done();
+          }, ICONS[id]);
+        });
+      });
+    },
+
     // 게임 오버: 지도 한 장을 처음부터 다시 시작합니다.
     gameover(info, done) {
       open(() => {
@@ -298,9 +329,10 @@ export function createEvents({ getRun, data, record, onChange, persist = () => {
     },
 
     // 보스를 쓰러뜨려 단원을 클리어했습니다.
-    clear(gold, done) {
+    // opened: 이번에 새로 열린 도전 단계 (없으면 0)
+    clear(gold, done, opened = 0) {
       open(() => {
-        base('ev.clearTitle', t('ev.clearText', { n: data.clears, gold }));
+        base('ev.clearTitle', t('ev.clearText', { n: data.clears, gold }) + (opened ? `\n\n${t('ascend.opened', { n: opened })}\n${t(`ascend.l${opened}`)}` : ''));
         leave('ev.newRun', done);
       });
     },

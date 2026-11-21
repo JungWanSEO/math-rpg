@@ -696,7 +696,7 @@ body:not(.ready) .ios-hint { visibility: hidden; }
 .options button.with-ico .ico { grid-row: 1 / span 2; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; color: var(--teal); background: var(--deep); border: 1px solid var(--line); }
 .options button.with-ico .ico svg { width: 22px; height: 22px; }
 .ico-heal, .ico-maxhp { color: var(--rose) !important; }
-.ico-hint, .ico-book { color: var(--amber) !important; }
+.ico-hint, .ico-book, .ico-coin { color: var(--amber) !important; }
 .ico-skill, .ico-weak { color: #c9a0ff !important; }
 .ico-basic { color: #5aa9ff !important; }
 .options button.with-ico b { grid-column: 2; align-self: end; }
@@ -712,3 +712,13 @@ body:not(.ready) .ios-hint { visibility: hidden; }
   .act small { font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) { .tw, .flag, .flame, .ray, .drift, .ult.ready, .intent.big, .answers button.right, .answers button.wrong { animation: none; } }
+
+/* challenge level picker on the range screen */
+.ascend { display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; border-radius: 12px; border: 1px solid var(--rose); background: rgba(255, 125, 143, 0.08); }
+.ascend[hidden] { display: none; }
+.ascend-pick { display: flex; align-items: center; gap: 8px; }
+.ascend-pick b { flex: 1 1 auto; font-size: 13px; color: var(--rose); }
+.ascend-pick strong { min-width: 44px; text-align: center; font-size: 14px; }
+.ascend-pick button { min-width: 40px; min-height: 36px; padding: 0; font-size: 18px; font-weight: 800; }
+.ascend small { font-size: 11px; line-height: 1.4; color: var(--muted); }
+#evText { white-space: pre-line; }

@@ -85,6 +85,14 @@ export function createScope({ data, onStart, onBack }) {
       ? t('scope.summary', { n: count, bonus: Math.round(goldBonus(count) * 100) })
       : t('scope.empty');
     $('scopeStart').disabled = count === 0;
+    // 도전 단계: 열린 단계 안에서 고릅니다. 설명에는 그 단계에서 새로 붙는 규칙을 적습니다.
+    const top = data.ascendMax || 0;
+    const level = Math.min(data.ascend || 0, top);
+    $('ascendRow').hidden = top === 0;
+    $('ascendNum').textContent = `${level} / ${top}`;
+    $('ascendDown').disabled = level <= 0;
+    $('ascendUp').disabled = level >= top;
+    $('ascendDesc').textContent = level === 0 ? t('ascend.l0') : `${t(`ascend.l${level}`)}${level > 1 ? ` ${t('ascend.stack')}` : ''}`;
     $('scopeSame').disabled = !(data.lastScope && data.lastScope.some(hasType));
   }
 
@@ -103,6 +111,14 @@ export function createScope({ data, onStart, onBack }) {
   });
   $('scopeStart').addEventListener('click', () => {
     if (chosen.size) onStart(allTypeKeys().filter((key) => chosen.has(key)));
+  });
+  $('ascendDown').addEventListener('click', () => {
+    data.ascend = Math.max(0, Math.min(data.ascend || 0, data.ascendMax || 0) - 1);
+    render();
+  });
+  $('ascendUp').addEventListener('click', () => {
+    data.ascend = Math.min(data.ascendMax || 0, (data.ascend || 0) + 1);
+    render();
   });
   $('scopeBack').addEventListener('click', onBack);
 

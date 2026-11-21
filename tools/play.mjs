@@ -55,7 +55,7 @@ const $ = (id) => window.document.getElementById(id);
 const vis = (id) => $(id) && !$(id).hidden;
 const enabled = (sel) => [...window.document.querySelectorAll(sel)].filter((b) => !b.disabled && !b.hidden);
 const rnd = (a) => a[Math.floor(Math.random() * a.length)];
-const stats = { types: {}, clicks: 0, answers: 0, right: 0, nodes: {}, battles: 0, defeats: 0, hints: 0, bought: 0, coach: new Set(), codexOpened: 0 };
+const stats = { types: {}, clicks: 0, answers: 0, right: 0, nodes: {}, battles: 0, defeats: 0, hints: 0, bought: 0, deathFloors: {}, coach: new Set(), codexOpened: 0 };
 let ts = 0, shopClicks = 0, lastScreen = '';
 
 function solve(textId, boxSel) {
@@ -112,7 +112,7 @@ function act() {
   if (vis('screenEvent')) {
     if (!$('evQuiz').hidden && enabled('#evAnswers button').length) { solve('evQText', '#evAnswers button'); stats.clicks++; return; }
     const title = $('evTitle').textContent;
-    if (/ゲームオーバー|게임 오버|Game over/.test(title) && lastScreen !== 'defeat') { stats.defeats++; lastScreen = 'defeat'; } else if (!/ゲームオーバー|게임 오버|Game over/.test(title)) lastScreen = '';
+    if (/ゲームオーバー|게임 오버|Game over/.test(title) && lastScreen !== 'defeat') { stats.defeats++; lastScreen = 'defeat'; const f = (save().last || {}).floor || 0; stats.deathFloors[f] = (stats.deathFloors[f] || 0) + 1; } else if (!/ゲームオーバー|게임 오버|Game over/.test(title)) lastScreen = '';
     const opts = enabled('#evOptions button');
     const leave = $('evLeave');
     if (opts.length && (leave.hidden || (shopClicks < 6 && Math.random() < 0.6))) { shopClicks++; if (!leave.hidden) stats.bought++; rnd(opts).click(); stats.clicks++; return; }
@@ -123,16 +123,20 @@ function act() {
 const save = () => JSON.parse(window.localStorage.getItem('mathrpg_save_v1') || '{}');
 let i = 0;
 const CAP = Number(process.env.CAP || 400000);
+const RUNS = Number(process.env.RUNS || 0);
 for (; i < CAP && !errors.length; i++) {
   ts += 16; const q = frames; frames = []; for (const f of q) f(ts);
   if (i % 12 === 0) act();
   if (i % 500 === 0 && (save().clears || 0) >= WANT_CLEARS) break;
+  if (RUNS && i % 500 === 0 && (save().clears || 0) + stats.defeats >= RUNS) break; // RUNS: 이기든 지든 정해진 판 수만 합니다
+  if (RUNS && i % 12 === 0 && vis('screenTitle') && (save().clears || 0) + stats.defeats >= RUNS) break;
 }
 const s = save();
+if (process.env.JSONOUT) { console.log(JSON.stringify({ acc: ACC, clears: s.clears || 0, deaths: stats.defeats, deathFloors: stats.deathFloors, answered: stats.answers, right: stats.right, errors: errors.length })); process.exit(errors.length ? 1 : 0); }
 if (process.env.BRIEF) { console.log(`acc ${ACC}: clears ${s.clears || 0}, deaths ${stats.defeats}, clear rate ${(((s.clears || 0) / Math.max(1, (s.clears || 0) + stats.defeats)) * 100).toFixed(0)}%, midboss reached ${stats.nodes['type-midboss'] || 0}, boss reached ${stats.nodes['type-boss'] || 0}, errors ${errors.length}`); process.exit(errors.length ? 1 : 0); }
 console.log(JSON.stringify({ acc: ACC, frames: i, minutesOfAnimation: +(i * 16 / 60000).toFixed(1), clears: s.clears, wins: s.wins, tut: s.tut, stats: { ...stats, coach: [...stats.coach].length, guides: stats.guides ? stats.guides.size : 0 }, answeredRate: +(stats.right / Math.max(1, stats.answers)).toFixed(2), seen: Object.keys(s.seen || {}), codexTypes: Object.keys(s.codex || {}).length, errors: errors.slice(0, 3) }));
 // language switch smoke test on whatever screen is showing
 for (const l of ['ko', 'en', 'ja']) { const sel = $('langSelect'); sel.value = l; sel.dispatchEvent(new window.Event('change')); await new Promise((r) => setTimeout(r, 30)); for (let k = 0; k < 5; k++) { ts += 16; const q = frames; frames = []; for (const f of q) f(ts); } }
-const leftovers = [...window.document.querySelectorAll('#app *')].filter((e) => !e.children.length && /\b(ui|msg|ev|map|node|up|tut|codex)\.[a-zA-Z.]+$/.test(e.textContent.trim())).map((e) => e.textContent.trim());
+const leftovers = [...window.document.querySelectorAll('#app *')].filter((e) => !e.children.length && /\b(ui|msg|ev|map|node|up|tut|codex|bless|ascend|cheer|data|title|scope)\.[a-zA-Z0-9.]+$/.test(e.textContent.trim())).map((e) => e.textContent.trim());
 console.log('lang switch errors:', errors.length, '| untranslated keys on screen:', [...new Set(leftovers)].slice(0, 5));
 process.exit(errors.length ? 1 : 0);

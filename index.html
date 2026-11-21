@@ -131,6 +131,16 @@
       </div>
       <div class="scope-list" id="scopeList"></div>
       <div class="scope-foot">
+        <!-- 도전 단계: 탑을 한 번 깬 뒤에만 보입니다 -->
+        <div class="ascend" id="ascendRow" hidden>
+          <span class="ascend-pick">
+            <b data-i18n="ascend.name"></b>
+            <button type="button" class="hint" id="ascendDown" aria-label="-">−</button>
+            <strong id="ascendNum"></strong>
+            <button type="button" class="hint" id="ascendUp" aria-label="+">+</button>
+          </span>
+          <small id="ascendDesc" aria-live="polite"></small>
+        </div>
         <p class="scope-summary" id="scopeSummary" aria-live="polite"></p>
         <div class="scope-foot-row">
           <button type="button" class="hint" id="scopeBack" data-i18n="scope.back"></button>

@@ -21,7 +21,7 @@ export function createTitle({ getRun, getRecord = () => null, onContinue, onNew,
     // 지금까지의 기록 한 줄 (한 번이라도 이긴 뒤에만 보입니다)
     const rec = getRecord();
     $('titleRecord').hidden = !rec || !rec.wins;
-    if (rec && rec.wins) $('titleRecord').textContent = t('title.record', { wins: rec.wins, clears: rec.clears });
+    if (rec && rec.wins) $('titleRecord').textContent = t('title.record', { wins: rec.wins, clears: rec.clears }) + (rec.ascendMax ? ` · ${t('ascend.best', { n: rec.ascendMax })}` : '');
 
     const cont = $('titleContinue');
     cont.hidden = !going;

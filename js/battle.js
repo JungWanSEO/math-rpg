@@ -50,6 +50,13 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     if (B.kind === 'elite') dmg += CONFIG.elite.attackAdd;
     if (B.kind === 'midboss') dmg += CONFIG.midboss.attackAdd;
     if (B.kind === 'boss') dmg += CONFIG.boss.attackAdd;
+    // 도전 단계: 3단계부터 보통 공격이, 5단계에서는 강한 공격이 더 아픕니다.
+    const level = getRun().ascend || 0;
+    if (level >= 3 && B.intent !== 'big') dmg += CONFIG.ascend.attackAdd;
+    if (level >= 5 && B.intent === 'big') dmg += CONFIG.ascend.bigAdd;
+    // 격려: 단계만큼 받는 피해가 줄어듭니다. (1 아래로는 내려가지 않습니다)
+    const cheer = getRun().cheer || 0;
+    if (cheer) dmg = Math.max(1, Math.round(dmg * (1 - CONFIG.cheer.guard * cheer)));
     if (B.safe) dmg = Math.floor(dmg / 2);
     return dmg;
   }
@@ -432,7 +439,13 @@ export function createBattle({ stage, getRun, record, tutorial, onChange }) {
     B.weak = weak;
     B.kind = kind;
     B.safe = Boolean(safe);
-    B.foeMax = Math.round(monster.hp * (kind === 'elite' ? CONFIG.elite.hpMul : 1));
+    const run = getRun();
+    const level = run.ascend || 0;
+    // 도전 단계: 1단계부터 모든 적, 5단계에서는 중간 보스와 보스의 체력이 더 늘어납니다.
+    const tough = 1 + (level >= 1 ? CONFIG.ascend.foeHp : 0) + (level >= 5 && (kind === 'midboss' || kind === 'boss') ? CONFIG.ascend.bossHp : 0);
+    B.foeMax = Math.round(monster.hp * (kind === 'elite' ? CONFIG.elite.hpMul : 1) * tough);
+    // 재도전 선물 "약해진 적": 남은 횟수 동안 전투·강적의 체력이 1 입니다. (횟수는 이겼을 때 js/main.js 가 줄입니다)
+    if (run.frail > 0 && (kind === 'battle' || kind === 'elite')) B.foeMax = 1;
     B.foeHp = B.foeMax;
     B.turn = 0;
     B.combo = 0;
