@@ -18,6 +18,7 @@ import { $, show } from './ui.js';
 import { play, setSound } from './sound.js';
 import { fitBattle, watchFit } from './fit.js';
 import { showGuide, hideGuide } from './guide.js';
+import { createData, inIosSafariTab } from './data.js';
 
 const FIGHTS = ['battle', 'elite', 'midboss', 'boss'];
 
@@ -147,7 +148,7 @@ async function boot() {
     screen = name;
     show(name);
     window.scrollTo(0, 0); // 긴 화면에서 넘어와도 맨 위부터 보이게
-    const menu = name === 'screenTitle' || name === 'screenScope';
+    const menu = name === 'screenTitle' || name === 'screenScope' || name === 'screenData';
     // 도감은 지도와 이벤트 화면에서만 엽니다. (전투 중에는 숨김)
     $('codexBtn').hidden = name === 'screenBattle' || name === 'screenCodex' || menu;
     $('runStatus').hidden = menu;
@@ -202,7 +203,7 @@ async function boot() {
     armed = false;
     if (screen === 'screenTitle') return; // 처음 화면에서는 그대로 나갑니다.
     armBack();
-    if (screen === 'screenScope') goTitle();
+    if (screen === 'screenScope' || screen === 'screenData') goTitle();
     else if (screen === 'screenCodex') $('codexClose').click();
     else if (!$('menu').hidden) closeMenu();
     else openMenu();
@@ -271,6 +272,17 @@ async function boot() {
       goScope();
     },
   });
+  // 데이터 관리: 용량 보기, 백업, 홈 화면 안내, 지우기
+  const dataScreen = createData({ data, onBack: () => goTitle() });
+  function goData() {
+    persist();
+    go('screenData');
+    dataScreen.open();
+  }
+  $('titleData').addEventListener('click', goData);
+  $('iosHint').addEventListener('click', goData);
+  $('iosHint').hidden = !inIosSafariTab();
+
   function goTitle() {
     persist();
     title.reset();
@@ -385,6 +397,7 @@ async function boot() {
       if (screen === 'screenBattle') battle.refresh();
       if (screen === 'screenEvent') events.refresh();
       if (screen === 'screenCodex') codex.render();
+      if (screen === 'screenData') dataScreen.render();
       if (!$('menu').hidden) $('menuText').textContent = t($('menu').dataset.key);
       renderSound();
       onChange();

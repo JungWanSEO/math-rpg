@@ -18,6 +18,7 @@
 <link rel="modulepreload" href="./js/battle.js">
 <link rel="modulepreload" href="./js/codex.js">
 <link rel="modulepreload" href="./js/config.js">
+<link rel="modulepreload" href="./js/data.js">
 <link rel="modulepreload" href="./js/events.js">
 <link rel="modulepreload" href="./js/figures.js">
 <link rel="modulepreload" href="./js/fit.js">
@@ -94,6 +95,7 @@
         <button type="button" id="titleNew"><b></b><small></small></button>
         <button type="button" id="titleCodex"><b data-i18n="ui.codex"></b><small data-i18n="title.codexSub"></small></button>
         <button type="button" id="titleTutorial" hidden><b data-i18n="title.tutorial"></b><small data-i18n="title.tutorialSub"></small></button>
+        <button type="button" id="titleData"><b data-i18n="data.title"></b><small data-i18n="title.dataSub"></small></button>
       </div>
       <div class="settings">
         <button type="button" class="hint sound-toggle"></button>
@@ -106,6 +108,8 @@
           </select>
         </label>
       </div>
+      <!-- 아이폰 사파리로 열었을 때만: 기록이 지워질 수 있다는 안내 -->
+      <button type="button" class="ios-hint" id="iosHint" hidden><b data-i18n="title.iosHint"></b><small data-i18n="title.iosHintSub"></small></button>
       <p class="title-note" data-i18n="title.note"></p>
       <p class="title-note version" id="versionText"></p>
     </div>
@@ -225,6 +229,60 @@
     </div>
   </section>
 
+  <!-- 데이터 관리 -->
+  <section class="screen" id="screenData" hidden>
+    <div class="event">
+      <h2 data-i18n="data.title"></h2>
+      <p data-i18n="data.intro"></p>
+
+      <h3 data-i18n="data.usageTitle"></h3>
+      <div class="codex-card">
+        <b id="dataUsage"></b>
+        <small id="dataSummary"></small>
+      </div>
+
+      <h3 data-i18n="data.backupTitle"></h3>
+      <p data-i18n="data.backupText"></p>
+      <div class="data-row">
+        <button type="button" id="dataExport" data-i18n="data.export"></button>
+        <button type="button" id="dataImport" data-i18n="data.import"></button>
+      </div>
+      <div class="data-box" id="dataCodeBox" hidden>
+        <textarea id="dataCode" readonly rows="4" aria-label="backup code"></textarea>
+        <div class="data-row">
+          <button type="button" class="primary" id="dataCopy" data-i18n="data.copy"></button>
+          <button type="button" id="dataFile" data-i18n="data.file"></button>
+        </div>
+      </div>
+      <div class="data-box" id="dataImportBox" hidden>
+        <textarea id="dataPaste" rows="4" aria-label="backup code" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+        <div class="data-row">
+          <label class="file-pick"><span data-i18n="data.pick"></span><input type="file" id="dataPick" accept=".txt,text/plain"></label>
+          <button type="button" class="primary" id="dataApply" data-i18n="data.apply"></button>
+        </div>
+      </div>
+      <p class="data-note" id="dataNote" aria-live="polite"></p>
+
+      <h3 data-i18n="data.homeTitle"></h3>
+      <div class="codex-card" id="dataIos" hidden>
+        <b data-i18n="data.iosTitle"></b>
+        <small data-i18n="data.iosText"></small>
+        <small data-i18n="data.iosSteps"></small>
+        <small data-i18n="data.iosMove"></small>
+      </div>
+      <div class="codex-card" id="dataOther">
+        <small data-i18n="data.otherText"></small>
+      </div>
+
+      <h3 data-i18n="data.eraseTitle"></h3>
+      <p data-i18n="data.eraseText"></p>
+      <button type="button" class="hint" id="dataReset"><b data-i18n="data.reset"></b> · <small data-i18n="data.resetSub"></small></button>
+      <button type="button" class="hint danger" id="dataWipe"><b data-i18n="data.wipe"></b> · <small data-i18n="data.wipeSub"></small></button>
+
+      <button type="button" class="primary" id="dataBack" data-i18n="data.back"></button>
+    </div>
+  </section>
+
   <!-- 도감 -->
   <section class="screen" id="screenCodex" hidden>
     <div class="event">
@@ -245,6 +303,24 @@
       <p id="confirmText"></p>
       <button type="button" class="primary" id="confirmCancel" data-i18n="title.confirmCancel"></button>
       <button type="button" class="hint danger" id="confirmOk" data-i18n="title.confirmOk"></button>
+    </div>
+  </div>
+
+  <!-- 여러 버튼이 달린 확인 창 (데이터 관리에서 씁니다) -->
+  <div class="menu-overlay" id="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" hidden>
+    <div class="menu-box">
+      <h2 id="dialogTitle"></h2>
+      <p id="dialogText"></p>
+      <div class="dialog-buttons" id="dialogButtons"></div>
+    </div>
+  </div>
+
+  <!-- 모두 지운 뒤의 끝 화면 -->
+  <div class="menu-overlay wiped" id="wiped" hidden>
+    <div class="menu-box">
+      <h2 id="wipedTitle"></h2>
+      <p id="wipedText"></p>
+      <button type="button" class="hint" id="wipedAgain"></button>
     </div>
   </div>
 
